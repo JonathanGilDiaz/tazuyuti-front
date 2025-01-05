@@ -7,7 +7,16 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:class": {
+          "path": "src/app/models",
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "path": "src/app/services",
+          "skipTests": true
         }
       },
       "root": "",
@@ -21,7 +30,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -103,5 +113,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "af4d813b-3538-446f-933b-0bcf2a979de1"
   }
 }

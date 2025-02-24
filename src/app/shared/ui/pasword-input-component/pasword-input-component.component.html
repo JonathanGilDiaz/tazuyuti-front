@@ -1,0 +1,54 @@
+<div>
+  <div class="input-group">
+    <input
+      (input)="emitirTexto()"
+      [(ngModel)]="value"
+      [type]="banderaMostrarContrasenia ? 'text' : 'password'"
+      class="form-control"
+      (blur)="touched($event)"
+      [class.campo-invalido]="campoValido"
+      [placeholder]="placeholder"
+      [value]="valor"
+      aria-label="contraseña"
+      aria-describedby="basic-addon2"
+      [maxlength]="maxlength"
+      [minlength]="minlength"
+      [disabled]="disabled"
+      [autocomplete]="autocomplete"
+    />
+    <button
+      type="button"
+      class="input-group-text"
+      (click)="banderaMostrarContrasenia = !banderaMostrarContrasenia"
+    >
+      <span>
+        @if (banderaMostrarContrasenia) {
+          <fa-icon [icon]="faEyeSlash" ></fa-icon>
+        }@else {
+          <fa-icon [icon]="faEye" ></fa-icon>
+        }
+        </span>
+    </button>
+  </div>
+  <div>
+    @if (!ocultarCriterios) {
+      <ul class="list-unstyled">
+        @for (criterio of criterios; track $index) {
+          <li
+          [ngClass]="criterio.evaluacion() ? 'text-success' : 'text-black'"
+        >
+          <span class="fs-8">
+            @if (criterio.evaluacion()) {
+              <fa-icon [icon]="faCheck" ></fa-icon>
+            }@else {
+              <fa-icon [icon]="faTimes" ></fa-icon>
+            }
+          {{ criterio.mensaje }}
+          </span>
+        </li>
+        }
+      </ul>
+    }
+  </div>
+</div>
+

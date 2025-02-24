@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss(true)"></button>
+</div>
+<div class="modal-body">
+    @if (contentTemplate) {
+        <div>
+            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+        </div>
+    }
+    @if (iframeUrl) {
+        <div *ngIf="isImage(iframeUrl); else iframeContent">
+            <img [src]="sanitizerURL()" alt="img" style="max-width:100%; max-height: 100%; object-fit: contain;">
+        </div>
+        <ng-template #iframeContent>
+            <iframe
+                class="document"
+                [src]="sanitizerURL()"
+                width="100%"
+                frameborder="0"
+            ></iframe>
+        </ng-template>
+    }
+    
+</div>
+<div class="modal-footer">
+    @if (footerTemplate) {
+        <ng-container>
+            <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+        </ng-container>
+    }
+    
+</div>

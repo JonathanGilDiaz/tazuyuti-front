@@ -1,0 +1,50 @@
+<div class="login">
+  <div class="form-login">
+    <div class="bg-form">
+      <img class="img-75" [src]="logoVertical" />
+    </div>
+    <form [formGroup]="formLogin" (ngSubmit)="iniciarSesion(formLogin)">
+      <img class="img-100 mb-3" [src]="logoPath" />
+
+      <div class="mb-2">
+        <label for="exampleInputEmail1" class="form-label">Usuario</label>
+        <input type="text" class="form-control" placeholder="Usuario"
+                  formControlName="usuario"
+                  [class.campo-invalido]="formLogin.get('usuario').invalid && formLogin.get('usuario').touched" 
+                  id="exampleInputEmail1" 
+                  aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+        <input-password
+          #idPassActual
+          [ocultarCriterios]="true"
+          [autocomplete]="'current-password'"
+          formControlName="contrasenia"
+          [campoValido]="formLogin.get('contrasenia').invalid && formLogin.get('contrasenia').touched" id="passActual" 
+          [placeholder]="'Contraseña'" 
+          name="passActual">
+        </input-password>
+      </div>
+
+      <div class="input-group mb-2">
+        <re-captcha id="recaptcha" name="recaptcha" formControlName="token" [siteKey]="siteKey" required [class.is-invalid]="formLogin.get('token').invalid && formLogin.get('token').touched"></re-captcha>
+              <div *ngIf="formLogin.get('token').invalid && formLogin.get('token').touched" class="invalid-feedback">
+                  <div class="text-danger">Este campo es requerido.</div>
+              </div>
+      </div>
+      <div class="d-grid mx-auto mb-2">
+        <button type="submit" appLoader class="btn btn-primary d-block mb-2">ENTRAR</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+<footer style="width: inherit;">
+  <div class="footer-creditos">
+    <div class="footer">
+      <img [src]="logoTecnologias" alt="img Dirección General de Tecnologías">
+      <p>Sistema Desarrollado por la Dirección General de Tecnologías e Innovación Digital</p>
+    </div>
+  </div>
+</footer>

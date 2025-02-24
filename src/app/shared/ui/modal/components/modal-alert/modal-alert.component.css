@@ -1,0 +1,17 @@
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+.modal-body {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+.fa-icon {
+    transition: transform 0.2s ease-in-out;
+}
+.fa-icon:hover {
+    transform: scale(1.1);
+}

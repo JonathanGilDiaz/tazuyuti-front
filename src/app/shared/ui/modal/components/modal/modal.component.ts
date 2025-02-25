@@ -3,13 +3,12 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
-  selector: 'app-modal',
-  standalone: true,
-  imports: [CommonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './modal.component.html',
-  styleUrl: './modal.component.css'
-  
+    selector: 'app-modal',
+    standalone: true,
+    imports: [CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './modal.component.html',
+    styleUrl: './modal.component.css'
 })
 export class ModalComponent {
 
@@ -28,17 +27,17 @@ export class ModalComponent {
    * TemplateRef footer dinamico.
    * @type {TemplateRef}
    */
-  footerTemplate : TemplateRef<any>;
+  footerTemplate : TemplateRef<any> | undefined;
   /**
    * URL del archivo o de la fuente del archivo.
    * @type {string | null}
    */
-  iframeUrl: string | null = null;
+  iframeUrl!: string;
   /**
    * TemplateRef contenido dinamico.
    * @type {TemplateRef}
    */
-  contentTemplate: TemplateRef<any>;
+  contentTemplate!: TemplateRef<any>;
 
   constructor(
     private sanitizer: DomSanitizer

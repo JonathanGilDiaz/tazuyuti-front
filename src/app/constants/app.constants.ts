@@ -44,7 +44,7 @@ export const DEFAULT_VALUES_fILES = {
 
 // Configuraciones de autenticación o API keys
 export const AUTH_CONFIG = {
-  RECAPTCHA_SITE_KEY: '6Ld7eeAqAAAAAKJVJdgcRKze7xj1iK6tt0MpYa5a',
+  RECAPTCHA_SITE_KEY: '6LcYneEqAAAAAN4iAQ8jG2Lpk8mGZvEzM13ZpSu2',
 };
 
 export const MODULES_URLS = {

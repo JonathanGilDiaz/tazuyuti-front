@@ -188,45 +188,6 @@
                     </p>
                 </div>
                 </li>
-                <li class="punto-tiempo">
-                <span class="icono-punto">
-                    <img class="img-linea" [src]="icono_turnado">
-                </span>
-                <div class="contenido-tiempo">
-                    <span class="titulo-punto">Turnado</span>
-                </div>
-                </li>
-                <li class="punto-tiempo">
-                <span class="icono-punto">
-                    <img class="img-linea" [src]="icono_recibido">
-                </span>
-                <div class="contenido-tiempo">
-                    <span class="titulo-punto">Recibido</span>
-                </div>
-                </li>
-                <li class="punto-tiempo">
-                <span class="icono-punto">
-                    <img class="img-linea" [src]="icono_seguimiento">
-                </span>
-                <div class="contenido-tiempo">
-                    <span class="titulo-punto">Seguimiento</span>
-                </div>
-                </li>
-
-                <li class="punto-tiempo inactivo">
-                <span class="icono-punto">
-                    <img class="img-linea" [src]="icono_concluido">
-                </span>
-                <div class="contenido-tiempo">
-                    <span class="titulo-punto">Conclucido</span>
-                </div>
-                </li>
-
-
-
-
-
-
             </ul>
 
             </div>
@@ -321,21 +282,6 @@
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit...
                         </p>
                     </p-tabPanel>
-                    <p-tabPanel header="Header II">
-                        <ng-template pTemplate="header">
-                            <div class="flex align-items-center gap-2">
-                                <p-avatar
-                                    [image]="icono_registro_solicitud"
-                                    shape="circle" />
-                                <span class="font-bold white-space-nowrap m-0">
-                                    Registro de solicitud
-                                </span>
-                            </div>
-                        </ng-template>
-                        <p>
-                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium...
-                        </p>
-                    </p-tabPanel>
                     <p-tabPanel header="Header III">
                         <ng-template pTemplate="header">
                             <div class="flex align-items-center gap-2">
@@ -364,31 +310,6 @@
                     type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
                     <img class="img-tab" [src]="icono_inicio">
                     Inicio</button>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="registro-tab" data-bs-toggle="tab" data-bs-target="#registro-tab-pane" type="button"
-                    role="tab" aria-controls="registro-tab-pane" aria-selected="true">
-                    <img class="img-tab" [src]="icono_registro_solicitud">
-                    Registro de Solicitud</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="turnado-tab" data-bs-toggle="tab" data-bs-target="#turnado-tab-pane"
-                    type="button" role="tab" aria-controls="turnado-tab-pane" aria-selected="false">
-                    <img class="img-tab" [src]="icono_turnado_peticion">
-                    Turnado de Demanda</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="seguimiento-tab" data-bs-toggle="tab" data-bs-target="#seguimiento-tab-pane"
-                    type="button" role="tab" aria-controls="seguimiento-tab-pane" aria-selected="false">
-                    <img class="img-tab" [src]="icono_seguimiento_peticion">
-                    Seguimiento a Demanda</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="consulta-tab" data-bs-toggle="tab" data-bs-target="#consulta-tab-pane"
-                    type="button" role="tab" aria-controls="consulta-tab-pane" aria-selected="false">
-                    <img class="img-tab" [src]="icono_consultas_reporte">
-                    Consulta de Solicitud</button>
-                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">Home</div>
@@ -468,9 +389,6 @@
 
         <div class="my-5">
             <h3 class="titulo">Alerts Primeng</h3>
-            <div class="card">
-                <p-messages [(value)]="messages" [enableService]="false" />
-            </div>
         </div>
 
         <div class="my-5">

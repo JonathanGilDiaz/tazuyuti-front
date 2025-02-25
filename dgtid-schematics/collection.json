@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "dgtid-component": {
+      "description": "Generate a custom DGTID component.",
+      "factory": "./src/dgtid-component/index#dgtidComponent",
+      "schema": "./src/dgtid-component/schema.json"
+    }
+  }
+}

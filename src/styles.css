@@ -1,0 +1,6 @@
+/* You can add global styles to this file, and also import other style files */
+.campo-invalido{
+    border: solid;
+    border-width: 2px;
+    border-color: red !important;
+}

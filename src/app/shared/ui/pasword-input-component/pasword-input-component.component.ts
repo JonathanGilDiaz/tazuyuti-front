@@ -7,19 +7,19 @@ import { faEyeSlash, faEye, faCheck, faTimes} from '@fortawesome/free-solid-svg-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
-  selector: 'input-password',
-  standalone: true,
-  imports: [CommonModule, FormsModule, DividerModule,PasswordModule,ReactiveFormsModule,FontAwesomeModule],
-  templateUrl: './pasword-input-component.component.html',
-  styleUrl: './pasword-input-component.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => PaswordInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'input-password',
+    standalone: true,
+    imports: [CommonModule, FormsModule, DividerModule, PasswordModule, ReactiveFormsModule, FontAwesomeModule],
+    templateUrl: './pasword-input-component.component.html',
+    styleUrl: './pasword-input-component.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => PaswordInputComponent),
+            multi: true
+        }
+    ]
 })
 export class PaswordInputComponent implements ControlValueAccessor, OnChanges{
 
@@ -29,8 +29,8 @@ export class PaswordInputComponent implements ControlValueAccessor, OnChanges{
   @Input() campoValido:boolean=false;
   @Input() maxlength:number;
   @Input() minlength:number;
-  @Input() autocomplete:string;
-  @Input() valor:string;
+  @Input() autocomplete:string | undefined;
+  @Input() valor:string | undefined;
   @Input() disabled:boolean =false;
   faEyeSlash = faEyeSlash;
   faEye = faEye;
@@ -66,7 +66,7 @@ export class PaswordInputComponent implements ControlValueAccessor, OnChanges{
   }
 
   emitirTexto() {
-    if(this.evaluarMinuscula() && this.evaluarMayuscula &&
+    if(this.evaluarMinuscula() && this.evaluarMayuscula() &&
       this.evaluarNumero() && this.evaluarCaracterEspecial() &&
       this.evaluarLongitud()){
         this.inputContrasenia.emit(this._value);
@@ -122,15 +122,15 @@ export class PaswordInputComponent implements ControlValueAccessor, OnChanges{
   propagateChange = (_: any) => { };
   propagateTouched = (_: any) => { };
 
-  registerOnChange(fn) {
+  registerOnChange(fn: (_: any) => void) {
     this.propagateChange = fn;
   }
 
-  registerOnTouched(fn) {
+  registerOnTouched(fn: (_: any) => void) {
     this.propagateTouched = fn;
   }
 
-  touched($event) {
+  touched($event: any) {
     this.propagateTouched($event);
   }
 

@@ -14,11 +14,14 @@ export const routes: Routes = [
   {
     path: '',
     
-    canActivate: [authGuard],
     children: [
       {
         path: 'primeng',
         loadComponent: () => PrimengComponent,
+      },
+      {
+        path: 'usuarios',
+        loadChildren: () => import('@app/pages/users/user.routes').then(m => m.userRoutes),
       },
       {
         path: 'dashboard',

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "residencia-front": {
+    "angular-18-boilerplate": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -26,7 +26,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/residencia-front",
+            "outputPath": "dist/angular-18-boilerplate",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -34,19 +34,38 @@
               "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/favicon.png",
+              "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "@template/plugins/DataTables/datatables.min.css",
+              "node_modules/datatables.net-responsive-dt/css/responsive.dataTables.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "@template/plugins/fontawesome/6.5.2/css/all.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "@template/css/bootstrap.css",
+              "@template/css/estilo.css",
+              "src/styles.css",
+              "@template/css/custom-p-table-styles.css",
+              "@template/css/theme-gob.css"
             ],
-            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/"]
+            },
+            "scripts": [
+              "@template/js/jquery.slim.min.js",
+              "@template/plugins/DataTables/datatables.min.js",
+              "node_modules/datatables.net-responsive/js/dataTables.responsive.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "server": "src/main.server.ts",
-            "prerender": true,
+            "prerender": false,
             "ssr": {
               "entry": "server.ts"
             }
@@ -56,21 +75,31 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "3MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "20kB",
+                  "maximumError": "20kB"
                 }
               ],
+              "ssr": false,
+              "prerender": false,
               "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "ssr": false,
+              "prerender": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -79,10 +108,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "residencia-front:build:production"
+              "buildTarget": "angular-18-boilerplate:build:production"
             },
             "development": {
-              "buildTarget": "residencia-front:build:development"
+              "buildTarget": "angular-18-boilerplate:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,10 +124,10 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -106,7 +135,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
@@ -115,6 +144,6 @@
     }
   },
   "cli": {
-    "analytics": "af4d813b-3538-446f-933b-0bcf2a979de1"
+    "analytics": false
   }
 }

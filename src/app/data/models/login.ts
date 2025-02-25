@@ -1,5 +1,5 @@
 export interface LoginData{
-    correo              : string, 
+    usuario              : string, 
     password            : string,
     recaptchaResponse   : string
 }

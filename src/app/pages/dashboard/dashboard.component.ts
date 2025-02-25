@@ -5,11 +5,11 @@ import { APP } from '@app/constants/app.constants';
 import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [LayoutComponent, ReactiveFormsModule],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+    selector: 'app-dashboard',
+    standalone: true,
+    imports: [LayoutComponent, ReactiveFormsModule],
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
   form: FormGroup;

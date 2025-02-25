@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { MODULES_URLS } from '@app/constants/app.constants';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoginData } from '@app/data/models/login';
-import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -37,7 +36,7 @@ export class LogInComponent implements OnInit{
   logoTecnologias = 'assets/template/images/TECNOLOGIAS.png';
   captcha = 'assets/template/images/captcha.png';
   siteKey =environment.recaptcha.siteKey;
-  formLogin!:FormGroup;
+  formLogin:FormGroup;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -47,7 +46,7 @@ export class LogInComponent implements OnInit{
     private encryptTextService : EncryptTextService,
     private router : Router,
   ){
-    
+
   }
   ngOnInit(): void {
     this.iniciarFormulario(); // Inicializa el formulario antes de verificar la autenticación
@@ -65,58 +64,44 @@ export class LogInComponent implements OnInit{
   }
 
   passwordChange(event :string){
-    this.formLogin.get('contrasenia')?.setValue(event);
+    this.formLogin.get('contrasenia').setValue(event);
   }
 
   iniciarSesion(form: FormGroup): void {
-    if(form.valid){
-      let username = this.encryptTextService.encrypt(form.controls['usuario'].value);
-      let password = this.encryptTextService.encrypt(form.controls['contrasenia'].value);
-      let dataLogin :LoginData = { 
-        correo: username, 
-        password,
-        recaptchaResponse : this.formLogin.get('token')?.value
-      }
-
-      console.log(dataLogin);
+    if (form.valid) {
+      let username = form.controls['usuario'].value;
+      let password = form.controls['contrasenia'].value;
+      
+      let dataLogin: LoginData = { 
+        usuario: username, 
+        password: password,
+        recaptchaResponse: this.formLogin.get('token').value
+      };
+  
+      console.log('Datos encriptados:', dataLogin);
       this.authService.login(dataLogin).pipe(takeUntil(this.destroy$)).subscribe(
-        {
-          next: async response=>{
-            if(response.success){
-              this.authService.guardarUsuario(response.data.usuario);
-              this.authService.guardarToken(response.data.token);
-              this.authService.guardarMenu(response.data.menus);
-              this.router.navigate(['dashboard']);
-            }else{
-              let mensaje = response.message == "Bad credentials"? 'Datos de acceso incorrectos' : response.message;
-              this.modalService.openAlertModal('error','Error', mensaje).pipe(takeUntil(this.destroy$)).subscribe({
-                next : () => {
-                    form.get('contrasenia')?.setValue('');
-                    form.get('contrasenia')?.markAsTouched();
-                }
-              });
-            }
-          },
-          error : (err : GlobalError) => {
-            this.formLogin.get('token')?.reset();
-            Object.keys(form.controls).forEach(key => {
-              form.controls[key].markAsTouched();
-            });
-            let mensaje = err.error.message == "Bad credentials"? 'Datos de acceso incorrectos' : err.error.message;
+        response => {
+          if (response.success) {
+            this.authService.guardarUsuario(response.data.usuario);
+            this.authService.guardarToken(response.data.token);
+            this.authService.guardarMenu(response.data.menus);
+            this.router.navigate(['dashboard']);
+          } else {
+            let mensaje = response.message == "Bad credentials" ? 'Datos de acceso incorrectos' : response.message;
             this.modalService.openAlertModal('error', 'Error', mensaje).pipe(takeUntil(this.destroy$)).subscribe();
           }
+        },
+        error => {
+          this.formLogin.get('token').reset();
+          let mensaje = error.error.message == "Bad credentials" ? 'Datos de acceso incorrectos' : error.error.message;
+          this.modalService.openAlertModal('error', 'Error', mensaje).pipe(takeUntil(this.destroy$)).subscribe();
         }
       );
-    }else{
-      this.modalService.openAlertModal('error','Error', 'Datos incompletos, favor de ingresarlos para iniciar sesión').pipe(takeUntil(this.destroy$)).subscribe({
-        next : () => {
-            Object.keys(form.controls).forEach(key => {
-              form.controls[key].markAsTouched();
-            });
-        }
-      });
+    } else {
+      this.modalService.openAlertModal('error', 'Error', 'Datos incompletos, favor de ingresarlos para iniciar sesión').pipe(takeUntil(this.destroy$)).subscribe();
     }
   }
+  
 
   ngOnDestroy(): void {
     this.destroy$.next();

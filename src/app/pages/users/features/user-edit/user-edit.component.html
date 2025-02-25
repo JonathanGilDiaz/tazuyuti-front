@@ -1,0 +1,166 @@
+<app-layout>
+    <h3 class="titulo">Edición de Usuario</h3>
+    <dinamic-form [buttonText]="{cancel: 'Regresar',submit :loading? 'Guardando' : 'Guardar', return:'Regresar'}" nombreFormulario="Datos del Usuario" (formCancelled)="eventoCancelar()" (formSubmitted)="onSubmit()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="nombre" class="form-label">Nombre(s): <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Nombre(s)"
+                    formControlName="nombre"
+                    onlyText
+                    maxlength="50"
+                    minlength="3"
+                    [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
+                    id="nombre" 
+                    aria-describedby="nombre">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="apellidoPaterno" class="form-label">Apellido Paterno: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Apellido Paterno"
+                    formControlName="apellidoPaterno"
+                    onlyText
+                    maxlength="50"
+                    minlength="3"
+                    [class.campo-invalido]="form.get('apellidoPaterno').invalid && form.get('apellidoPaterno').touched"
+                    id="apellidoPaterno" 
+                    aria-describedby="apellidoPaterno">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="apellidoMaterno" class="form-label">Apellido Materno:</label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Apellido Materno"
+                    formControlName="apellidoMaterno"
+                    onlyText
+                    maxlength="50"
+                    minlength="3"
+                    [class.campo-invalido]="form.get('apellidoMaterno').invalid && form.get('apellidoMaterno').touched"
+                    id="apellidoMaterno" 
+                    aria-describedby="apellidoMaterno">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="cargo" class="form-label">Cargo: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Cargo"
+                    formControlName="cargo"
+                    maxlength="50"
+                    minlength="5"
+                    [class.campo-invalido]="form.get('cargo').invalid && form.get('cargo').touched"
+                    id="cargo" 
+                    aria-describedby="cargo">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="usuario" class="form-label">Usuario: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="email" class="form-control" placeholder="Usuario"
+                    maxlength="50"
+                    minlength="5"
+                    (input)="cambioValorUsuario($event)"
+                    formControlName="usuario"
+                    [class.campo-invalido]="form.get('usuario').invalid && form.get('usuario').touched"
+                    id="usuario" 
+                    aria-describedby="usuario">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="correoPersonal" class="form-label">Correo Personal: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="email" class="form-control" placeholder="Correo Personal"
+                    maxlength="50"
+                    minlength="5"
+                    formControlName="correoPersonal"
+                    [class.campo-invalido]="form.get('correoPersonal').invalid && form.get('correoPersonal').touched"
+                    id="correoPersonal" 
+                    aria-describedby="correoPersonal">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="contrasenia" class="form-label">Nueva contraseña:</label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="password" class="form-control" placeholder="Nueva contraseña"
+                        formControlName="contrasenia"
+                        id="contrasenia"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="telefono" class="form-label">Teléfono de oficina: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Teléfono de oficina"
+                    appOnlyNumber
+                    formControlName="telefono"
+                    maxlength="10"
+                    minlength="7"
+                    [class.campo-invalido]="form.get('telefono').invalid && form.get('telefono').touched"
+                    id="telefono" 
+                    aria-describedby="telefono">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="extension" class="form-label">Extensión:</label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Extensión"
+                    appOnlyNumber
+                    formControlName="extension"
+                    maxlength="6"
+                    minlength="4"
+                    [class.campo-invalido]="form.get('extension').invalid && form.get('extension').touched"
+                    id="extension" 
+                    aria-describedby="extension">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="celular" class="form-label">Teléfono Celular: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Teléfono celular"
+                    appOnlyNumber
+                    formControlName="celular"
+                    maxlength="10"
+                    minlength="10"
+                    [class.campo-invalido]="form.get('celular').invalid && form.get('celular').touched"
+                    id="celular" 
+                    aria-describedby="celular">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="rol_id" class="form-label">Rol: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <select formControlName="rol_id" class="form-select" id="rol_id" data-placeholder="Selecciona un rol"
+                        [class.campo-invalido]="form.get('rol_id').invalid && form.get('rol_id').touched">
+                            <option value=''>Seleccione un Rol</option>
+                            @for (rol of roles; track $index) {
+                                <option [value]="rol.id">{{rol.rol}}</option>
+                            }
+                    </select>
+                </div>
+            </div>
+       
+        </form>
+    </dinamic-form>
+</app-layout>

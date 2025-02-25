@@ -1,0 +1,229 @@
+/* ==============================
+    Colores personalizados
+============================== */
+:root {
+    --primary-color: #9D2449;
+    --primary-color-hover: #7e1d3a;
+    --primary-color-active: #5e162c;
+    --text-color: #582e3b;
+    --border-color: rgba(157, 36, 73, 0.3);
+    --background-color: #f9f4f5;
+    --background-color-dark: rgba(157, 36, 72, 0.22);
+    --color-hover: #EFF6FF;
+}
+
+/* ==============================
+    Encabezados de la tabla
+============================== */
+.p-datatable-thead > tr > th {
+    border-bottom: 2px solid var(--primary-color);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--primary-color-active);
+}
+
+/* ==============================
+    Fondo de filas y selección
+============================== */
+.p-datatable-tbody > tr {
+    background-color: transparent;
+}
+
+.p-datatable-tbody > tr.p-highlight > td {
+    box-shadow: inset 0 0 0 9999px var(--background-color-dark);
+    color: white;
+}
+
+.p-datatable-tbody > tr:nth-child(odd) {
+    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.023);
+}
+
+.p-datatable-tbody > tr:hover > td {
+    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.035);
+}
+
+.p-datatable-tbody > tr:nth-child(odd).p-highlight > td {
+    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.850);
+}
+
+.p-datatable-tbody > tr:nth-child(even).p-highlight > td {
+    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.800);
+}
+
+.p-datatable-tbody > tr:hover > td.p-highlight {
+    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.962);
+}
+
+/* ==============================
+    Bordes entre filas
+============================== */
+.p-datatable-tbody > tr > td {
+    border-top: 1px solid rgba(157, 36, 73, 0.15);
+}
+
+/* ==============================
+    Ícono de ordenamiento en cabeceras
+============================== */
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--primary-color);
+}
+
+.p-datatable .p-sortable-column.p-highlight {
+    background-color: var(--background-color-dark);
+    color: var(--primary-color-active);
+}
+
+/* ==============================
+    Paginación
+============================== */
+.p-paginator .p-paginator-page,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-prev {
+    color: var(--text-color);
+    border: 1px solid transparent;
+}
+
+.p-paginator .p-highlight {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--border-color);
+}
+
+.p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background-color: var(--primary-color-hover);
+    color: white;
+    border: 1px solid #181214;
+}
+
+/* ==============================
+    Controles colapsables
+============================== */
+.p-datatable-rowgroup-toggler {
+    color: white;
+    border: 0.15em solid white;
+    box-shadow: 0 0 0.2em #633946;
+    background-color: #59b038;
+}
+
+.p-datatable-rowgroup-toggler.p-datatable-rowgroup-toggler-opened {
+    background-color: #f44c63;
+}
+
+/* ==============================
+    Otros estilos de DataTable
+============================== */
+.p-datatable .p-datatable-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* ==============================
+    Menú desplegable de filtros (Multiselect)
+============================== */
+.p-multiselect-items .p-multiselect-item {
+    background-color: transparent;
+    color: var(--primary-color-active);
+    padding: 8px;
+}
+
+.p-multiselect-items .p-multiselect-item:hover {
+    background-color: var(--background-color-dark);
+    color: var(--primary-color-active);
+}
+
+.p-multiselect-items .p-multiselect-item .p-checkbox-box {
+    border-color: var(--primary-color-active);
+    background-color: white;
+}
+
+.p-multiselect-items .p-multiselect-item .p-checkbox-box .p-checkbox-icon {
+    color: var(--primary-color-active);
+}
+
+.p-multiselect-items .p-multiselect-item .p-checkbox-box.p-highlight {
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
+}
+
+.p-multiselect-items .p-multiselect-item .p-checkbox-box.p-highlight .p-checkbox-icon {
+    color: white;
+}
+
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: var(--border-color);
+    background: var(--primary-color-active);
+}
+
+/* ==============================
+    Botón aplicar filtros
+============================== */
+.p-multiselect-footer .p-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.p-multiselect-footer .p-button:hover {
+    background-color: var(--primary-color-hover);
+    color: white;
+}
+
+/* ==============================
+    Input de búsqueda en filtros
+============================== */
+.p-column-filter .p-inputtext {
+    border-color: var(--primary-color);
+    color: var(--primary-color-active);
+    background-color: transparent;
+}
+
+.p-column-filter .p-inputtext:focus {
+    border-color: var(--primary-color-active);
+    box-shadow: 0 0 0.2em rgba(157, 36, 73, 0.5);
+}
+
+.p-column-filter .p-inputtext:hover {
+    border-color: var(--border-color);
+}
+.p-datatable .p-datatable-thead > tr > th {
+    text-align: left;
+    padding: 0.3rem 0.3rem;
+}
+/* ==============================
+    Menú de opciones de filtros avanzados
+============================== */
+.p-column-filter-row-items .p-menuitem-link {
+    color: var(--primary-color-active);
+}
+
+.p-column-filter-row-items .p-menuitem-link:hover,
+.p-column-filter-overlay .p-column-filter-row-items .p-column-filter-row-item.p-highlight {
+    background-color: var(--background-color-dark);
+    color: var(--primary-color-active) !important;
+}
+
+/* ==============================
+    Botón embudo del filtro (Con Valor)
+============================== */
+.p-column-filter-menu-button.p-highlight {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color-active);
+    color: white;
+}
+
+.p-column-filter-menu-button.p-highlight:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.p-column-filter-menu-button.p-column-filter-menu-button-active,
+.p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
+    background: var(--color-hover);
+    color: var(--primary-color-active);
+}
+
+/* ==============================
+    Datepicker
+============================== */
+.p-datepicker table td > span.p-highlight {
+    color: var(--color-hover);
+    background: var(--primary-color);
+}

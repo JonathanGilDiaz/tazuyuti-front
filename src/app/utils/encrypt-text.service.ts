@@ -1,31 +1,29 @@
 import { Injectable } from '@angular/core';
-import { privateKey, publicKey } from '@app/config';
 import JSEncrypt from 'jsencrypt';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EncryptTextService {
+  
+  private encryptor: JSEncrypt;
+  private publicKey: string = `
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnzWNdCyDKJIET8htt1HLt5KfrHQcyp+9OcOsQNoavefCkx1LL5w86jj2bHDPZW2iYee9KoO0vpYFt+ngYXUMC79vM0NE+EQ8cbSFu2Jn5CQyxu2gNXvByo623zqq333BiPBvp+TyVv9Y98AgNDW01il6MglhyxYmopuFuilkHJWfcBN6oYOKtlVAlJpMwKs8OXKbzLu19bdX6kSnJsyvk+PNfPESnEiO8aw5mqsuw8hztAss21GWKvcoORk5HXl5anjFI01HAFyE+9pgEHpzCpiuZP+FxieuzBZjqtdyJFm5TIA4aQNwJTm5cEcsFzvO/TKU0K9OYb0bCDvJeAOb0wIDAQAB
+    -----END PUBLIC KEY-----
+  `;
 
-  encrypt$ :JSEncrypt ;
   constructor() {
-    this.encrypt$ = new JSEncrypt();
+    this.encryptor = new JSEncrypt();
+    this.encryptor.setPublicKey(this.publicKey);
   }
 
-  /**
-   * 
-   * @param text Param to encrypt
-   * @returns encrypted param
-   */
-  encrypt(text : string) : string {
-    this.encrypt$.setPublicKey(publicKey);
-    let value = this.encrypt$.encrypt(text);
-      return (!Object.is(value,false))? value.toString() : '';
-  }
-
-  decrypt(text : string) : string {
-    this.encrypt$.setPrivateKey(privateKey);
-		let value = this.encrypt$.decrypt(text);
-    return (!Object.is(value,false))? value.toString() : '';
+  encrypt(data: string): string {
+    const encrypted = this.encryptor.encrypt(data);
+    if (!encrypted) {
+      console.error("Error al encriptar los datos");
+      return "";
+    }
+    return encrypted;
   }
 }

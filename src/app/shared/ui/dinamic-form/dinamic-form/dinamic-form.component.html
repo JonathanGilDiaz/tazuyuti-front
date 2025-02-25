@@ -1,0 +1,28 @@
+<div class="row mt-3 mb-3">
+    <div class="col-12 col-md-6 offset-md-3">
+        <fieldset>
+            <legend>{{nombreFormulario}}</legend>
+            <div>
+                <ng-content></ng-content> <!-- Proyección de contenido para los campos del formulario -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-3">
+                        @if(buttonShow.cancel){
+                            <button class="btn btn-secondary me-md-2" type="button" (click)="onCancel()">
+                                <i [ngClass]="buttonIcons.cancel"></i> {{ buttonText.cancel }}
+                            </button>
+                        }
+                        @if(buttonShow.submit){
+                            <button class="btn btn-primary" type="button" (click)="onSubmit()">
+                                <i [ngClass]="buttonIcons.submit"></i> {{ buttonText.submit }}
+                            </button>
+                        }
+                        @if(buttonShow.return){
+                            <button class="btn btn-secondary" type="button" (click)="onCancel()">
+                                <i [ngClass]="buttonIcons.return"></i> {{ buttonText.return }}
+                            </button>
+                        }
+                    </div>
+            </div>
+        
+        </fieldset>
+    </div>
+</div>

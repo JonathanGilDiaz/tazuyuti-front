@@ -1,0 +1,335 @@
+/* ==============================
+    Colores personalizados
+============================== */
+:root {
+    --primary-color: #9D2449;
+    --primary-color-hover: #7e1d3a;
+    --primary-color-active: #5e162c;
+    --text-color: #582e3b;
+    --border-color: rgba(157, 36, 73, 0.3);
+    --background-color: #f9f4f5;
+    --highlight-color: #7e1d3a;
+}
+
+/* ==============================
+    Estilos Generales
+============================== */
+body {
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* ==============================
+    Botones
+============================== */
+.p-button {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+}
+.p-fileupload-choose {
+    padding: 0.45rem 1.25rem;
+    font-size: 0.95rem;
+}
+
+.p-fileupload .p-fileupload-buttonbar .p-button {
+    margin-right: 0.5rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.p-button.p-button-icon-only.p-button-rounded {
+    border-radius: 6px;
+    height: 2.2rem;
+    max-height: none;
+}
+/* 
+
+.p-button:hover {
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
+}
+
+.p-button:focus {
+    box-shadow: 0 0 0.2em var(--primary-color);
+}
+
+.p-button:active {
+    background-color: var(--primary-color-active);
+    border-color: var(--primary-color-active);
+} */
+
+/* ==============================
+    Autocomplete
+============================== */
+p-autocomplete.ng-dirty.ng-invalid > .p-autocomplete > .p-inputtext {
+    border-color: #e24c4c;
+    border-width: 2px;
+}
+
+/* ==============================
+    Tabla (DataTable)
+============================== */
+/* .p-datatable .p-sortable-column.p-highlight,
+.p-datatable .p-datatable-thead > tr > th {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.p-datatable .p-sortable-column-icon {
+    color: var(--primary-color);
+}
+
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--primary-color-hover);
+} */
+
+/* ==============================
+    Inputs de Búsqueda
+============================== */
+
+.p-inputtext:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0.2em var(--highlight-color);
+}
+
+.p-inputtext:hover {
+    border-color: var(--primary-color-hover);
+}
+.p-inputtext {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* .p-inputtext:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0.2em var(--highlight-color);
+}
+
+.p-inputtext:hover {
+    border-color: var(--primary-color-hover);
+} */
+
+
+/* ==============================
+    Menú de Opciones de Filtro
+============================== */
+/* .p-column-filter-row-items .p-menuitem-link {
+    color: var(--text-color);
+}
+
+.p-column-filter-row-items .p-menuitem-link:hover {
+    background-color: rgba(157, 36, 73, 0.1);
+    color: var(--text-color);
+} */
+
+/* ==============================
+    Checkbox en MultiSelect
+============================== */
+/* .p-multiselect-items .p-multiselect-item .p-checkbox-box.p-highlight {
+    background-color: var(--primary-color-hover);
+    border-color: var(--primary-color-hover);
+}
+
+.p-multiselect-items .p-multiselect-item .p-checkbox-box.p-highlight .p-checkbox-icon {
+    color: white;
+} */
+
+/* ==============================
+    Botón de Embudo en Filtros (Con Valor)
+============================== */
+/* .p-column-filter-menu-button.p-highlight {
+    background-color: var(--primary-color);
+    border-color: var(--text-color);
+    color: white;
+}
+
+.p-column-filter-menu-button.p-highlight:hover {
+    background-color: var(--highlight-color);
+} */
+
+/* ==============================
+    Paginación
+============================== */
+/* .p-paginator .p-paginator-page.p-highlight {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.p-paginator .p-paginator-page:not(.p-highlight):hover {
+    background-color: var(--primary-color-hover);
+    color: white;
+} */
+
+/* ==============================
+    Mensajes de Error
+============================== */
+.p-message.p-message-error {
+    background-color: rgba(244, 76, 99, 0.2);
+    border-color: #F44C63;
+    color: #5e162c;
+}
+
+/* ==============================
+    Dropdown y MultiSelect
+============================== */
+/* .p-dropdown,
+.p-multiselect {
+    border-color: var(--border-color);
+}
+.p-dropdown .p-dropdown-label,
+.p-multiselect .p-multiselect-label {
+    color: var(--text-color);
+}
+
+.p-dropdown.p-focus,
+.p-multiselect.p-focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0.2em var(--highlight-color);
+} */
+
+.p-calendar .p-datepicker{
+    z-index : 1030 !important;
+}
+
+.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
+    outline: 0 none;
+    outline-offset: 0;
+    border-color: var(--border-color);
+}
+
+p-calendar.ng-dirty.ng-invalid > .p-calendar > .p-inputtext{
+    border-color: #e24c4c;
+    border-width: 2px;
+}
+
+/* ==============================
+    Radio Button
+============================== */
+.p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem var(--background-color);
+    border-color: var(--border-color);
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight {
+    border-color: var(--border-color);
+    background: var(--highlight-color);
+}
+
+.p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+    border-color: var(--primary-color-hover);
+  }
+/* ==============================
+    Dialog
+============================== */
+
+/* Footer dentro de un diálogo */
+.p-dialog footer {
+    background: none !important;
+    font-size: inherit;
+}
+
+.p-dialog-mask{
+    z-index: 1036 !important;
+}
+
+/* ==============================
+    Calendar
+   ============================== */
+/* Reducir tamaño del calendario */
+.p-datepicker {
+    padding: 0.2rem;
+    font-size: 0.9rem;
+}
+
+/* Reducir el tamaño de las celdas */
+.p-datepicker table td,
+.p-datepicker table th {
+    padding: 0.3rem;
+}
+
+.p-datepicker table td > span,
+.p-datepicker table th > span {
+    width: 2rem; /* Reducir tamaño de los días */
+    height: 2rem;
+}
+
+/* Reducir encabezado */
+.p-datepicker .p-datepicker-header {
+    padding: 0.3rem;
+    font-size: 0.9rem;
+}
+
+/* Botones de navegación más pequeños */
+.p-datepicker .p-datepicker-header .p-datepicker-prev,
+.p-datepicker .p-datepicker-header .p-datepicker-next {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Reducir tamaño del selector de tiempo */
+.p-datepicker .p-timepicker span {
+    font-size: 1rem;
+}
+
+.p-datepicker .p-timepicker button {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* Ajuste altura de inputs */
+input, button, select, optgroup, .p-dropdown {
+    max-height: 38px;
+}
+/* Quitar padding a listas*/
+ol, ul {
+    padding-left: 0rem;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+    padding: 0.50rem 1rem;
+}
+.p-dropdown-label {
+    padding: 0.50rem;
+}
+.p-dropdown{
+    width: 100% !important;
+}
+.p-button {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 0.5rem 0.85rem;
+}
+.p-inputnumber-button-group .p-button {
+    padding: 0px;
+}
+.p-inputnumber-input{
+    font-size: 12px;
+}
+.btn {
+    display: inline-flex;
+    align-items:center;
+    margin-right: 1px;
+}
+.btn .pi {
+    margin-right: 0.5rem;
+}
+.btn .pi.notext {
+    margin-right: 0rem;
+}
+/* Spinner */
+.loading-container {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #666;
+    margin-top: 2rem;
+}
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 200px;
+}
+/* ./Spinner */

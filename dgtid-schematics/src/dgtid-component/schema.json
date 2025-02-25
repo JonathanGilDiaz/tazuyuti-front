@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "dgtid-component",
+  "title": "Component Schematic",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the component",
+      "$default": {
+        "$source": "argv"
+      }
+    },
+    "path": {
+      "type": "string",
+      "description": "The path to create the component",
+      "default": "src/app"
+    }
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-system">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><img [src]="logoNav" /></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+      <ul class="navbar-nav menu-horizontal">
+        <!-- Opciones principales del menú -->
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+        </li>
+        <li *ngFor="let item of menu" class="nav-item" [class.dropdown]="item.items">
+          <!-- Si NO tiene submenús, es un link directo -->
+          <a *ngIf="!item.items" class="nav-link" [routerLink]="item.routerLink">
+            {{ item.label }}
+          </a>
+        
+          <!-- Si tiene submenús, usa dropdown -->
+          <a *ngIf="item.items" class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {{ item.label }}
+          </a>
+          
+          <ul *ngIf="item.items" class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li *ngFor="let subItem of item.items">
+              <a class="dropdown-item" [routerLink]="subItem.routerLink">{{ subItem.label }}</a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Botón Sidebar -->
+        <!--
+        <li class="nav-item">
+          <button class="btn btn-primary" (click)="sidebarVisible = true">
+            <i class="pi pi-bars"></i>
+          </button>
+        </li>
+        -->
+
+        <!-- Ícono de usuario -->
+        <li class="nav-item dropdown">
+          <button class="btn btn-primary bg-transparent border-0" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="pi pi-user"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <!--<li><span class="dropdown-item">{{ username }}</span></li>-->
+            <li>
+              @if (authService.isAuthenticated()) {
+                <a class="dropdown-item" href="#" (click)="cerrarSesion($event)">Cerrar sesión</a>
+              } @else {
+                <a class="dropdown-item" href="/auth/login">Iniciar Sesión</a>
+              }
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Sidebar component -->
+      <!--
+      <p-sidebar [(visible)]="sidebarVisible" position="right" [modal]="true">
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-2">
+            <a class="navbar-brand" href="#"><img [src]="logoSideBar" /></a>
+          </div>
+        </ng-template>
+        <p-panelMenu [model]="menu"></p-panelMenu>
+      </p-sidebar>
+      -->
+    </div>
+  </div>
+</nav>

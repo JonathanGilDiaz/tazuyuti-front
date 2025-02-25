@@ -1,0 +1,44 @@
+<div class="modal-header bg-light">
+    <h5 class="modal-title">{{ title }}</h5>
+    @if (mostrarBotonX) {
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss(true)"></button>
+    }
+</div>
+<div class="modal-body d-flex align-items-center p-4">
+    <!-- Icono -->
+    <div class="me-3">
+        <fa-icon 
+            [icon]="tipoAlerta === 'exito' ? faCircleCheck : tipoAlerta === 'advertencia' ? faExclamation : tipoAlerta === 'error' ? faTimes : faInfo" 
+            size="3x" 
+            [ngClass]="{
+                'text-success': tipoAlerta === 'exito',
+                'text-warning': tipoAlerta === 'advertencia',
+                'text-danger': tipoAlerta === 'error',
+                'text-info': tipoAlerta === 'informacion'
+            }">
+        </fa-icon>
+    </div>
+    <!-- Contenido -->
+    <div>
+        <!-- Si no es un arreglo -->
+        @if (!esArreglo(content)) {
+            <div>{{ content }}</div>
+        }
+        <!-- Si es un arreglo -->
+        @if (esArreglo(content)) {
+            <ul class="mb-0">
+                @for (dato of content; track $index) {
+                    <li>{{dato}}</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+<div class="modal-footer bg-light d-flex justify-content-center gap-2">
+    @if (mostrarBotonCancelar) {
+        <button type="button" class="btn btn-secondary" (click)="activeModal.close(false)">{{ dataButtons.cancelButton?.label || 'Cancelar' }}</button>
+    }
+    @if (mostrarBotonAceptar) {
+        <button type="button" class="btn btn-primary" (click)="activeModal.close(true)">{{ dataButtons.acceptButton?.label || 'Aceptar' }}</button>
+    }
+</div>

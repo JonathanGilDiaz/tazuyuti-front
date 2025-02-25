@@ -1,0 +1,14 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
+
+@Component({
+  selector: '<%= dasherize(name) %>',
+  standalone: true,
+  imports: [
+    LayoutComponent
+  ],
+  templateUrl: './<%= dasherize(name) %>.component.html',
+  styleUrls: ['./<%= dasherize(name) %>.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class <%= classify(name) %>Component { }

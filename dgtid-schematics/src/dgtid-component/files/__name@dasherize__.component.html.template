@@ -1,0 +1,4 @@
+
+<app-layout>
+<p><%= dasherize(name) %> works!</p>
+</app-layout>

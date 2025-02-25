@@ -1,0 +1,721 @@
+<app-layout>
+
+  <nav class="navbar bg-body-tertiary fixed-top navbar-system">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><img [src]="logoMenu"></a>
+        <div class="d-flex">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+        </button>
+        <form>
+        <button type="button" class="btn btn-primary bg-transparent border-0" data-bs-toggle="dropdown"
+            aria-expanded="false"><i class="fa-regular fa-2x fa-circle-user"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="login.html">Salir</a></li>
+            <li><a class="dropdown-item" href="#">Cambiar contraseña</a></li>
+        </ul>
+    </form>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel"><img class="img-menu" src="images/imagotipo"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="inicio.html">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+        <form class="input-group" role="search">
+        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container my-5">
+        <h3 class="titulo">Label</h3>
+        <div class="card grid grid-nogutter">
+            <div class="col-12 md:col-4">
+
+                <p-avatar
+                    label="P"
+                    styleClass="mr-2"
+                    />
+                <p-avatar
+                    label="V"
+                    styleClass="mr-2"
+                    size="large"
+                    [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }" />
+                <p-avatar
+                    label="U"
+                    styleClass="mr-2"
+                    [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }" />
+            </div>
+        </div>
+        <!-- Buttons -->
+        <div class="my-5 col-12">
+            <h3 class="titulo">Botones</h3>
+            <div class="card">
+                <p-button label="Primary" styleClass="p-button-primary" />
+                <p-button label="Secondary" severity="secondary" />
+                <p-button label="Success" severity="success" />
+                <p-button label="Info" severity="info" />
+                <p-button label="Warning" severity="warning" />
+                <p-button label="Help" severity="help" />
+                <p-button label="Danger" severity="danger" />
+                <p-button label="Contrast" severity="contrast" />
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="my-5 col-3">
+            <h3 class="titulo">Calendar</h3>
+            <div>
+                <div class="flex-auto">
+                    <p-calendar
+                        [(ngModel)]="date"
+                        [iconDisplay]="'input'"
+                        [showIcon]="true"
+                        inputId="icondisplay" />
+                </div>
+            </div>
+        </div>
+
+        <!--labels-->
+        <app-layout>
+<div class="card grid grid-nogutter">
+            <div class="col-12 md:col-4">
+                <h5>Label</h5>
+                <p-avatar
+                    label="P"
+                    styleClass="mr-2"
+                    />
+                <p-avatar
+                    label="V"
+                    styleClass="mr-2"
+                    size="large"
+                    [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }" />
+                <p-avatar
+                    label="U"
+                    styleClass="mr-2"
+                    [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }" />
+            </div>
+            <div class="col-12 md:col-4">
+                <h5>Label - Circle</h5>
+                <p-avatar
+                    label="P"
+                    styleClass="mr-2"
+                    shape="circle" />
+                <p-avatar
+                    label="V"
+                    styleClass="mr-2"
+                    size="large"
+                    [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+                    shape="circle" />
+                <p-avatar
+                    label="U"
+                    styleClass="mr-2"
+                    [style]="{ 'background-color': '#dee9fc', color: '#1a2551' }"
+                    shape="circle" />
+            </div>
+            <div class="col-12 md:col-4">
+                <h5>Badge</h5>
+                <p-avatar
+                    label="U"
+                    pBadge
+                    styleClass="mr-2"
+                    value="4"
+                />
+            </div>
+        </div>
+</app-layout>
+
+        <div class="login-dgtid row justify-content-md-center align-items-center">
+            <div class="col col-sm-12 col-md-5 col-lg-4">
+            <img class="logo" [src]="logoVertical">
+            </div>
+            <form class=" col col-sm-12 col-md-5 col-lg-4">
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-registro_solicitud"></span>
+                <h4>Registro de Solicitud</h4>
+                </div>
+                <div class="d-grid mx-auto mb-2">
+                <a href="registro-form.html" class="btn btn-primary d-block"><i
+                    class="fa-solid fa-magnifying-glass"></i> Consulta Estado de la Solicitud</a>
+                </div>
+                <p class="text-center my-2">O</p>
+                <div class="d-grid mx-auto mb-2">
+                <a href="login.html" class="btn btn-primary d-block">iniciar sesión</a>
+                </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="contenedor-linea mt-5">
+            <div class="linea-de-tiempo">
+            <!-- Cambiar a clase bg-20- bg-40 bg-60 bg-80 segun sea el porcentaje de abance -->
+            <ul class="linea bg-80">
+
+                <li class="punto-tiempo">
+                <span class="icono-punto">
+                    <img class="img-linea" [src]="icono_registrado">
+                </span>
+                <div class="contenido-tiempo">
+                    <span class="titulo-punto">Registrado</span>
+                    <p class="info-punto">
+                    <b>Martes</b>
+                    01 de enero 2024
+                    </p>
+                </div>
+                </li>
+            </ul>
+
+            </div>
+        </div>
+        <div class="my-5">
+            <h3 class="titulo">Sistema Integral de Atencion Ciudadana</h3>
+            <div class="servicios">
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-registro_solicitud"></span>
+                <h4>Registro de Solicitud</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-eventos"></span>
+                <h4>Eventos</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-turnado_peticion"></span>
+                <h4>Turnado de Petición</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-consultas_reporte"></span>
+                <h4>Consulta y Reportes</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-admin_usuarios"></span>
+                <h4>Administrador de Usuarios</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-admin-catalogos"></span>
+                <h4>Administrador de Catálogos</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-recepcion_demanda"></span>
+                <h4>Recepción de la Demanda</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-seguimiento_peticion"></span>
+                <h4>Seguimiento de la Petición</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-peticiones"></span>
+                <h4>Peticiones de Conocimiento</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-individual"></span>
+                <h4>Individual</h4>
+                </div>
+            </div>
+
+            <div class="servicios-card">
+                <div class="servicio"><span class="icon icon-colectiva"></span>
+                <h4>Colectiva</h4>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="my-5">
+            <h3 class="titulo">Tabs Primeng</h3>
+            <div class="card">
+                <p-tabView styleClass="tabview-custom">
+                    <p-tabPanel>
+                        <ng-template pTemplate="header">
+                            <div class="flex align-items-center gap-2">
+                                <p-avatar
+                                    [image]="icono_inicio"
+                                    shape="circle" />
+                                <span class="font-bold white-space-nowrap m-0">
+                                    Home
+                                </span>
+                            </div>
+                        </ng-template>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+                        </p>
+                    </p-tabPanel>
+                    <p-tabPanel header="Header III">
+                        <ng-template pTemplate="header">
+                            <div class="flex align-items-center gap-2">
+                                <p-avatar
+                                    image="https://primefaces.org/cdn/primeng/images/demo/avatar/ionibowcher.png"
+                                    shape="circle" />
+                                <span class="font-bold white-space-nowrap m-0">
+                                    Ioni Bowcher
+                                </span>
+                                <p-badge value="2" />
+                            </div>
+                        </ng-template>
+                        <p>
+                            At vero eos et accusamus et iusto odio dignissimos...
+                        </p>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+        </div>
+
+        <div class="my-5">
+            <h3 class="titulo">Tabs bootstrap</h3>
+            <ul class="nav nav-tabs nav-icons" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation"></li>
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                    type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                    <img class="img-tab" [src]="icono_inicio">
+                    Inicio</button>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">Home</div>
+            <div class="tab-pane fade" id="registro-tab-pane" role="tabpanel" aria-labelledby="registro-tab" tabindex="0">Registro</div>
+            <div class="tab-pane fade" id="turnado-tab-pane" role="tabpanel" aria-labelledby="turnado-tab" tabindex="0">turnado</div>
+            <div class="tab-pane fade" id="seguimiento-tab-pane" role="tabpanel" aria-labelledby="seguimiento-tab" tabindex="0">seguimiento</div>
+            <div class="tab-pane fade" id="consulta-tab-pane" role="tabpanel" aria-labelledby="consulta-tab" tabindex="0">consulta</div>
+            </div>
+        </div>
+
+        <div class="my-5">
+            <h3 class="titulo">Botones bootstrap</h3>
+            <button type="button" class="btn btn-primary mb-2">Primary</button>
+            <button type="button" class="btn btn-secondary mb-2">Secondary</button>
+            <button type="button" class="btn btn-success mb-2">Success</button>
+            <button type="button" class="btn btn-danger mb-2">Danger</button>
+            <button type="button" class="btn btn-warning mb-2">Warning</button>
+            <button type="button" class="btn btn-info mb-2">Info</button>
+            <button type="button" class="btn btn-light mb-2">Light</button>
+            <button type="button" class="btn btn-dark mb-2">Dark</button>
+            <button type="button" class="btn btn-link mb-2">Link</button>
+            <br>
+            <button type="button" class="btn btn-outline-primary">Primary</button>
+            <button type="button" class="btn btn-outline-secondary">Secondary</button>
+            <button type="button" class="btn btn-outline-success">Success</button>
+            <button type="button" class="btn btn-outline-danger">Danger</button>
+            <button type="button" class="btn btn-outline-warning">Warning</button>
+            <button type="button" class="btn btn-outline-info">Info</button>
+            <button type="button" class="btn btn-outline-light">Light</button>
+            <button type="button" class="btn btn-outline-dark">Dark</button>
+            <br><br>
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Consultar
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-xmark"></i>
+            Cerrar
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-calendar-plus"></i>
+            Agregar Evento
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-slash"></i>
+            Rechazar
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-file-circle-plus"></i>
+            Agregar Seguimiento
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-regular fa-paste"></i>
+            Reporte general
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-arrow-left"></i>
+            Regresar
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-regular fa-floppy-disk"></i>
+            Guardar
+            </button>
+
+            <button type="button" class="btn btn-primary mb-2">
+            <i class="fa-solid fa-ban"></i>
+            cancelar
+            </button>
+        </div>
+
+        <div class="my-5">
+            <h3 class="titulo">Alerts Primeng</h3>
+        </div>
+
+        <div class="my-5">
+            <h3 class="titulo">Alerts Bootstrap</h3>
+            <div class="alert alert-primary" role="alert">
+            A simple primary alert—check it out!
+            </div>
+            <div class="alert alert-secondary" role="alert">
+            A simple secondary alert—check it out!
+            </div>
+            <div class="alert alert-success" role="alert">
+            A simple success alert—check it out!
+            </div>
+            <div class="alert alert-danger" role="alert">
+            A simple danger alert—check it out!
+            </div>
+            <div class="alert alert-warning" role="alert">
+            A simple warning alert—check it out!
+            </div>
+            <div class="alert alert-info" role="alert">
+            A simple info alert—check it out!
+            </div>
+            <div class="alert alert-dark" role="alert">
+            A simple dark alert—check it out!
+            </div>
+        </div>
+        <div class="mb-5">
+            <h3 class="titulo">DataTables</h3>
+            <table id="table_id" class="display">
+            <thead>
+                <tr>
+                <th>
+                    Column 1
+                </th>
+                <th>Column 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>Row 1 Data 1</td>
+                <td>Row 1 Data 2</td>
+                </tr>
+                <tr>
+                <td>Row 2 Data 1</td>
+                <td>
+                    <button type="button" class="btn btn-link"><i
+                        class="fa-solid fa-2x fa-magnifying-glass-plus"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-pen-to-square"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-calendar-xmark"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-circle-plus"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-eye"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-pen"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-circle-xmark"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-export"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-right-to-bracket"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-import"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-arrow-down-short-wide"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-list-check"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-print"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-regular fa-2x fa-folder-open"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-circle-info"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-file-lines"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-lock"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-user-pen"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-lock-open"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-regular fa-2x fa-eye"></i></button>
+                    <!-- <button type="button" class="btn btn-link">-</button>
+                    <button type="button" class="btn btn-link">-</button> -->
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-circle-xmark"></i></button>
+                    <button type="button" class="btn btn-link"><i class="fa-solid fa-2x fa-circle-check"></i></button>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <div class="my-5">
+            <h3 class="titulo">Bages</h3>
+            <span class="badge text-bg-primary">Primary</span>
+            <span class="badge text-bg-secondary">Secondary</span>
+            <span class="badge text-bg-success">Success</span>
+            <span class="badge text-bg-danger">Danger</span>
+            <span class="badge text-bg-warning">Warning</span>
+            <span class="badge text-bg-info">Info</span>
+            <span class="badge text-bg-light">Light</span>
+            <span class="badge text-bg-dark">Dark</span>
+        </div>
+        <div class="my-5">
+            <h3 class="titulo">Tabs</h3>
+            <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+            </li>
+            </ul>
+        </div>
+        <div class="my-5">
+            <h3 class="titulo">Forms</h3>
+            <select class="form-select" id="select-field" data-placeholder="Choose one thing">
+            <option></option>
+            <option>Reactive</option>
+            <option>Solution</option>
+            <option>Conglomeration</option>
+            <option>Algoritm</option>
+            <option>Holistic</option>
+            </select>
+
+            <div class="row">
+            <div class="col-3">
+                <div class="input-group date mt-3" id="datepicker">
+                <input type="text" class="form-control" id="date" />
+                <span class="input-group-append">
+                    <span class="input-group-text bg-light d-block rounded-0 rounded-end">
+                    <i class="fa fa-calendar"></i>
+                    </span>
+                </span>
+                </div>
+            </div>
+            </div>
+            <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                Default checkbox
+            </label>
+            </div>
+            <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+                Checked checkbox
+            </label>
+            </div>
+            <div class="mb-3 mt-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div class="mb-3 row">
+            <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com">
+            </div>
+            </div>
+            <div class="mb-3 row">
+            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword">
+            </div>
+            </div>
+            <div class="mb-3">
+            <label for="formFile" class="form-label">Default file input example</label>
+            <input class="form-control" type="file" id="formFile">
+            </div>
+            <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">-</span>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                aria-describedby="basic-addon1">
+            </div>
+            <div class="my-5">
+            <h3 class="titulo">Tables</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>twitter</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+            <div class="my-5">
+            <h3 class="titulo">Modal</h3>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    ...
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="my-5">
+            <h3 class="titulo">LOGIN</h3>
+            <div class="login-dgtid row justify-content-md-center  align-items-center">
+            <div class="col col-sm-12 col-md-5 col-lg-4">
+                <img class="logo" src="images/imagotipo-vertical">
+            </div>
+            <form class="col col-sm-12 col-md-5 col-lg-4">
+                <div class="mb-2">
+                <label for="exampleInputEmail1" class="form-label">Usuario</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="input-group mb-2">
+                <span class="input-group-text p-0 captcha"><img src="images/captcha"></span>
+                <button class="btn btn-outline-primary" type="button" id="button-addon1"><i
+                    class="fa-solid fa-arrows-rotate"></i></button>
+                <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
+                    aria-describedby="button-addon1">
+                </div>
+                <div class="d-grid mx-auto mb-2">
+                <button type="submit" class="btn btn-primary d-block mb-2">ENTRAR</button>
+                </div>
+                <p>¿Olvido su Contraseña?<a href="#"> Recuperar</a></p>
+            </form>
+            </div>
+
+            <div class="login-dgtid row justify-content-md-center align-items-center">
+            <div class="col col-sm-12 col-md-5 col-lg-4">
+                <img class="logo" src="images/imagotipo-vertical">
+            </div>
+            <form class=" col col-sm-12 col-md-5 col-lg-4">
+                <div class="mb-2">
+                <label for="exampleInputEmail1" class="form-label">Ingresar Folio solicitud:</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Nombre del solicitante:</label>
+                <input type="text" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="d-grid mx-auto mb-2">
+                <button type="submit" class="btn btn-primary d-block mb-2"><i class="fa-solid fa-magnifying-glass"></i>
+                    Consulta</button>
+                </div>
+            </form>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+        <div class="my-5">
+            <h3 class="titulo">Fieldset</h3>
+            <fieldset>
+            <legend>Fieldset example</legend>
+            <div>
+                <form>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            </fieldset>
+        </div>
+    </div>
+</main>
+
+
+<footer>
+    <div class="footer">
+    <div>
+        <p><span class="texto-md">DGTID</span>Sistema Integral de Atención Ciudadana<br>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, nobis dolore minima cupiditate itaque nemo
+        beatae quibusdam numquam sequi assumenda consectetur optio, reprehenderit atque odit doloribus incidunt natus,
+        necessitatibus esse.<br>
+        Tel. <span class="texto-md">00 50 9000</span> Ext. <span class="texto-md">23456</span></p>
+    </div>
+    <img src="images/imagotipo-2">
+    </div>
+    <div class="footer-creditos">
+    <div class="footer">
+        <img src="images/TECNOLOGIAS.png" alt="">
+        <p>Sistema Desarrollado por la Dirección General de Tecnologías e Innovación Digital</p>
+    </div>
+    </div>
+</footer>
+</app-layout>

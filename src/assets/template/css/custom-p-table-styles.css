@@ -2,13 +2,13 @@
     Colores personalizados
 ============================== */
 :root {
-    --primary-color: #9D2449;
-    --primary-color-hover: #7e1d3a;
-    --primary-color-active: #5e162c;
-    --text-color: #582e3b;
-    --border-color: rgba(157, 36, 73, 0.3);
+    --primary-color: #03026d;
+    --primary-color-hover: #060394;
+    --primary-color-active: #04025a;
+    --text-color: #070553;
+    --border-color: rgba(2, 0, 143, 0.3);
     --background-color: #f9f4f5;
-    --background-color-dark: rgba(157, 36, 72, 0.22);
+    --background-color-dark: rgba(12, 7, 90, 0.22);
     --color-hover: #EFF6FF;
 }
 
@@ -43,22 +43,22 @@
 }
 
 .p-datatable-tbody > tr:nth-child(odd).p-highlight > td {
-    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.850);
+    box-shadow: inset 0 0 0 9999px rgba(22, 2, 116, 0.85);
 }
 
 .p-datatable-tbody > tr:nth-child(even).p-highlight > td {
-    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.800);
+    box-shadow: inset 0 0 0 9999px rgba(23, 3, 134, 0.8);
 }
 
 .p-datatable-tbody > tr:hover > td.p-highlight {
-    box-shadow: inset 0 0 0 9999px rgba(157, 36, 73, 0.962);
+    box-shadow: inset 0 0 0 9999px rgba(23, 3, 134, 0.8);
 }
 
 /* ==============================
     Bordes entre filas
 ============================== */
 .p-datatable-tbody > tr > td {
-    border-top: 1px solid rgba(157, 36, 73, 0.15);
+    border-top: 1px solid rgba(36, 44, 157, 0.15);
 }
 
 /* ==============================
@@ -101,12 +101,12 @@
 .p-datatable-rowgroup-toggler {
     color: white;
     border: 0.15em solid white;
-    box-shadow: 0 0 0.2em #633946;
+    box-shadow: 0 0 0.2em #423963;
     background-color: #59b038;
 }
 
 .p-datatable-rowgroup-toggler.p-datatable-rowgroup-toggler-opened {
-    background-color: #f44c63;
+    background-color: #654cf4;
 }
 
 /* ==============================
@@ -178,7 +178,7 @@
 
 .p-column-filter .p-inputtext:focus {
     border-color: var(--primary-color-active);
-    box-shadow: 0 0 0.2em rgba(157, 36, 73, 0.5);
+    box-shadow: 0 0 0.2em rgba(48, 36, 157, 0.5);
 }
 
 .p-column-filter .p-inputtext:hover {

@@ -98,14 +98,8 @@ export interface Opcion {
 export interface Usuario {
     id?:             number;
     nombre:          string;
-    apellidoPaterno: string;
-    apellidoMaterno: string;
-    correoPersonal:   string;
     usuario:         string;
-    cargo:           string;
-    contacto:        string;
-    telefono:        string;
-    extension:       string;
+    sucursal:        Sucursal;
     rol:             Rol;
     activo:          boolean;
 }
@@ -114,4 +108,12 @@ export interface Rol {
     id:     number;
     rol:    string;
     activo: boolean;
+}
+
+export interface Sucursal{
+     id:     number;
+     nombre: string;
+    horario: string;
+    telefono: string;
+    direccion: string;
 }

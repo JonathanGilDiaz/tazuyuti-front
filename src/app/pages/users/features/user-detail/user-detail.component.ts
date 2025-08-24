@@ -38,14 +38,7 @@ export class UserDetailComponent {
   iniciarFormulario(): void{
     this.form=this.fb.group({
       nombre: [''],
-      apellidoPaterno: [''],
-      apellidoMaterno: [''],
-      correoPersonal: [''],
-      cargo: [''],
-      usuario : [''],
-      telefono: [''],
-      celular: [''],
-      extension: [''],
+      sucursal: [''],
       rol: [''],
     });
   }

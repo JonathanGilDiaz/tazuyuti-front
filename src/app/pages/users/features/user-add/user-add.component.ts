@@ -2,13 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Rol } from '@app/core/interfaces/apiResponse';
+import { Rol, Sucursal } from '@app/core/interfaces/apiResponse';
 import { DinamicFormComponent } from '@app/shared/ui/dinamic-form/dinamic-form/dinamic-form.component';
 import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { UsuariosService } from '@app/data/services/usuarios.service';
 import { OnlyTextDirective } from '@app/shared/directives/only-text.directive';
-import { OnlyNumberDirective } from '@app/shared/directives/only-number.directive';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
@@ -22,7 +21,6 @@ import { DropdownModule } from 'primeng/dropdown';
     DinamicFormComponent,
     ReactiveFormsModule,
     OnlyTextDirective,
-    OnlyNumberDirective,
     DropdownModule
   ],
   templateUrl: './user-add.component.html',
@@ -32,6 +30,7 @@ export class UserAddComponent implements OnInit{
 
   form:                 FormGroup;
   roles:                Rol[] = [];
+  sucursales:           Sucursal[] = [];
   loading:              boolean = false;
   destroy$=             new Subject<void>();
 
@@ -48,16 +47,9 @@ export class UserAddComponent implements OnInit{
 
   iniciarFormulario(): void{
     this.form=this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      apellidoPaterno: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      apellidoMaterno: ['', [Validators.minLength(3), Validators.maxLength(50)]],
-      usuario: ['', [Validators.required,Validators.minLength(5), Validators.maxLength(50)]],
+      nombre: ['', [Validators.required]],
       contrasenia: ['', [Validators.required,Validators.minLength(5), Validators.maxLength(50)]],
-      correoPersonal: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.required, Validators.pattern(/^[a-zA-Z0-9_\-\.~]{2,}@[a-zA-Z0-9_\-\.~]{2,}\.[a-zA-Z]{2,4}$/)]],
-      cargo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-      telefono: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(10)]],
-      celular: ['', [Validators.required,Validators.minLength(10), Validators.maxLength(10)]],
-      extension: ['', [Validators.minLength(2), Validators.maxLength(10)]],
+      sucursal_id: ['', [Validators.required]],
       rol_id: ['', [Validators.required]],
     });
   }
@@ -68,6 +60,7 @@ export class UserAddComponent implements OnInit{
       next : response => {
         if(response.success){
           this.roles = response.data.roles;
+          this.sucursales = response.data.sucursales;
           this.loading = false;
         }else{
           this.loading = false;
@@ -100,15 +93,17 @@ export class UserAddComponent implements OnInit{
           this.loading = true;
           if(response.resultado){
             const rolId = this.form.get('rol_id').value;
-            
+            const sucursalId = this.form.get('sucursal_id').value;
             let datos: any = {
               ...this.form.value,
-              rol: { id: parseInt(rolId) }
+              rol: { id: parseInt(rolId) },
+              sucursal:  { id: parseInt(sucursalId) }
             };
   
             datos = {
               ...datos,
               rol: { id: rolId },
+               sucursal: { id: sucursalId },
             };
             this.usuariosServicio.agregarRegistro(datos).subscribe(
               {

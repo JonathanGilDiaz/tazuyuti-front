@@ -4,75 +4,19 @@
       <form [formGroup]="form">
           <div class="row g-3 mt-2 align-items-center">
               <div class="col-12 col-md-5">
-                  <label for="nombre" class="form-label">Nombre(s):</label>
+                  <label for="nombre" class="form-label">Nombre:</label>
               </div>
               <div class="col-12 col-md-7">
-                <label for="nombre" class="form-label">{{form.get('nombre'  ).value}}</label>
+                <label for="nombre" class="form-label">{{form.get('nombre').value}}</label>
               </div>
           </div>
-          <div class="row g-3 mt-2 align-items-center">
+           <div class="row g-3 mt-2 align-items-center">
               <div class="col-12 col-md-5">
-                  <label for="apellidoPaterno" class="form-label">Apellido Paterno:</label>
+                  <label for="sucursal" class="form-label">Sucursal:</label>
               </div>
               <div class="col-12 col-md-7">
-                <label for="apellidoPaterno" class="form-label">{{form.get('apellidoPaterno').value}}</label>
+                <label for="sucursal" class="form-label">{{form.get('sucursal').value.nombre}}</label>
               </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-              <div class="col-12 col-md-5">
-                  <label for="apellidoMaterno" class="form-label">Apellido Materno:</label>
-              </div>
-              <div class="col-12 col-md-7">
-                <label for="apellidoMaterno" class="form-label">{{form.get('apellidoMaterno').value}}</label>
-              </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-              <div class="col-12 col-md-5">
-                  <label for="cargo" class="form-label">Cargo:</label>
-              </div>
-              <div class="col-12 col-md-7">
-                <label for="cargo" class="form-label">{{form.get('cargo').value}}</label>
-              </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-              <div class="col-12 col-md-5">
-                  <label for="correoPersonal" class="form-label">Correo Personal:</label>
-              </div>
-              <div class="col-12 col-md-7">
-                <label for="correoPersonal" class="form-label">{{form.get('correoPersonal').value}}</label>
-              </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-            <div class="col-12 col-md-5">
-                <label for="usuario" class="form-label">Usuario:</label>
-            </div>
-            <div class="col-12 col-md-7">
-              <label for="usuario" class="form-label">{{form.get('usuario').value}}</label>
-            </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-              <div class="col-12 col-md-5">
-                  <label for="telefono" class="form-label">Teléfono de oficina:</label>
-              </div>
-              <div class="col-12 col-md-7">
-                  <label for="telefono" class="form-label">{{form.get('telefono').value}}</label>
-              </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-              <div class="col-12 col-md-5">
-                  <label for="extension" class="form-label">Extensión:</label>
-              </div>
-              <div class="col-12 col-md-7">
-                <label for="extension" class="form-label">{{form.get('extension').value}}</label>
-              </div>
-          </div>
-          <div class="row g-3 mt-2 align-items-center">
-            <div class="col-12 col-md-5">
-                <label for="celular" class="form-label">Teléfono Celular:</label>
-            </div>
-            <div class="col-12 col-md-7">
-                <label for="celular" class="form-label">{{form.get('celular').value}}</label>
-            </div>
           </div>
           <div class="row g-3 mt-2 align-items-center">
               <div class="col-12 col-md-5">

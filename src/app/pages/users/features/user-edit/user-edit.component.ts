@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Rol } from '@app/core/interfaces/apiResponse';
+import { Rol, Sucursal } from '@app/core/interfaces/apiResponse';
 import { DinamicFormComponent } from '@app/shared/ui/dinamic-form/dinamic-form/dinamic-form.component';
 import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { UsuariosService } from '@app/data/services/usuarios.service';
 import { Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { OnlyTextDirective } from '@app/shared/directives/only-text.directive';
-import { OnlyNumberDirective } from '@app/shared/directives/only-number.directive';
 import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
@@ -21,7 +20,6 @@ import { DropdownModule } from 'primeng/dropdown';
     DinamicFormComponent,
     ReactiveFormsModule,
     OnlyTextDirective,
-    OnlyNumberDirective,
     DropdownModule
   ],
   templateUrl: './user-edit.component.html',
@@ -31,6 +29,7 @@ export class UserEditComponent {
 
   form:                       FormGroup;
   roles:                      Rol[] = [];
+  sucursales:                 Sucursal[] = [];
   cambioUsuario:  boolean = false; // vatiable que guardara si es que el valor del correo institucional fue cambiado.
   valorAnterior:              string;
   loading:                    boolean = false;
@@ -57,16 +56,9 @@ export class UserEditComponent {
   iniciarFormulario(): void{
     this.form=this.fb.group({
       id : [null],
-      nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      apellidoPaterno: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      apellidoMaterno: ['', [Validators.minLength(3), Validators.maxLength(50)]],
-      correoPersonal: ['', [Validators.minLength(5), Validators.maxLength(50), Validators.required, Validators.pattern(/^[a-zA-Z0-9_\-\.~]{2,}@[a-zA-Z0-9_\-\.~]{2,}\.[a-zA-Z]{2,4}$/)]],
-      cargo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-      usuario: [''],
+      nombre: ['', [Validators.required]],
+      sucursal_id: ['', [Validators.required]],
       contrasenia: [''],
-      telefono: ['', [Validators.required,Validators.minLength(7), Validators.maxLength(10)]],
-      celular: ['', [Validators.required,Validators.minLength(10), Validators.maxLength(10)]],
-      extension: ['', [Validators.minLength(4), Validators.maxLength(6)]],
       rol_id: ['', [Validators.required]],
     });
     //this.form.get('correoInstitucional').disable();
@@ -82,6 +74,7 @@ export class UserEditComponent {
     this.usuarioService.catalogos().pipe(
       tap(responseCat => {
         this.roles = responseCat.data.roles;
+        this.sucursales = responseCat.data.sucursales;
       }), 
       switchMap(() => this.usuarioService.obtenerRegistro(id)) 
     ).subscribe({
@@ -89,9 +82,11 @@ export class UserEditComponent {
         let datos: any = {
           ...response.data,
           rol_id: response.data.rol.id,
+          sucursal_id: response.data.sucursal.id,
         };
 
         const rolId = response.data.rol.id;
+        const sucursalId = response.data.sucursal.id;
         datos = {
           ...datos,
         };
@@ -114,6 +109,7 @@ export class UserEditComponent {
       next : response => {
         if(response.success){
           this.roles = response.data.roles;
+          this.sucursales = response.data.sucursales;
           this.loading = false;
         }else{
           this.loading = false;
@@ -142,10 +138,12 @@ export class UserEditComponent {
             this.loading = true;
             if(response.resultado){
               const rolId = this.form.get('rol_id').value;
+              const sucursalId = this.form.get('sucursal_id').value;
 
               let datos: any = {
                 ...this.form.getRawValue(),
-                rol: { id: parseInt(rolId) }
+                rol: { id: parseInt(rolId) },
+                sucursal: { id: parseInt(sucursalId) }
               };
 
               datos = {

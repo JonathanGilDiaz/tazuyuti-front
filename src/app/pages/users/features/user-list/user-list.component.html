@@ -23,10 +23,8 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"/></th>
-                    <th pSortableColumn="apellidoPaterno">Apellido Paterno<p-sortIcon field="apellidoPaterno"/></th>
-                    <th pSortableColumn="apellidoMaterno">Apellido Materno<p-sortIcon field="apellidoMaterno"/></th>
+                    <th pSortableColumn="sucursal.nombre">Sucursal<p-sortIcon field="sucursal.nombre"/></th>
                     <th pSortableColumn="rol.rol">Rol<p-sortIcon field="rol.rol"/></th>
-                    <th pSortableColumn="usuario">Usuario<p-sortIcon field="usuario"/></th>
                     <th pSortableColumn="activo">Estado<p-sortIcon field="activo"/></th>
                     <th>Acciones</th>
                 </tr>
@@ -44,19 +42,10 @@
                         <p-columnFilter
                         [showMenu]="false" 
                             type="text"
-                            field="apellidoPaterno"
+                            field="sucursal.nombre"
                             matchMode="contains"
-                            placeholder="Buscar Apellido Paterno" 
-                            ariaLabel="Buscar Apellido Paterno" />
-                    </th>
-                    <th>
-                        <p-columnFilter
-                        [showMenu]="false" 
-                            type="text"
-                            field="apellidoMaterno"
-                            matchMode="contains"
-                            placeholder="Buscar Apellido Materno" 
-                            ariaLabel="Buscar Apellido Materno" />
+                            placeholder="Buscar sucursal" 
+                            ariaLabel="Buscar sucursal" />
                     </th>
                     <th>
                         <p-columnFilter
@@ -66,15 +55,6 @@
                             matchMode="contains"
                             placeholder="Buscar Rol" 
                             ariaLabel="Buscar Rol" />
-                    </th>
-                    <th>
-                        <p-columnFilter
-                        [showMenu]="false" 
-                            type="text"
-                            field="usuario"
-                            matchMode="contains"
-                            placeholder="Buscar usuario" 
-                            ariaLabel="Buscar usuario" />
                     </th>
                     <th>
                         <p-columnFilter field="activo" matchMode="equals" [showMenu]="false">
@@ -106,10 +86,8 @@
             <ng-template pTemplate="body" let-user>
                 <tr>
                     <td>{{ user?.nombre }}</td>
-                    <td>{{ user?.apellidoPaterno }}</td>
-                    <td>{{ user?.apellidoMaterno }}</td>
+                    <td>{{ user?.sucursal?.nombre }}</td>
                     <td>{{ user?.rol?.rol }}</td>
-                    <td>{{ user?.usuario }}</td>
                     <td>{{ (user?.activo)? 'Activo' : 'Inactivo' }}</td>
                     <td>
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

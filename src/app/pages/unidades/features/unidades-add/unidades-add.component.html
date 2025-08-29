@@ -1,0 +1,65 @@
+    <dinamic-form
+        nombreFormulario="Datos Generales"
+        [buttonText]="{ cancel: 'Cancelar', submit: loading? 'Guardando' : 'Guardar', return: 'Regresar' }"
+        (formCancelled)="eventoCancelar()"
+        (formSubmitted)="onSubmit()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="nombre" class="form-label">Nombre<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Nombre(s)"
+                    formControlName="nombre"
+                    onlyText
+                    [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
+                    id="nombre" 
+                    aria-describedby="nombre">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="encargado" class="form-label">Encargado<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Encargado"
+                    formControlName="encargado"
+                    onlyText
+                    [class.campo-invalido]="form.get('encargado').invalid && form.get('encargado').touched"
+                    id="encargado" 
+                    aria-describedby="encargado">
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="placas" class="form-label">Placas<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Placas"
+                    formControlName="placas"
+                    onlyText
+                    [class.campo-invalido]="form.get('placas').invalid && form.get('placas').touched"
+                    id="placas" 
+                    aria-describedby="placas">
+                </div>
+            </div>
+              <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5">
+                    <label for="tipoCamioneta" class="form-label">Tipo de camioneta: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <select formControlName="tipoCamioneta" class="form-select" id="tipoCamioneta" data-placeholder="Selecciona un tipo de camioneta"
+                        [class.campo-invalido]="form.get('tipoCamioneta').invalid && form.get('tipoCamioneta').touched">
+                            <option value=''>Seleccione un tipo de camioneta</option>
+                            @for (tipoCamioneta of tiposCamionetas; track $index) {
+                                <option [value]="tipoCamioneta.id">{{tipoCamioneta.nombre}}</option>
+                            }
+                    </select>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <label><span class="text-danger">* Campos requeridos</span></label>
+            </div>
+        </form>
+    </dinamic-form>
+

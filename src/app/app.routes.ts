@@ -28,6 +28,18 @@ export const routes: Routes = [
         loadComponent: () => DashboardComponent,
       },
       {
+        path: 'inventario',
+        loadChildren: () => import('@app/pages/productos/productos.routes').then(m => m.ProductosRoutes),
+      },
+       {
+        path: 'clientes',
+        loadChildren: () => import('@app/pages/clientes/clientes.routes').then(m => m.ClienteRoutes),
+      },
+       {
+        path: 'unidades',
+        loadChildren: () => import('@app/pages/unidades/unidades.routes').then(m => m.UnidadRoutes),
+      },
+      {
         path: '**',
         redirectTo: MODULES_URLS.PUBLIC.DEFAULT
       },

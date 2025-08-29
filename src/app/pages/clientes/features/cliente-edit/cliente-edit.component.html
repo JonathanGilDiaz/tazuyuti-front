@@ -1,0 +1,150 @@
+    <dinamic-form
+        nombreFormulario="Datos Generales"
+        [buttonText]="{ cancel: 'Cancelar', submit: loading? 'Guardando' : 'Guardar', return: 'Regresar' }"
+        (formCancelled)="eventoCancelar()"
+        (formSubmitted)="onSubmit()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="nombre" class="form-label">Nombre(s)<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Nombre(s)"
+                    formControlName="nombre"
+                    onlyText
+                    [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
+                    id="nombre" 
+                    aria-describedby="nombre">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="apellidoPaterno" class="form-label">Apellido paterno<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Apellido paterno"
+                    formControlName="apellidoPaterno"
+                    onlyText
+                    [class.campo-invalido]="form.get('apellidoPaterno').invalid && form.get('apellidoPaterno').touched"
+                    id="apellidoPaterno" 
+                    aria-describedby="apellidoPaterno">
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="apellidoMaterno" class="form-label">Apellido materno<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Apellido materno"
+                    formControlName="apellidoMaterno"
+                    onlyText
+                    [class.campo-invalido]="form.get('apellidoMaterno').invalid && form.get('apellidoMaterno').touched"
+                    id="apellidoMaterno" 
+                    aria-describedby="apellidoMaterno">
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="nombreComercial" class="form-label">Nombre comercial<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Nombre comercial"
+                    formControlName="nombreComercial"
+                    [class.campo-invalido]="form.get('nombreComercial').invalid && form.get('nombreComercial').touched"
+                    id="nombreComercial" 
+                    aria-describedby="nombreComercial">
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="rfc" class="form-label">RFC<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="RFC"
+                    formControlName="rfc"
+                    [class.campo-invalido]="form.get('rfc').invalid && form.get('rfc').touched"
+                    id="rfc" 
+                    aria-describedby="rfc">
+                </div>
+            </div>
+                 <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="sociedad" class="form-label">Tipo de sociedad<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Tipo de sociedad"
+                    formControlName="sociedad"
+                    [class.campo-invalido]="form.get('sociedad').invalid && form.get('sociedad').touched"
+                    id="sociedad" 
+                    aria-describedby="sociedad">
+                </div>
+            </div>
+               <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="telefono" class="form-label">Teléfono<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Teléfono"
+                    formControlName="telefono"
+                    [valueAsNumber]="true"
+                    [class.campo-invalido]="form.get('telefono').invalid && form.get('telefono').touched"
+                    id="telefono" 
+                    aria-describedby="telefono">
+                </div>
+            </div>
+                <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="regimenFiscal" class="form-label">Régimen fiscal<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Régimen fiscal"
+                    formControlName="regimenFiscal"
+                    [class.campo-invalido]="form.get('regimenFiscal').invalid && form.get('regimenFiscal').touched"
+                    id="regimenFiscal" 
+                    aria-describedby="regimenFiscal">
+                </div>
+            </div>
+                <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="direccion" class="form-label">Dirección<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Régimen fiscal"
+                    formControlName="direccion"
+                    [class.campo-invalido]="form.get('direccion').invalid && form.get('direccion').touched"
+                    id="direccion" 
+                    aria-describedby="direccion">
+                </div>
+            </div>
+                 <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="codigoPostal" class="form-label">Código postal<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Código postal"
+                    formControlName="codigoPostal"
+                    [valueAsNumber]="true"
+                    [class.campo-invalido]="form.get('codigoPostal').invalid && form.get('codigoPostal').touched"
+                    id="codigoPostal" 
+                    aria-describedby="codigoPostal">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="tipoPersona" class="form-label">Tipo de Persona: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <select formControlName="tipoPersona" class="form-select" id="tipoPersona" data-placeholder="Selecciona una opción"
+                        [class.campo-invalido]="form.get('tipoPersona').invalid && form.get('tipoPersona').touched">
+                            <option value=''>Selecciona</option>
+                            <option value='Persona Física'>Persona Física</option>
+                            <option value='Persona Moral'>Persona Moral</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <label><span class="text-danger">* Campos requeridos</span></label>
+            </div>
+        </form>
+    </dinamic-form>
+

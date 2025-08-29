@@ -1,0 +1,164 @@
+<app-layout>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="titulo">Administrador de Productos</h3>
+        <p-button label="Nuevo Producto" (onClick)="agregarProducto()" icon="pi pi-plus" styleClass="p-button-primary"></p-button>
+    </div>  
+    <div class="card">
+        <p-table [value]="datos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onPage)="pageChange($event)"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="codigo">Código<p-sortIcon field="codigo"/></th>
+                    <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"/></th>
+                    <th pSortableColumn="unidad">Unidad<p-sortIcon field="unidad"/></th>
+                    <th pSortableColumn="costo">Costo de compra<p-sortIcon field="costo"/></th>
+                    <th pSortableColumn="precio">Precio de venta<p-sortIcon field="precio"/></th>
+                    <th pSortableColumn="fechaCreacion">Creación<p-sortIcon field="fechaCreacion"/></th>
+                    <th pSortableColumn="fechaActualizacion">Actualización<p-sortIcon field="fechaActualizacion"/></th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="codigo"
+                            matchMode="contains"
+                            placeholder="Buscar código" 
+                            ariaLabel="Buscar código" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="nombre"
+                            matchMode="contains"
+                            placeholder="Busca nombre" 
+                            ariaLabel="Buscar nombre" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="unidad"
+                            matchMode="contains"
+                            placeholder="Buscar unidad" 
+                            ariaLabel="Buscar unidad" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="costo"
+                            matchMode="contains"
+                            placeholder="Buscar costo" 
+                            ariaLabel="Buscar costo" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="precio"
+                            matchMode="contains"
+                            placeholder="Buscar precio" 
+                            ariaLabel="Buscar precio" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fechaCreacion"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fechaActualizacion"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato>
+                <tr>
+                    <td>{{ dato?.codigo }}</td>
+                    <td>{{ dato?.nombre }}</td>
+                    <td>{{ dato?.unidad }}</td>
+                    <td>{{ '$' + (dato?.costo | number:'1.2-2') }}</td>
+                    <td>{{ '$' + (dato?.precio | number:'1.2-2') }}</td>
+                    <td>{{ dato?.fechaCreacion }}</td>
+                    <td>{{ dato?.fechaActualizacion }}</td>
+
+                    <td>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </a>
+                        <!-- Acciones para ver y editar -->
+                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-eye" 
+                                    (click)="ver(dato)"
+                                    label="Ver"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-pencil" 
+                                    (click)="editar(dato)"
+                                    label="Editar"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                  pButton
+                                  pRipple
+                                  type="button"
+                                  icon="pi pi-trash"
+                                  (click)="eliminar(dato)"
+                                  label="Eliminar"
+                                  class="p-button-rounded p-button-text dropdown-item"
+                                ></button>
+                              </li>
+                        </ul>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Datos no encontrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mt-3">
+        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
+    </div>
+</app-layout>

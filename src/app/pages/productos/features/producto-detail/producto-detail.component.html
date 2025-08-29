@@ -1,0 +1,54 @@
+    <dinamic-form [buttonText]="{cancel: '',submit :'', return: 'Regresar'}" [buttonShow]="{cancel: false,submit :false, return: true}" nombreFormulario="Datos generales" (formCancelled)="eventoCancelar()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                  <label for="codigo" class="form-label">Código:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="codigo" class="form-label">{{ form.get('codigo').value }}</label>
+                </div>
+              </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="nombre" class="form-label">{{form.get('nombre').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                    <label for="unidad" class="form-label">Tipo de unidad:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="unidad" class="form-label">{{form.get('unidad').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                    <label for="costo" class="form-label">Costo del producto:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="costo" class="form-label">{{'$' + (form.get('costo').value| number:'1.2-2')}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                    <label for="precio" class="form-label">Precio de venta:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="precio" class="form-label">{{'$' + (form.get('precio').value| number:'1.2-2')}}</label>
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-end">
+                    <label for="fechaActualizacion" class="form-label">Ultima fecha de actualización:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="fechaActualizacion" class="form-label">{{form.get('fechaActualizacion').value}}</label>
+                </div>
+            </div>
+        </form>
+    </dinamic-form>
+  
+  

@@ -1,8 +1,8 @@
 //respuesta del api generica
 export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T;
+  success: boolean;
+  message: string;
+  data: T;
 }
 
 /**
@@ -10,9 +10,9 @@ export interface ApiResponse<T> {
  * para la paginación.
  */
 export interface ApiResponseWithPagination<T> {
-    success: boolean;
-    message: string;
-    data: DataContent<T>;
+  success: boolean;
+  message: string;
+  data: DataContent<T>;
 }
 
 /**
@@ -20,100 +20,145 @@ export interface ApiResponseWithPagination<T> {
  */
 
 export interface DataArchivo {
-    archivo : Archivo;
+  archivo: Archivo;
 }
 export interface Archivo {
-    base64Content: string;
-    mimeType:      string;
+  base64Content: string;
+  mimeType: string;
 }
 
 export interface DataContent<T> {
-    content:          T[];
-    pageable:         Pageable;
-    last:             boolean;
-    totalPages:       number;
-    totalElements:    number;
-    size:             number;
-    number:           number;
-    sort:             Sort;
-    first:            boolean;
-    numberOfElements: number;
-    empty:            boolean;
+  content: T[];
+  pageable: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }
 
 export interface Pageable {
-    pageNumber: number;
-    pageSize:   number;
-    sort:       Sort;
-    offset:     number;
-    paged:      boolean;
-    unpaged:    boolean;
+  pageNumber: number;
+  pageSize: number;
+  sort: Sort;
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
 }
 
 export interface Sort {
-    empty:    boolean;
-    sorted:   boolean;
-    unsorted: boolean;
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
 }
 
 export interface Etiqueta {
-    etiqueta : string;
-    valor : string;
+  etiqueta: string;
+  valor: string;
 }
 
 export interface DetalleBoton {
-    class : string;
-    nombre : string;
+  class: string;
+  nombre: string;
 }
 
 export interface UsuarioData {
-    usuario: Usuario;
-    menus:   MenuElement[];
-    token:   string;
+  usuario: Usuario;
+  menus: MenuElement[];
+  token: string;
 }
 
 export interface MenuElement {
-    subMenus: SubMenuClass[];
-    menu:     SubMenuClass;
+  subMenus: SubMenuClass[];
+  menu: SubMenuClass;
 }
 
 export interface SubMenuClass {
-    id:     number;
-    opcion: Opcion;
-    depens: number;
-    orden:  number;
-    activo: boolean;
+  id: number;
+  opcion: Opcion;
+  depens: number;
+  orden: number;
+  activo: boolean;
 }
 
 export interface Opcion {
-    id:          number;
-    descripcion: string;
-    opcion:      string;
-    url:         string;
-    icono:       string;
-    nivel:       number;
-    activo:      boolean;
+  id: number;
+  descripcion: string;
+  opcion: string;
+  url: string;
+  icono: string;
+  nivel: number;
+  activo: boolean;
 }
 
 export interface Usuario {
-    id?:             number;
-    nombre:          string;
-    usuario:         string;
-    sucursal:        Sucursal;
-    rol:             Rol;
-    activo:          boolean;
+  id?: number;
+  nombre: string;
+  usuario: string;
+  sucursal: Sucursal;
+  rol: Rol;
+  activo: boolean;
 }
 
 export interface Rol {
-    id:     number;
-    rol:    string;
-    activo: boolean;
+  id: number;
+  rol: string;
+  activo: boolean;
 }
 
-export interface Sucursal{
-     id:     number;
-     nombre: string;
-    horario: string;
-    telefono: string;
-    direccion: string;
+export interface Sucursal {
+  id: number;
+  nombre: string;
+  horario: string;
+  telefono: string;
+  direccion: string;
+}
+
+export interface Producto {
+  id: number;
+  nombre: string;
+  codigo: string;
+  unidad: string;
+  costo: number;
+  precio: number;
+  estado: boolean;
+  fechaCreacion: Date;
+  fechaActualziacion: Date;
+}
+
+export interface Cliente {
+  id: number;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  nombreComercial: string;
+  rfc: number;
+  sociedad: string;
+  telefono: string;
+  regimenFiscal: string;
+  direccion: string;
+  codigoPostal: number;
+  tipoPersona: string;
+  estado: boolean;
+  fechaCreacion: Date;
+  fechaActualziacion: Date;
+}
+
+export interface TipoCamioneta{
+  id: number;
+  nombre: string;
+  capacidad: number;
+}
+
+export interface Unidad{
+  id: number;
+  nombre: string;
+  placas: string;
+  encargado: string;
+  estado: boolean;
+  tipoCamioneta: TipoCamioneta;
 }

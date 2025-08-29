@@ -85,8 +85,6 @@ export class UserEditComponent {
           sucursal_id: response.data.sucursal.id,
         };
 
-        const rolId = response.data.rol.id;
-        const sucursalId = response.data.sucursal.id;
         datos = {
           ...datos,
         };

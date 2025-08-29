@@ -1,0 +1,163 @@
+<app-layout>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="titulo">Administrador de Clientes</h3>
+        <p-button label="Nuevo cliente" (onClick)="agregar()" icon="pi pi-plus" styleClass="p-button-primary"></p-button>
+    </div>  
+    <div class="card">
+        <p-table [value]="datos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onPage)="pageChange($event)"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"/></th>
+                    <th pSortableColumn="apellidoPaterno">Apellido Paterno<p-sortIcon field="apellidoPaterno"/></th>
+                    <th pSortableColumn="apellidoMaterno">Apellido materno<p-sortIcon field="apellidoMaterno"/></th>
+                    <th pSortableColumn="nombreComercial">Nombre comercial<p-sortIcon field="apellidoMaterno"/></th>
+                    <th pSortableColumn="rfc">RFC<p-sortIcon field="rfc"/></th>
+                    <th pSortableColumn="telefono">Teléfono<p-sortIcon field="telefono"/></th>
+                    <th pSortableColumn="fechaActualizacion">Fecha de actualización<p-sortIcon field="fechaActualizacion"/></th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="nombre"
+                            matchMode="contains"
+                            placeholder="Busca nombre" 
+                            ariaLabel="Buscar nombre" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="apellidoPaterno"
+                            matchMode="contains"
+                            placeholder="Buscar apellido paterno" 
+                            ariaLabel="Buscar apellido paterno" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="apellidoMaterno"
+                            matchMode="contains"
+                            placeholder="Buscar apellido materno" 
+                            ariaLabel="Buscar apellido materno" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="nombreComercial"
+                            matchMode="contains"
+                            placeholder="Buscar nombre comercial" 
+                            ariaLabel="Buscar nombre comercial" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="rfc"
+                            matchMode="contains"
+                            placeholder="Buscar rfc" 
+                            ariaLabel="Buscar rfc" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="telefono"
+                            matchMode="contains"
+                            placeholder="Buscar telefono" 
+                            ariaLabel="Buscar telefono" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fechaActualizacion"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato>
+                <tr>
+                    <td>{{ dato?.nombre }}</td>
+                    <td>{{ dato?.apellidoPaterno }}</td>
+                    <td>{{ dato?.apellidoMaterno }}</td>
+                    <td>{{ dato?.nombreComercial }}</td>
+                    <td>{{ dato?.rfc }}</td>
+                    <td>{{ dato?.telefono }}</td>
+                    <td>{{ dato?.fechaActualizacion }}</td>
+                    <td>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </a>
+                        <!-- Acciones para ver y editar -->
+                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-eye" 
+                                    (click)="ver(dato)"
+                                    label="Ver"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-pencil" 
+                                    (click)="editar(dato)"
+                                    label="Editar"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                  pButton
+                                  pRipple
+                                  type="button"
+                                  icon="pi pi-trash"
+                                  (click)="eliminar(dato)"
+                                  label="Eliminar"
+                                  class="p-button-rounded p-button-text dropdown-item"
+                                ></button>
+                              </li>
+                        </ul>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Datos no encontrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mt-3">
+        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
+    </div>
+</app-layout>

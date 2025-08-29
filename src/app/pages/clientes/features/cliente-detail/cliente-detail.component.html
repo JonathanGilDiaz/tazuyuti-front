@@ -1,0 +1,102 @@
+    <dinamic-form [buttonText]="{cancel: '',submit :'', return: 'Regresar'}" [buttonShow]="{cancel: false,submit :false, return: true}" nombreFormulario="Datos generales" (formCancelled)="eventoCancelar()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="nombre" class="form-label">{{form.get('nombre').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="apellidoPaterno" class="form-label">Apellido Paterno:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="apellidoPaterno" class="form-label">{{form.get('apellidoPaterno').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="apellidoMaterno" class="form-label">Apellido Materno:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="apellidoMaterno" class="form-label">{{form.get('apellidoMaterno').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="nombreComercial" class="form-label">Nombre comercial:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="nombreComercial" class="form-label">{{form.get('nombreComercial').value}}</label>
+                </div>
+            </div>
+                <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="rfc" class="form-label">RFC:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="rfc" class="form-label">{{form.get('rfc').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="sociedad" class="form-label">Tipo de sociedad:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="sociedad" class="form-label">{{form.get('sociedad').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="telefono " class="form-label">Teléfono :</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="telefono" class="form-label">{{form.get('telefono').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="regimenFiscal" class="form-label">Régimen fiscal:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="regimenFiscal" class="form-label">{{form.get('regimenFiscal').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="direccion" class="form-label">Dirección:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="direccion" class="form-label">{{form.get('direccion').value}}</label>
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="codigoPostal" class="form-label">Código postal:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="codigoPostal" class="form-label">{{form.get('codigoPostal').value}}</label>
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="tipoPersona" class="form-label">Tipo de persona:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="tipoPersona" class="form-label">{{form.get('tipoPersona').value}}</label>
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-6 text-center">
+                    <label for="fechaActualizacion" class="form-label">Ultima fecha de actualización:</label>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="fechaActualizacion" class="form-label">{{form.get('fechaActualizacion').value}}</label>
+                </div>
+            </div>
+        </form>
+    </dinamic-form>
+  
+  

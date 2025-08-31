@@ -1,0 +1,175 @@
+  <fieldset class="mb-4">
+    <legend>Datos Generales</legend>
+    <div class="row g-3 mt-2 align-items-center">
+      <!-- Responsable -->
+      <div class="col-12 col-md-4">
+        <label for="responsable" class="form-label">Responsable:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="responsable"
+          disabled
+          [value]="form.get('usuario')?.value?.nombre"
+          aria-describedby="responsable"
+        />
+      </div>
+
+      <!-- Fecha -->
+      <div class="col-12 col-md-4">
+        <label for="fechaCreacion" class="form-label">Fecha de Registro:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fechaCreacion"
+          disabled
+          [value]="form.get('fechaCreacion')?.value"
+          aria-describedby="fechaCreacion"
+        />
+      </div>
+
+      <div class="col-12 col-md-4 text-center">
+        <label for="folio" class="form-label">Folio:</label>
+        <p class="fs-3 text-danger mb-1">{{ form.get("folio")?.value }}</p>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="imprimirTicket()"
+        >
+          <i class="pi pi-print"></i> Imprimir Ticket
+        </button>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend>Productos Solicitados</legend>
+    <div class="card">
+      <p-table
+        [value]="detalleVentas"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cantidad</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Unidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato.cantidad }}</td>
+            <td>{{ dato.producto?.codigo }}</td>
+            <td>{{ dato.producto?.nombre }}</td>
+            <td>{{ dato.producto?.unidad }}</td>
+            <td>{{ "$" + (dato?.precio | number : "1.2-2") }}</td>
+            <td>{{ "$" + (dato?.subtotal | number : "1.2-2") }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No coincidencia.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3"></div>
+      <div class="row g-3 mt-2 align-items-center justify-content-end">
+        <!-- Forma de Pago -->
+        <div class="col-12 col-md-5">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-auto col-lg-5 text-center">
+              <label for="formaPago" class="form-label">Forma de Pago:</label>
+            </div>
+            <div class="col-12 col-lg-7">
+              <input
+                type="text"
+                class="form-control"
+                id="formaPago"
+                disabled
+                [value]="form.get('formaPago')?.value"
+                aria-describedby="formaPago"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="col-12 col-md-3">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-auto col-lg-5 text-center">
+              <label for="total" class="form-label">Total:</label>
+            </div>
+            <div class="col-12 col-lg-7">
+              <input
+                type="text"
+                class="form-control"
+                id="total"
+                disabled
+                [value]="'$' + (form.get('total')?.value | number : '1.2-2')"
+                aria-describedby="total"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="row g-3 mt-2 align-items-center justify-content-end"
+        *ngIf="form.get('formaPago')?.value?.includes('Efectivo')"
+      >
+        <!-- Pago -->
+        <div class="col-12 col-md-3">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-auto col-lg-5 text-center">
+              <label for="pago" class="form-label">Pago:</label>
+            </div>
+            <div class="col-12 col-lg-7">
+              <input
+                type="text"
+                class="form-control"
+                id="pago"
+                disabled
+                [value]="'$' + (form.get('pago')?.value | number : '1.2-2')"
+                aria-describedby="pago"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <div
+        class="row g-3 mt-2 align-items-center justify-content-end"
+        *ngIf="form.get('formaPago')?.value?.includes('Efectivo')"
+      >      
+        <!-- Cambio -->
+        <div class="col-12 col-md-3">
+          <div class="row align-items-center">
+            <div class="col-12 col-md-auto col-lg-5 text-center">
+              <label for="cambio" class="form-label">Cambio:</label>
+            </div>
+            <div class="col-12 col-lg-7">
+              <input
+                type="text"
+                class="form-control"
+                id="cambio"
+                disabled
+                [value]="'$' + (form.get('cambio')?.value | number : '1.2-2')"
+                aria-describedby="cambio"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>

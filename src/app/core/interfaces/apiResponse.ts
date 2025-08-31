@@ -162,3 +162,25 @@ export interface Unidad{
   estado: boolean;
   tipoCamioneta: TipoCamioneta;
 }
+
+export interface DetalleVenta{
+  id: number;
+  venta: Venta;
+  producto: Producto;
+  cantidad: number;
+  precio: number;
+  subTotal: number;
+}
+
+export interface Venta{
+  id: number;
+  usuario: Usuario;
+  formaPago: string;
+  total: number;
+  pago: number;
+  cambio: number;
+  fechaCreacion: Date;
+  estado: boolean;
+  folio: string;
+  detalleVentas: DetalleVenta[];
+}

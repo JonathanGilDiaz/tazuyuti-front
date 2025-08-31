@@ -72,7 +72,7 @@ export class DatatableService {
     }
     
     // Orden por defecto si no hay orden seleccionado y wihtoutOrder es false
-    return [{ nombre: "asc" }];
+    return [{ id: "desc" }];
   }
 
   /**

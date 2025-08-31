@@ -61,6 +61,6 @@ export class ProductoDetailComponent {
   }
 
   eventoCancelar() {
-    this.ref.close(); // 🔥 ahora cierra el modal
+    this.ref.close();
   }
 }

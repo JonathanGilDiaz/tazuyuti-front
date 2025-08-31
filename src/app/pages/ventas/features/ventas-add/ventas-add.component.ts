@@ -1,0 +1,273 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
+import { ModalService } from '@app/shared/ui/modal/services/modal.service';
+import { OnlyTextDirective } from '@app/shared/directives/only-text.directive';
+import { Subject, takeUntil } from 'rxjs';
+import { DropdownModule } from 'primeng/dropdown';
+import { PrimeNGModules } from '@app/primeng-config';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Producto } from '@app/core/interfaces/apiResponse';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { VentasService } from '@app/data/services/ventas.service';
+import { ProductosService } from '@app/data/services/productos.service';
+import { AuthService } from '@app/core/services/auth.service';
+@Component({
+  selector: 'app-user-add',
+  standalone: true,
+  imports: [CommonModule, PrimeNGModules, ReactiveFormsModule, DropdownModule],
+  providers: [DialogService],
+  templateUrl: './ventas-add.component.html',
+  styleUrl: './ventas-add.component.css',
+})
+export class VentasAddComponent implements OnInit {
+  form: FormGroup;
+  loading: boolean = false;
+  destroy$ = new Subject<void>();
+  fechaFormateada: string;
+  refDialog: DynamicDialogRef | undefined;
+  productos: Producto[] = []; // todos los productos (getAll)
+  sugerencias: Producto[] = []; // productos filtrados
+  detalleVentas: any[] = []; // productos agregados a la tabla
+  total: number = 0;
+  formaPago: string = '01 Efectivo'; // default
+  pago: number = 0;
+  cambio: number = 0;
+  totalRecords: number = 0;
+
+  constructor(
+    private fb: FormBuilder,
+    private ventaService: VentasService,
+    private productoService: ProductosService,
+    private modalService: ModalService,
+    private authService: AuthService,
+    public ref: DynamicDialogRef
+  ) {
+    this.iniciarFormulario();
+  }
+
+  ngOnInit(): void {
+    this.productoService.obtenerTodos().subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.productos = resp.data;
+        }
+      },
+    });
+
+    this.form.get('pago')?.valueChanges.subscribe(() => this.calcularTotal());
+    this.form
+      .get('formaPago')
+      ?.valueChanges.subscribe(() => this.calcularTotal());
+  }
+
+  trackByProd = (_: number, p: Producto) => p.id;
+
+  filtrarProductos() {
+    const texto: string = (this.form.get('textoBusqueda')?.value || '')
+      .toLowerCase()
+      .trim();
+
+    if (!texto) {
+      this.sugerencias = [];
+      return;
+    }
+
+    const productoPorCodigo = this.productos.find(
+      (p) => p.codigo?.toLowerCase() === texto
+    );
+    if (productoPorCodigo) {
+      this.agregarProducto(productoPorCodigo);
+      return;
+    }
+
+    this.sugerencias = this.productos.filter(
+      (p) =>
+        p.nombre?.toLowerCase().includes(texto) ||
+        p.codigo?.toLowerCase().includes(texto)
+    );
+  }
+
+  buscarPorCodigo() {
+    const texto: string = (this.form.get('textoBusqueda')?.value || '').trim();
+    const producto = this.productos.find(
+      (p) => p.codigo?.toLowerCase() === texto.toLowerCase()
+    );
+    if (producto) this.agregarProducto(producto);
+  }
+
+  agregarProducto(producto: Producto) {
+    const existente = this.detalleVentas.find((p) => p.id === producto.id);
+    if (existente) {
+      existente.cantidad += 1;
+      existente.subtotal = existente.cantidad * existente.precio;
+    } else {
+      this.detalleVentas = [
+        ...this.detalleVentas,
+        {
+          id: producto.id,
+          codigo: producto.codigo,
+          nombre: producto.nombre,
+          unidad: producto.unidad,
+          precio: producto.precio,
+          cantidad: 1,
+          subtotal: producto.precio,
+        },
+      ];
+    }
+
+    this.calcularTotal();
+    this.form.get('textoBusqueda')?.setValue('');
+    this.sugerencias = [];
+  }
+
+  editar(item: any) {
+    const cantidad = prompt('Cantidad:', String(item.cantidad));
+    const n = Number(cantidad);
+    if (!isNaN(n) && n > 0) {
+      item.cantidad = n;
+      item.subtotal = n * item.precio;
+      this.calcularTotal();
+    }
+  }
+
+  eliminar(item: any) {
+    this.detalleVentas = this.detalleVentas.filter((p) => p.id !== item.id);
+    this.calcularTotal();
+  }
+
+  calcularTotal() {
+    this.total = this.detalleVentas.reduce((acc, p) => acc + p.subtotal, 0);
+
+    const formaPago = this.form.get('formaPago')?.value;
+    const pago = Number(this.form.get('pago')?.value || 0);
+
+    if (formaPago === '01 Efectivo') {
+      this.cambio = pago >= this.total ? pago - this.total : 0;
+    } else {
+      this.cambio = 0;
+      this.form.get('pago')?.setValue(0, { emitEvent: false });
+    }
+  }
+
+  cargarDatos(event: TableLazyLoadEvent) {}
+
+  iniciarFormulario(): void {
+    this.form = this.fb.group({
+      total: [0, Validators.required],
+      textoBusqueda: [''],
+      formaPago: ['01 Efectivo'],
+      pago: [0],
+    });
+  }
+
+  eventoCancelar() {
+    this.modalService
+      .openAlertModal(
+        'advertencia',
+        'Atención',
+        '¿Está seguro de cancelar la acción?',
+        true
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.resultado) {
+            this.ref.close(false);
+          }
+        },
+      });
+  }
+
+  onSubmit() {
+    if (this.detalleVentas.length === 0 || this.total <= 0) {
+      this.modalService
+        .openAlertModal(
+          'error',
+          'Error',
+          'Debe agregar al menos un producto y el total debe ser mayor a 0.'
+        )
+        .subscribe();
+      return;
+    }
+
+    const formaPago = this.form.get('formaPago')?.value;
+    const pago = Number(this.form.get('pago')?.value || 0);
+
+    if (formaPago === '01 Efectivo' && pago < this.total) {
+      this.modalService
+        .openAlertModal(
+          'error',
+          'Error',
+          'El pago debe ser igual o mayor al total.'
+        )
+        .subscribe();
+      return;
+    }
+
+    const detalleAdaptado = this.detalleVentas.map((prod) => ({
+      producto: { id: prod.id },
+      cantidad: prod.cantidad,
+      precio: prod.precio,
+      subtotal: prod.subtotal,
+    }));
+
+    const venta = {
+      usuario: { id: this.authService.getUsuario()?.id },
+      formaPago: formaPago,
+      total: this.total,
+      pago: formaPago === '01 Efectivo' ? pago : this.total,
+      cambio: formaPago === '01 Efectivo' ? this.cambio : 0,
+      detalleVentas: detalleAdaptado,
+    };
+
+    this.modalService
+      .openAlertModal(
+        'advertencia',
+        'Atención',
+        '¿Está seguro de guardar la venta?',
+        true
+      )
+      .subscribe({
+        next: (resp) => {
+          if (resp.resultado) {
+            this.ventaService.agregarRegistro(venta).subscribe({
+              next: (resp) => {
+                if (resp.success) {
+                  this.modalService
+                    .openAlertModal('exito', 'Éxito', resp.message)
+                    .subscribe(() => {
+                      // 👇 devolvemos el idVenta al cerrar
+                      this.ref.close({ idVenta: resp.data.id });
+                    });
+                } else {
+                  this.modalService
+                    .openAlertModal('error', 'Error', resp.message)
+                    .subscribe();
+                }
+              },
+            });
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.unsubscribe();
+  }
+
+  cancelar() {
+    this.ref.close(false);
+  }
+
+  cerrar(): void {
+    this.ref.close(false);
+  }
+}

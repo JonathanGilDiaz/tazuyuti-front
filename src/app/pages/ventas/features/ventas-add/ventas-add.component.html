@@ -1,0 +1,213 @@
+<div class="row">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <fieldset>
+      <legend>Busqueda</legend>
+      <br />
+      <div class="col-12 col-md-12">
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-5 col-xl-5 col-xxl-2">
+            <label for="seleccionarProducto" class="form-label"
+              >Buscar producto:</label
+            >
+          </div>
+          <div class="col-12 col-lg-7 col-xl-7 col-xxl-10">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar producto"
+              formControlName="textoBusqueda"
+              (input)="filtrarProductos()"
+              (keyup.enter)="buscarPorCodigo()"
+            />
+            <ul
+              *ngIf="sugerencias.length > 0"
+              class="list-group position-absolute w-100"
+              style="
+                max-height: 220px;
+                overflow: auto;
+                z-index: 1050;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 0.5rem;
+                margin-top: 0.25rem;
+              "
+            >
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+                style="cursor: pointer"
+                *ngFor="let prod of sugerencias; trackBy: trackByProd"
+                (click)="agregarProducto(prod)"
+                onmouseover="this.style.backgroundColor='#f8f9fa'"
+                onmouseout="this.style.backgroundColor='white'"
+              >
+                <span>
+                  <strong>{{ prod.nombre }}</strong>
+                  <small class="text-muted"> — {{ prod.codigo }}</small>
+                </span>
+                <span class="badge bg-light text-dark">
+                  {{ prod.unidad || "pz" }} •
+                  {{
+                    prod.precio | currency : "MXN" : "symbol" : "1.2-2"
+                  }}</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Lista de productos</legend>
+      <div class="card">
+        <p-table
+          [value]="detalleVentas"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 20, 50]"
+          [loading]="loading"
+          [sortField]="'id'"
+          [totalRecords]="totalRecords"
+          sortMode="multiple"
+          [globalFilterFields]="['id']"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          [lazy]="true"
+          (onLazyLoad)="cargarDatos($event)"
+          [filterDelay]="0"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Cantidad</th>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Unidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dato>
+            <tr>
+              <td>{{ dato.cantidad }}</td>
+              <td>{{ dato.codigo }}</td>
+              <td>{{ dato.nombre }}</td>
+              <td>{{ dato.unidad }}</td>
+              <td>{{ "$" + (dato?.precio | number : "1.2-2") }}</td>
+              <td>{{ "$" + (dato?.subTotal | number : "1.2-2") }}</td>
+              <td>
+                <a
+                  class="nav-link dropdown-toggle"
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="pi pi-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      icon="pi pi-pencil"
+                      (click)="editar(dato)"
+                      label="Editar"
+                      class="p-button-rounded p-button-text dropdown-item"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      icon="pi pi-trash"
+                      (click)="eliminar(dato)"
+                      label="Eliminar"
+                      class="p-button-rounded p-button-text dropdown-item"
+                    ></button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-8"></div>
+          <div class="col-12 col-md-4">
+            <div class="row align-items-center">
+              <div
+                class="col-12 col-md-auto col-lg-5 col-xl-5 col-xxl-5 text-end"
+              >
+                <label for="total" class="form-label">Total:</label>
+              </div>
+              <div class="col-12 col-lg-7 col-xl-7 col-xxl-7">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Total aproximado"
+                  [value]="'$' + (total | number : '1.2-2')"
+                  disabled
+                  id="total"
+                  aria-describedby="total"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12 col-md-6">
+            <label for="formaPago" class="form-label">Forma de pago:</label>
+            <select
+              class="form-select"
+              formControlName="formaPago"
+              (change)="calcularTotal()"
+            >
+              <option value="01 Efectivo">01 Efectivo</option>
+              <option value="03 Transferencia">03 Transferencia</option>
+              <option value="04 Tarjeta">04 Tarjeta</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          *ngIf="form.get('formaPago')?.value === '01 Efectivo'"
+          class="row mt-2"
+        >
+          <div class="col-6">
+            <label for="pago">Pago:</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="pago"
+              (input)="calcularTotal()"
+            />
+          </div>
+          <div class="col-6">
+            <label for="cambio">Cambio:</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="'$' + (cambio | number : '1.2-2')"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <div class="row justify-content-end mt-2">
+      <div class="col-12 col-md-auto me-sm-0">
+        <button
+          class="btn btn-secondary w-100"
+          type="button"
+          (click)="cerrar()"
+        >
+          <i class="pi pi-times"></i> Cancelar
+        </button>
+      </div>
+      <div class="col-12 col-md-auto mt-1 mt-md-0">
+        <button class="btn btn-primary w-100" type="submit">
+          <i class="pi pi pi-check"></i>
+          Guardar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

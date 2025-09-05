@@ -1,0 +1,204 @@
+<div class="row">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <fieldset>
+      <legend>Datos de envío</legend>
+
+      <div class="row g-3 mt-2 align-items-center">
+        <div class="col-12 col-md-2 text-end">
+          <label for="remitente" class="form-label">Remitente <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-12 col-md-4">
+          <input type="text" class="form-control" id="remitente" formControlName="remitente" placeholder="Nombre del remitente" />
+        </div>
+
+        <div class="col-12 col-md-2 text-end">
+          <label for="destinatario" class="form-label">Destinatario <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-12 col-md-4">
+          <input type="text" class="form-control" id="destinatario" formControlName="destinatario" placeholder="Nombre del destinatario" />
+        </div>
+      </div>
+
+      <div class="row g-3 mt-2 align-items-center">
+        <div class="col-12 col-md-2 text-end">
+          <label class="form-label">Base origen</label>
+        </div>
+        <div class="col-12 col-md-4">
+          <input type="text" class="form-control" [value]="baseOrigenNombre" disabled />
+        </div>
+
+        <div class="col-12 col-md-2 text-end">
+          <label for="baseDestino" class="form-label">Base destino <span class="text-danger">*</span></label>
+        </div>
+        <div class="col-12 col-md-4">
+          <select id="baseDestino" class="form-select" formControlName="baseDestinoId">
+            <option [ngValue]="null">-- Selecciona base destino --</option>
+            <option *ngFor="let s of sucursalesFiltradas; trackBy: trackBySuc" [value]="s.id">
+              {{ s.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ====================== AGREGAR PRECIOS ====================== -->
+    <fieldset class="mt-3">
+      <legend>Agregar precios</legend>
+
+      <div class="card p-3">
+        <div class="row g-3 align-items-end">
+          <div class="col-12 col-md-6">
+            <label for="precioSeleccionado" class="form-label">Precio/Concepto</label>
+            <select id="precioSeleccionado" class="form-select" formControlName="precioSeleccionadoId">
+              <option [ngValue]="null">-- Selecciona un precio --</option>
+              <option *ngFor="let p of precios; trackBy: trackByPrec" [value]="p.id">
+                {{ p.nombre }} — ${{ p.precio | number:'1.2-2' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-8 col-md-3">
+            <label for="cantidadAgregar" class="form-label">Cantidad</label>
+            <input id="cantidadAgregar" type="number" min="1" class="form-control" formControlName="cantidadAgregar" />
+          </div>
+
+          <div class="col-4 col-md-3">
+            <button type="button" class="btn btn-success w-100" (click)="agregarSeleccion()">
+              <i class="pi pi-plus"></i> Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ====================== LISTA DE PRODUCTOS ====================== -->
+    <fieldset class="mt-3">
+      <legend>Lista de productos</legend>
+      <div class="card">
+        <p-table
+          [value]="detallePaquete"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 20, 50]"
+          [loading]="loading"
+          [sortField]="'id'"
+          [totalRecords]="totalRecords"
+          sortMode="multiple"
+          [globalFilterFields]="['id']"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          [lazy]="true"
+          (onLazyLoad)="cargarDatos($event)"
+          [filterDelay]="0"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Cantidad</th>
+              <th>Nombre</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dato>
+            <tr>
+              <td>{{ dato.cantidad }}</td>
+              <td>{{ dato.nombre }}</td>
+              <td>{{ "$" + (dato?.precio | number : "1.2-2") }}</td>
+              <!-- OJO: usamos 'subtotal' (coincide con TS) -->
+              <td>{{ "$" + (dato?.subtotal | number : "1.2-2") }}</td>
+              <td>
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="pi pi-ellipsis-v"></i>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      icon="pi pi-pencil"
+                      (click)="editar(dato)"
+                      label="Editar"
+                      class="p-button-rounded p-button-text dropdown-item"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      icon="pi pi-trash"
+                      (click)="eliminar(dato)"
+                      label="Eliminar"
+                      class="p-button-rounded p-button-text dropdown-item"
+                    ></button>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-8"></div>
+          <div class="col-12 col-md-4">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-auto col-lg-5 col-xl-5 col-xxl-5 text-end">
+                <label for="total" class="form-label">Total:</label>
+              </div>
+              <div class="col-12 col-lg-7 col-xl-7 col-xxl-7">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Total aproximado"
+                  [value]="'$' + (total | number : '1.2-2')"
+                  disabled
+                  id="total"
+                  aria-describedby="total"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forma de pago -->
+        <div class="row mt-3">
+          <div class="col-12 col-md-6">
+            <label for="formaPago" class="form-label">Forma de pago:</label>
+            <select id="formaPago" class="form-select" formControlName="formaPago" (change)="calcularTotal()">
+              <option value="01 Efectivo">01 Efectivo</option>
+              <option value="03 Transferencia">03 Transferencia</option>
+              <option value="04 Tarjeta">04 Tarjeta</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pago/Cambio solo en efectivo -->
+        <div *ngIf="form.get('formaPago')?.value === '01 Efectivo'" class="row mt-2">
+          <div class="col-6">
+            <label for="pago">Pago:</label>
+            <input type="number" class="form-control" id="pago" formControlName="pago" (input)="calcularTotal()" />
+          </div>
+          <div class="col-6">
+            <label for="cambio">Cambio:</label>
+            <input type="text" id="cambio" class="form-control" [value]="'$' + (cambio | number : '1.2-2')" disabled />
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Botones -->
+    <div class="row justify-content-end mt-2">
+      <div class="col-12 col-md-auto me-sm-0">
+        <button class="btn btn-secondary w-100" type="button" (click)="cerrar()">
+          <i class="pi pi-times"></i> Cancelar
+        </button>
+      </div>
+      <div class="col-12 col-md-auto mt-1 mt-md-0">
+        <button class="btn btn-primary w-100" type="submit">
+          <i class="pi pi pi-check"></i>
+          Guardar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -78,7 +78,6 @@ export class LogInComponent implements OnInit{
         recaptchaResponse: this.formLogin.get('token').value
       };
   
-      console.log('Datos encriptados:', dataLogin);
       this.authService.login(dataLogin).pipe(takeUntil(this.destroy$)).subscribe(
         response => {
           if (response.success) {

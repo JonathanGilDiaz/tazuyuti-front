@@ -11,37 +11,30 @@ import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
-import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { UnidadesService } from '@app/data/services/unidades.service';
-import { TipoCamioneta, Usuario } from '@app/core/interfaces/apiResponse';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { PreciosEquipajeService } from '@app/data/services/preciosEquipaje.service';
 
 @Component({
   selector: 'app-user-add',
   standalone: true,
-  imports: [
-    CommonModule,
+  imports: [ CommonModule,
     DinamicFormComponent,
     ReactiveFormsModule,
-    DropdownModule,
-  ],
-  templateUrl: './unidades-add.component.html',
-  styleUrl: './unidades-add.component.css',
+    DropdownModule,],
+  templateUrl: './precio-equipaje-add.component.html',
+  styleUrl: './precio-equipaje-add.component.css',
 })
-export class UnidadesAddComponent implements OnInit {
+export class PrecioEquipajeAddComponent implements OnInit {
   form: FormGroup;
   loading: boolean = false;
   destroy$ = new Subject<void>();
-  tiposCamionetas: TipoCamioneta[] = [];
-  usuarios: Usuario[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private service: UnidadesService,
+    private productosService: PreciosEquipajeService,
     private modalService: ModalService,
-    public ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    public ref: DynamicDialogRef
   ) {
-    this.obtenerCatalogos();
     this.iniciarFormulario();
   }
   ngOnInit(): void {}
@@ -49,29 +42,11 @@ export class UnidadesAddComponent implements OnInit {
   iniciarFormulario(): void {
     this.form = this.fb.group({
       nombre: ['', [Validators.required]],
-      placas: [''],
-      usuario: ['', [Validators.required]],
-      tipoCamioneta: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      peso: ['', [Validators.required]],
+      medidas: ['', [Validators.required]],
+      precio: ['', Validators.required],
     });
-  }
-
-  obtenerCatalogos() {
-    this.loading = true;
-    this.service.catalogos().subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.tiposCamionetas = response.data.tipo;
-          this.usuarios = response.data.usuarios;
-          this.loading = false;
-        } else {
-          this.loading = false;
-          this.modalService
-            .openAlertModal('error', 'Error', response.message)
-            .subscribe();
-        }
-      },
-    });
-    this.loading = false;
   }
 
   eventoCancelar() {
@@ -121,7 +96,7 @@ export class UnidadesAddComponent implements OnInit {
                 }
               });
 
-              this.service.agregarRegistro(datos).subscribe({
+              this.productosService.agregarRegistro(datos).subscribe({
                 next: (response) => {
                   this.loading = false;
                   if (response.success) {

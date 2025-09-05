@@ -11,7 +11,6 @@
                 <div class="col-12 col-md-7">
                     <input type="text" class="form-control" placeholder="Nombre(s)"
                     formControlName="nombre"
-                    onlyText
                     [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
                     id="nombre" 
                     aria-describedby="nombre">
@@ -19,15 +18,16 @@
             </div>
             <div class="row g-3 mt-2 align-items-center">
                 <div class="col-12 col-md-5 text-center">
-                    <label for="encargado" class="form-label">Encargado<span class="text-danger">*</span></label>
+                    <label for="usuario" class="form-label">Encargado<span class="text-danger">*</span></label>
                 </div>
-                <div class="col-12 col-md-7">
-                    <input type="text" class="form-control" placeholder="Encargado"
-                    formControlName="encargado"
-                    onlyText
-                    [class.campo-invalido]="form.get('encargado').invalid && form.get('encargado').touched"
-                    id="encargado" 
-                    aria-describedby="encargado">
+               <div class="col-12 col-md-7">
+                    <select formControlName="usuario" class="form-select" id="usuario" data-placeholder="Selecciona un tipo de camioneta"
+                        [class.campo-invalido]="form.get('usuario').invalid && form.get('usuario').touched">
+                            <option value=''>Seleccione el encargado</option>
+                            @for (usuario of usuarios; track $index) {
+                                <option [value]="usuario.id">{{usuario.nombre}}</option>
+                            }
+                    </select>
                 </div>
             </div>
              <div class="row g-3 mt-2 align-items-center">
@@ -37,7 +37,6 @@
                 <div class="col-12 col-md-7">
                     <input type="text" class="form-control" placeholder="Placas"
                     formControlName="placas"
-                    onlyText
                     [class.campo-invalido]="form.get('placas').invalid && form.get('placas').touched"
                     id="placas" 
                     aria-describedby="placas">

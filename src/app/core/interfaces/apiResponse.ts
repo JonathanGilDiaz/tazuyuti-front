@@ -148,13 +148,13 @@ export interface Cliente {
   fechaActualziacion: Date;
 }
 
-export interface TipoCamioneta{
+export interface TipoCamioneta {
   id: number;
   nombre: string;
   capacidad: number;
 }
 
-export interface Unidad{
+export interface Unidad {
   id: number;
   nombre: string;
   placas: string;
@@ -163,7 +163,7 @@ export interface Unidad{
   tipoCamioneta: TipoCamioneta;
 }
 
-export interface DetalleVenta{
+export interface DetalleVenta {
   id: number;
   venta: Venta;
   producto: Producto;
@@ -172,7 +172,7 @@ export interface DetalleVenta{
   subTotal: number;
 }
 
-export interface Venta{
+export interface Venta {
   id: number;
   usuario: Usuario;
   formaPago: string;
@@ -183,4 +183,51 @@ export interface Venta{
   estado: boolean;
   folio: string;
   detalleVentas: DetalleVenta[];
+}
+
+export interface PrecioPaqueteria {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  medidas: String;
+  peso: number;
+  precio: number;
+  estado: boolean;
+}
+
+export interface PrecioEquipaje {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  medidas: String;
+  peso: number;
+  precio: number;
+  estado: boolean;
+}
+
+export interface DetallePaquete {
+  id: number;
+  paquete: Paquete;
+  cantidad: number;
+  precio: number;
+  subTotal: number;
+}
+
+export interface Paquete {
+  id: number;
+  destinatario: string;
+  remitente: string;
+  fechaCreacion: Date;
+  usuario: Usuario;
+  formaPago: string;
+  total: number;
+  estado: EstadoPaquete;
+  destino: Sucursal;
+  folio: string;
+  detallePaquete: DetallePaquete[];
+}
+
+export interface EstadoPaquete{
+  id: number;
+  nombre: string;
 }

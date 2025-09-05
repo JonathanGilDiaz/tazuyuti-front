@@ -9,12 +9,11 @@ import {
 import { Router } from '@angular/router';
 import { DinamicFormComponent } from '@app/shared/ui/dinamic-form/dinamic-form/dinamic-form.component';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
-import { Subject, switchMap, tap, } from 'rxjs';
+import { ProductosService } from '@app/data/services/productos.service';
+import { Subject, switchMap, tap } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ClienteService } from '@app/data/services/clientes.service';
-import { UnidadesService } from '@app/data/services/unidades.service';
-import { TipoCamioneta, Unidad, Usuario } from '@app/core/interfaces/apiResponse';
+import { preciosPaqueteriaService } from '@app/data/services/preciosPaqueteria.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -25,85 +24,61 @@ import { TipoCamioneta, Unidad, Usuario } from '@app/core/interfaces/apiResponse
     ReactiveFormsModule,
     DropdownModule,
   ],
-  templateUrl: './unidades-edit.component.html',
-  styleUrl: './unidades-edit.component.css',
+  templateUrl: './precio-paqueteria-edit.component.html',
+  styleUrl: './precio-paqueteria-edit.component.css',
 })
-export class UnidadesEditComponent {
+export class PrecioPaqueteriaEditComponent {
   form: FormGroup;
   loading: boolean = false;
   destroy$ = new Subject<void>();
-  tipoCamionetas:  TipoCamioneta[] = [];
-  usuarios:  Usuario[] = [];
 
 constructor(
   private fb: FormBuilder,
-  private service: UnidadesService,
+  private service: preciosPaqueteriaService,
   private modalService: ModalService,
   public config: DynamicDialogConfig,
   public ref: DynamicDialogRef
   ) {
-        this.obtenerCatalogos();
     this.iniciarFormulario();
-      if (this.config?.data?.dato) {
-        this.obtenerRegistro(this.config?.data?.dato.id);
+      if (this.config?.data?.precio) {
+    this.form.patchValue(this.config.data.precio);
   }
   }
 
   ngOnInit(): void {
   }
 
-   obtenerCatalogos(){
-    this.loading = true;
-    this.service.catalogos().subscribe({
-      next : response => {
-        if(response.success){
-          this.tipoCamionetas = response.data.tipo;
-          this.usuarios = response.data.usuarios;
-          this.loading = false;
-        }else{
-          this.loading = false;
-          this.modalService.openAlertModal('error','Error', response.message).subscribe();
-        }
-      }
-    });
-    this.loading = false;
-  }
-
   iniciarFormulario(): void {
     this.form = this.fb.group({
       id: [null],
-      nombre: ['', [Validators.required]],
-      placas: [''],
-      usuario: ['', [Validators.required]],
-      tipoCamioneta: ['', [Validators.required]],
+       nombre: ['', [Validators.required]],
+      descripcion: ['', [Validators.required]],
+      peso: ['', [Validators.required]],
+      medidas: ['', [Validators.required]],
+      precio: ['', Validators.required],
     });
   }
 
   obtenerRegistro(id: number) {
     this.loading = true;
-    this.service.catalogos().pipe(
-      tap(responseCat => {
-        this.tipoCamionetas = responseCat.data.tipo;
-        this.usuarios = responseCat.data.usuarios;
-      }), 
-      switchMap(() => this.service.obtenerRegistro(id)) 
-    ).subscribe({
-      next: response => {
+    this.service.obtenerRegistro(id).subscribe({
+      next: (response) => {
         let datos: any = {
           ...response.data,
-          tipoCamioneta: response.data.tipoCamioneta.id,
-          usuario: response.data.usuario.id,
         };
-        datos = {
-          ...datos,
-        };
-        this.form.patchValue(datos);
+        this.form.patchValue(datos);           
         this.form.updateValueAndValidity();
         this.loading = false;
       },
-      error: err => this.modalService.openAlertModal('error','Error', err).subscribe()
+      error: (err) =>
+        this.modalService.openAlertModal('error', 'Error', err).subscribe(),
     });
     this.loading = false;
+  }
+
+  convertirFecha(fecha: string): string {
+    const partes = fecha.split('/');
+    return `${partes[2]}-${partes[1]}-${partes[0]}`;
   }
 
   eventoCancelar() {
@@ -125,7 +100,6 @@ constructor(
 
 onSubmit() {
   if (this.form.valid) {
-    // Normaliza los valores vacíos a null
     Object.keys(this.form.controls).forEach((key) => {
       if (this.form.controls[key].value === '') {
         this.form.controls[key].setValue(null);

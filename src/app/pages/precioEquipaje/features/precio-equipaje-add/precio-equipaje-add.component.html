@@ -1,0 +1,70 @@
+    <dinamic-form
+        nombreFormulario="Datos Generales"
+        [buttonText]="{ cancel: 'Cancelar', submit: loading? 'Guardando' : 'Guardar', return: 'Regresar' }"
+        (formCancelled)="eventoCancelar()"
+        (formSubmitted)="onSubmit()">
+        <form [formGroup]="form">
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="nombre" class="form-label">Nombre<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Nombre(s)"
+                    formControlName="nombre"
+                    [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
+                    id="nombre" 
+                    aria-describedby="nombre">
+                </div>
+            </div>
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="descripcion" class="form-label">Descripción<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Descripción del precio"
+                    formControlName="descripcion"
+                    [class.campo-invalido]="form.get('descripcion').invalid && form.get('descripcion').touched"
+                    id="descripcion" 
+                    aria-describedby="descripcion">
+                </div>
+            </div>
+               <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="medidas" class="form-label">Medidas<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="text" class="form-control" placeholder="Medidas"
+                    formControlName="medidas"
+                    [class.campo-invalido]="form.get('medidas').invalid && form.get('medidas').touched"
+                    id="medidas" 
+                    aria-describedby="medidas">
+                </div>
+            </div>
+            <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="peso" class="form-label">Peso (KG): <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="number" class="form-control" placeholder="Peso"
+                        formControlName="peso"
+                        [class.campo-invalido]="form.get('peso').invalid && form.get('peso').touched"
+                        id="peso" aria-describedby="peso">
+                </div>
+            </div>         
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="precio" class="form-label">Precio: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                    <input type="number" class="form-control" placeholder="Precio"
+                        formControlName="precio"
+                        [class.campo-invalido]="form.get('precio').invalid && form.get('precio').touched"
+                        id="precio" aria-describedby="precio">
+                </div>
+            </div>            
+            <div class="row g-3 mt-2 align-items-center">
+                <label><span class="text-danger">* Campos requeridos</span></label>
+            </div>
+        </form>
+    </dinamic-form>
+

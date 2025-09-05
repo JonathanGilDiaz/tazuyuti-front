@@ -23,7 +23,7 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"/></th>
-                    <th pSortableColumn="encargado">Encargado<p-sortIcon field="encargado"/></th>
+                    <th pSortableColumn="usuario.nombre">Encargado<p-sortIcon field="usuario.nombre"/></th>
                     <th pSortableColumn="placas">Placas<p-sortIcon field="placas"/></th>
                     <th pSortableColumn="tipoCamioneta.nombre">Tipo<p-sortIcon field="tipoCamioneta.nombre"/></th>
                     <th pSortableColumn="tipoCamioneta.capacidad">Capacidad<p-sortIcon field="tipoCamioneta.capacidad"/></th>
@@ -43,7 +43,7 @@
                         <p-columnFilter
                         [showMenu]="false" 
                             type="text"
-                            field="encargado"
+                            field="usuario.nombre"
                             matchMode="contains"
                             placeholder="Buscar encargado" 
                             ariaLabel="Buscar encargado" />
@@ -81,7 +81,7 @@
             <ng-template pTemplate="body" let-dato>
                 <tr>
                     <td>{{ dato?.nombre }}</td>
-                    <td>{{ dato?.encargado }}</td>
+                    <td>{{ dato?.usuario?.nombre }}</td>
                     <td>{{ dato?.placas }}</td>
                     <td>{{ dato?.tipoCamioneta?.nombre }}</td>
                     <td>{{ dato?.tipoCamioneta?.capacidad }}</td>

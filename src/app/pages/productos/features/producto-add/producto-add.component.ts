@@ -38,9 +38,7 @@ export class ProductoAddComponent implements OnInit {
     private fb: FormBuilder,
     private productosService: ProductosService,
     private modalService: ModalService,
-    private router: Router,
     public ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
   ) {
     this.iniciarFormulario();
   }

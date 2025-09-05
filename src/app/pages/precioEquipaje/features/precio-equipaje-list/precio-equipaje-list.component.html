@@ -1,0 +1,156 @@
+<app-layout>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="titulo">Administrador de precios de equipaje</h3>
+    <p-button
+      label="Nuevo Producto"
+      (onClick)="agregarProducto()"
+      icon="pi pi-plus"
+      styleClass="p-button-primary"
+    ></p-button>
+  </div>
+  <div class="card">
+    <p-table
+      [value]="datos"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [paginator]="true"
+      [showCurrentPageReport]="true"
+      [sortField]="'id'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['id']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onPage)="pageChange($event)"
+      (onLazyLoad)="cargarDatos($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre" /></th>
+          <th pSortableColumn="descripcion">
+            Descripción<p-sortIcon field="descripcion" />
+          </th>
+          <th pSortableColumn="medidas">
+            Medias<p-sortIcon field="medidas" />
+          </th>
+          <th pSortableColumn="peso">Peso<p-sortIcon field="peso" /></th>
+          <th pSortableColumn="precio">Precio<p-sortIcon field="precio" /></th>
+          <th>Acciones</th>
+        </tr>
+        <tr>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="nombre"
+              matchMode="contains"
+              placeholder="Busca nombre"
+              ariaLabel="Buscar nombre"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="descripcion"
+              matchMode="contains"
+              placeholder="Buscar descripción"
+              ariaLabel="Buscar descripción"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="costo"
+              matchMode="contains"
+              placeholder="Buscar medidas"
+              ariaLabel="Buscar medidas"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="precio"
+              matchMode="contains"
+              placeholder="Buscar peso"
+              ariaLabel="Buscar peso"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="date"
+              field="fechaCreacion"
+              matchMode="contains"
+              placeholder="Buscar precio"
+              ariaLabel="Buscar precio"
+            />
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato>
+        <tr>
+          <td>{{ dato?.nombre }}</td>
+          <td>{{ dato?.descripcion }}</td>
+          <td>{{ dato?.medidas }}</td>
+          <td>{{ (dato?.peso | number : "1.2-2") }}</td>
+          <td>{{ "$" + (dato?.precio | number : "1.2-2") }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-pencil"
+                  (click)="editar(dato)"
+                  label="Editar"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-trash"
+                  (click)="eliminar(dato)"
+                  label="Eliminar"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Datos no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="d-flex justify-content-end align-items-center mt-3">
+    <p-button
+      label="Regresar"
+      [routerLink]="urlRegresar"
+      icon="pi pi-arrow-left"
+      styleClass="p-button-primary"
+    ></p-button>
+  </div>
+</app-layout>

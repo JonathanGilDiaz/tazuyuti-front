@@ -1,0 +1,153 @@
+<app-layout>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="titulo">Administrador de horarios de salidas</h3>
+        <p-button label="Nuevo horario" (onClick)="agregar()" icon="pi pi-plus" styleClass="p-button-primary"></p-button>
+    </div>  
+    <div class="card">
+        <p-table [value]="datos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onPage)="pageChange($event)"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="viaje">Ruta<p-sortIcon field="viaje"/></th>
+                    <th pSortableColumn="hora">Salida<p-sortIcon field="hora"/></th>
+                    <th pSortableColumn="unidad.nombre">Unidad<p-sortIcon field="unidad.nombre"/></th>
+                    <th pSortableColumn="unidad.usuario.nombre">Chofer<p-sortIcon field="unidad.usuario.nombre"/></th>
+                    <th pSortableColumn="unidad.tipoCamioneta.nombre">Tipo<p-sortIcon field="unidad.tipoCamioneta.nombre"/></th>
+                    <th pSortableColumn="unidad.tipoCamioneta.capacidad">Capacidad<p-sortIcon field="unidad.tipoCamioneta.capacidad"/></th>
+                    <th pSortableColumn="repeticion">Repetición<p-sortIcon field="repeticion"/></th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="viaje"
+                            matchMode="contains"
+                            placeholder="Buscar viaje" 
+                            ariaLabel="Buscar viaje" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="hora"
+                            matchMode="contains"
+                            placeholder="Busca hora" 
+                            ariaLabel="Buscar hora" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="unidad.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar unidad" 
+                            ariaLabel="Buscar unidad" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="unidad.usuario.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar chofer" 
+                            ariaLabel="Buscar chofer" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="unidad.tipoCamioneta.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar tipo" 
+                            ariaLabel="Buscar tipo" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="unidad.tipoCamioneta.capacidad"
+                            matchMode="contains"
+                            placeholder="Buscar capacidad" 
+                            ariaLabel="Buscar capacidad" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="repeticion"
+                            matchMode="contains"
+                            placeholder="Buscar repeticion" 
+                            ariaLabel="Buscar repeticion" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato>
+                <tr>
+                    <td>{{ dato?.viaje }}</td>
+                    <td>{{ dato?.hora }}</td>
+                    <td>{{ dato?.unidad?.nombre }}</td>
+                    <td>{{ dato?.unidad?.usuario?.nombre }}</td>
+                    <td>{{ dato?.unidad?.tipoCamioneta?.nombre }}</td>
+                    <td>{{ dato?.unidad?.tipoCamioneta?.capacidad }}</td>
+                    <td>{{ dato?.repeticion }}</td>
+
+                    <td>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </a>
+                        <!-- Acciones para ver y editar -->
+                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-pencil" 
+                                    (click)="editar(dato)"
+                                    label="Editar"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                  pButton
+                                  pRipple
+                                  type="button"
+                                  icon="pi pi-trash"
+                                  (click)="eliminar(dato)"
+                                  label="Eliminar"
+                                  class="p-button-rounded p-button-text dropdown-item"
+                                ></button>
+                              </li>
+                        </ul>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Datos no encontrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mt-3">
+        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
+    </div>
+</app-layout>

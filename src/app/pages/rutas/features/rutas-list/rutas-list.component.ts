@@ -13,10 +13,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '@app/core/services/auth.service';
-import { Paquete } from '@app/core/interfaces/apiResponse';
-import { PaquetesService } from '@app/data/services/paquetes.service';
-import { PaquetesDetailComponent } from '../paquetes-detail/paquetes-detail.component';
-import { PaquetesAddComponent } from '../paquetes-add/paquetes-add.component';
+import { Paquete, Ruta } from '@app/core/interfaces/apiResponse';
+import { RutasService } from '@app/data/services/rutas.service';
+import { RutasAddComponent } from '../rutas-add/rutas-add.component';
+import { RutasEditComponent } from '../rutas-edit/rutas-edit.component';
 
 @Component({
   selector: 'app-user-list',
@@ -29,11 +29,11 @@ import { PaquetesAddComponent } from '../paquetes-add/paquetes-add.component';
     RouterLink,
     DropdownModule,
   ],
-  templateUrl: './paquetes-list.component.html',
-  styleUrl: './paquetes-list.component.css',
+  templateUrl: './rutas-list.component.html',
+  styleUrl: './rutas-list.component.css',
 })
-export class PaquetesListComponent {
-  datos: Paquete[] = [];
+export class RutasListComponent {
+  datos: Ruta[] = [];
   totalRecords: number = 0;
   loading: boolean = true;
   urlRegresar: string = MODULES_URLS.PUBLIC.DEFAULT;
@@ -46,7 +46,7 @@ export class PaquetesListComponent {
   first = 10;
   destroy$ = new Subject<void>();
   constructor(
-    private service: PaquetesService,
+    private service: RutasService,
     private modalService: ModalService,
     private datatableService: DatatableService,
     private dialogService: DialogService,
@@ -57,7 +57,7 @@ export class PaquetesListComponent {
 
   obtenerDatos(dataTablesParams: DataTableParams) {
     this.service
-      .obtenerRegistros(this.authService.getUsuario()?.id, dataTablesParams)
+      .obtenerRegistros(dataTablesParams)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -101,17 +101,6 @@ export class PaquetesListComponent {
     this.obtenerDatos(this.dataTablesParams);
   }
 
-  ver(dato: Paquete) {
-    this.mostrarModalAdicional(PaquetesDetailComponent, 'Detalle del envio', {
-      id: dato.id,
-    });
-    this.refDialog.onClose
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((resultado: any) => {
-        this.obtenerDatos(this.dataTablesParams);
-      });
-  }
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
@@ -131,11 +120,67 @@ export class PaquetesListComponent {
   }
 
   agregar() {
-    this.mostrarModalAdicional(PaquetesAddComponent, 'Registrar nuevo envio');
+    this.mostrarModalAdicional(RutasAddComponent, 'Registrar nuevo horario');
     this.refDialog.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe((resultado: any) => {
         this.obtenerDatos(this.dataTablesParams);
+      });
+  }
+
+  editar(item: Ruta) {
+    this.mostrarModalAdicional(RutasEditComponent, 'Editar Ruta', { item });
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: any) => {
+        this.obtenerDatos(this.dataTablesParams);
+      });
+  }
+
+  eliminar(producto: Ruta) {
+    this.modalService
+      .openAlertModal(
+        'advertencia',
+        'Atención',
+        '¿Está seguro de eliminar el registro?',
+        true
+      )
+      .subscribe({
+        next: (response) => {
+          this.loading = true;
+          if (response.resultado) {
+            this.service.eliminarRegistro(producto.id).subscribe({
+              next: (response) => {
+                if (response.success) {
+                  this.loading = false;
+                  this.modalService
+                    .openAlertModal('exito', 'Éxito', response.message)
+                    .subscribe({
+                      complete: () => {
+                        this.datos = [];
+                        this.obtenerDatos(this.dataTablesParams);
+                      },
+                    });
+                } else {
+                  this.loading = false;
+                  if (!response.data?.description?.includes('expirado')) {
+                    this.modalService
+                      .openAlertModal('error', 'Error', response.message)
+                      .subscribe();
+                  }
+                }
+              },
+              error: (err: GlobalError) => {
+                this.loading = false;
+                this.modalService
+                  .openAlertModal('error', 'Error', err.error.message)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              },
+            });
+          }
+          this.loading = false;
+        },
       });
   }
 }

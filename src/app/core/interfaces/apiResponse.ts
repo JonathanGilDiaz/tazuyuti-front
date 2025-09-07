@@ -1,3 +1,5 @@
+import { Time } from "@angular/common";
+
 //respuesta del api generica
 export interface ApiResponse<T> {
   success: boolean;
@@ -230,4 +232,13 @@ export interface Paquete {
 export interface EstadoPaquete{
   id: number;
   nombre: string;
+}
+
+export interface Ruta{
+  id: number;
+  unidad: Unidad;
+  viaje: String;
+  repeticion: string;
+  hora: Time;
+  estado: boolean;
 }

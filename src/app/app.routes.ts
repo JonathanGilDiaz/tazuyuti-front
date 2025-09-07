@@ -55,6 +55,10 @@ export const routes: Routes = [
         path: 'unidades',
         loadChildren: () => import('@app/pages/unidades/unidades.routes').then(m => m.UnidadRoutes),
       },
+        {
+        path: 'horarios',
+        loadChildren: () => import('@app/pages/rutas/rutas.routes').then(m => m.RutasRoutes),
+      },
       {
         path: '**',
         redirectTo: MODULES_URLS.PUBLIC.DEFAULT

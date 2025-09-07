@@ -1,1 +1,432 @@
-<p>paquetes-detail works!</p>
+<div class="row">
+  <form [formGroup]="form">
+    <!-- ====================== DATOS GENERALES ====================== -->
+    <div class="row mb-2">
+      <div class="col-12 d-flex gap-2 justify-content-end">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="imprimirTicketCliente()"
+        >
+          <i class="pi pi-print me-1"></i> Ticket cliente
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="imprimirTicketInterno()"
+        >
+          <i class="pi pi-file-pdf me-1"></i> Ticket interno
+        </button>
+      </div>
+    </div>
+    <fieldset>
+      <legend>Datos Generales</legend>
+
+      <div class="row g-3 mt-2 align-items-center">
+        <div class="col-12 col-md-4">
+          <label class="form-label">Remitente:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('remitente')?.value"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <label class="form-label">Destinatario:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('destinatario')?.value"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-4 text-center">
+          <label class="form-label">Folio:</label>
+          <p class="fs-4 text-danger mb-1">{{ form.get("folio")?.value }}</p>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-2 align-items-center">
+        <div class="col-12 col-md-4">
+          <label class="form-label">Fecha de Registro:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('fechaCreacion')?.value"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <label class="form-label">Base destino:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('destino')?.value?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <label class="form-label">Estado:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('estado')?.value?.nombre"
+            disabled
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ====================== LISTA DE PRODUCTOS ====================== -->
+    <fieldset class="mt-3">
+      <legend>Detalle de productos</legend>
+      <div class="card">
+        <p-table
+          [value]="detallePaquete"
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 20, 50]"
+          [loading]="loading"
+          [totalRecords]="totalRecords"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Cantidad</th>
+              <th>Concepto</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dato>
+            <tr>
+              <td>{{ dato.cantidad }}</td>
+              <td>{{ dato.precioPaquete?.nombre }}</td>
+              <td>{{ "$" + (dato.precio | number : "1.2-2") }}</td>
+              <td>{{ "$" + (dato.subtotal | number : "1.2-2") }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4">No hay productos registrados.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </fieldset>
+
+    <!-- ====================== TOTALES ====================== -->
+    <fieldset class="mt-3">
+      <legend>Totales</legend>
+      <div class="row g-3 align-items-center">
+        <div class="col-12 col-md-4">
+          <label class="form-label">Forma de Pago:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('formaPago')?.value"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-4">
+          <label class="form-label">Total:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="'$' + (form.get('total')?.value | number : '1.2-2')"
+            disabled
+          />
+        </div>
+
+        <div
+          class="col-12 col-md-4"
+          *ngIf="form.get('formaPago')?.value?.includes('Efectivo')"
+        >
+          <label class="form-label">Pago:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="'$' + (form.get('pago')?.value | number : '1.2-2')"
+            disabled
+          />
+        </div>
+
+        <div
+          class="col-12 col-md-4"
+          *ngIf="form.get('formaPago')?.value?.includes('Efectivo')"
+        >
+          <label class="form-label">Cambio:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="'$' + (form.get('cambio')?.value | number : '1.2-2')"
+            disabled
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ====================== ACCIONES SEGÚN ESTADO ====================== -->
+    <div class="row mt-4 justify-content-end">
+      <div class="col-12 d-flex gap-2 justify-content-end">
+        <!-- Botón Cerrar SIEMPRE -->
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="eventoCancelar()"
+        >
+          <i class="pi pi-times"></i> Cerrar
+        </button>
+
+        <!-- Botón Cancelar (excepto estado=4 y estado=5) -->
+        <button
+          *ngIf="
+            form.get('estado')?.value?.id !== 4 &&
+            form.get('estado')?.value?.id !== 5
+          "
+          type="button"
+          class="btn btn-danger"
+          (click)="mostrarFormularioCancelacion = true"
+        >
+          <i class="pi pi-ban"></i> Cancelar
+        </button>
+
+        <!-- Botón Enviar (estado=1) -->
+        <button
+          *ngIf="form.get('estado')?.value?.id === 1"
+          type="button"
+          class="btn btn-primary"
+          (click)="mostrarFormularioEnvio = true"
+        >
+          <i class="pi pi-send"></i> Enviar Paquete
+        </button>
+
+        <!-- Botón Recibir (estado=2) -->
+        <button
+          *ngIf="form.get('estado')?.value?.id === 2"
+          type="button"
+          class="btn btn-info"
+          (click)="mostrarFormularioRecibir = true"
+        >
+          <i class="pi pi-download"></i> Recibir Paquete
+        </button>
+
+        <!-- Botón Entregar (estado=3) -->
+        <button
+          *ngIf="form.get('estado')?.value?.id === 3"
+          type="button"
+          class="btn btn-success"
+          (click)="mostrarFormularioEntregar = true"
+        >
+          <i class="pi pi-check-circle"></i> Entregar Paquete
+        </button>
+      </div>
+    </div>
+
+    <!-- ====================== FORMULARIO DE ENVÍO ====================== -->
+    <fieldset *ngIf="mostrarFormularioEnvio" class="mt-3">
+      <legend>Enviar Paquete</legend>
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <label for="ruta" class="form-label">Ruta de hoy:</label>
+          <select
+            formControlName="ruta"
+            class="form-select"
+            id="ruta"
+            data-placeholder="Ruta a enviar"
+            [class.campo-invalido]="
+              form.get('ruta').invalid && form.get('ruta').touched
+            "
+          >
+            <option value="">Seleccione viaje</option>
+            @for (ruta of rutasDisponibles; track $index) {
+            <option [ngValue]="ruta">
+              {{ ruta.salida.nombre }} → {{ ruta.llegada.nombre }} ({{
+                ruta.salidaHora
+              }})
+            </option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="row justify-content-end mt-3">
+        <div class="col-auto">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="enviarPaquete()"
+          >
+            <i class="pi pi-check"></i> Confirmar Envío
+          </button>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Recibir -->
+    <fieldset *ngIf="mostrarFormularioRecibir" class="mt-3">
+      <legend>Recibir Paquete</legend>
+      <textarea
+        formControlName="observacionesRecibir"
+        class="form-control"
+        placeholder="Observaciones (opcional)"
+      ></textarea>
+      <div class="mt-2 text-end">
+        <button
+          class="btn btn-success"
+          type="button"
+          (click)="recibirPaquete()"
+        >
+          Confirmar Recepción
+        </button>
+      </div>
+    </fieldset>
+
+    <!-- Entregar -->
+    <fieldset *ngIf="mostrarFormularioEntregar" class="mt-3">
+      <legend>Entregar Paquete</legend>
+      <textarea
+        formControlName="observacionesEntregar"
+        class="form-control"
+        placeholder="Observaciones (opcional)"
+      ></textarea>
+      <input
+        type="text"
+        formControlName="recibio"
+        class="form-control mt-2"
+        placeholder="¿Quién lo recibe?"
+      />
+      <div class="mt-2 text-end">
+        <button
+          class="btn btn-success"
+          type="button"
+          (click)="entregarPaquete()"
+        >
+          Confirmar Entrega
+        </button>
+      </div>
+    </fieldset>
+
+    <!-- Cancelar -->
+    <fieldset *ngIf="mostrarFormularioCancelacion" class="mt-3">
+      <legend>Cancelar Paquete</legend>
+      <textarea
+        formControlName="descripcionCancelacion"
+        class="form-control"
+        placeholder="Motivo de cancelación"
+      ></textarea>
+      <div class="mt-2 text-end">
+        <button
+          class="btn btn-danger"
+          type="button"
+          (click)="cancelarPaquete()"
+        >
+          Confirmar Cancelación
+        </button>
+      </div>
+    </fieldset>
+
+    <!-- ====================== DETALLES DE ENVÍO ====================== -->
+    <fieldset *ngIf="form.get('envio')?.value" class="mt-3">
+      <legend>Detalles de Envío</legend>
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <label class="form-label">Fecha de Envío:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="
+              form.get('envio')?.value?.fecha | date : 'dd-MM-yyyy HH:mm'
+            "
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">Responsable:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('envio')?.value?.usuario?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">Unidad:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('envio')?.value?.unidad?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">Encargado de la Unidad:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="form.get('envio')?.value?.unidad?.usuario?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Ruta de Partida:</label>
+          <input
+            type="text"
+            class="form-control"
+            [value]="
+              (form.get('envio')?.value?.detalleRuta?.salida?.nombre || '') +
+              ' → ' +
+              (form.get('envio')?.value?.detalleRuta?.salidaHora || '')
+            "
+            disabled
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Detalles de Recepción -->
+    <fieldset *ngIf="form.get('recibo')?.value" class="mt-3">
+      <legend>Detalles de Recepción</legend>
+      <p><b>Fecha:</b> {{ form.get("recibo")?.value?.fecha }}</p>
+      <p>
+        <b>Responsable:</b> {{ form.get("recibo")?.value?.usuario?.nombre }}
+      </p>
+      <p>
+        <b>Observaciones:</b> {{ form.get("recibo")?.value?.observaciones }}
+      </p>
+    </fieldset>
+
+    <!-- Detalles de Entrega -->
+    <fieldset *ngIf="form.get('entrega')?.value" class="mt-3">
+      <legend>Detalles de Entrega</legend>
+      <p><b>Fecha:</b> {{ form.get("entrega")?.value?.fecha }}</p>
+      <p>
+        <b>Responsable:</b> {{ form.get("entrega")?.value?.usuario?.nombre }}
+      </p>
+      <p><b>Recibió:</b> {{ form.get("entrega")?.value?.recibio }}</p>
+      <p>
+        <b>Observaciones:</b> {{ form.get("entrega")?.value?.observaciones }}
+      </p>
+    </fieldset>
+
+    <!-- Detalles de Cancelación -->
+    <fieldset *ngIf="form.get('cancelacion')?.value" class="mt-3">
+      <legend>Detalles de Cancelación</legend>
+      <p><b>Fecha:</b> {{ form.get("cancelacion")?.value?.fecha }}</p>
+      <p>
+        <b>Responsable:</b>
+        {{ form.get("cancelacion")?.value?.usuario?.nombre }}
+      </p>
+      <p><b>Motivo:</b> {{ form.get("cancelacion")?.value?.descripcion }}</p>
+    </fieldset>
+  </form>
+</div>

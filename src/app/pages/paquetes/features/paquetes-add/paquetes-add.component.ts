@@ -106,7 +106,6 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
       pago: [0],
 
       total: [0],
-      textoBusqueda: [''],
     });
   }
 

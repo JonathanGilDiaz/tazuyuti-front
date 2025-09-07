@@ -38,4 +38,28 @@ export class PaquetesService {
       catalogos():Observable<ApiResponse<any>>{
     return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/paquete/catalogs`);
   }
+
+      enviarPaquete(datos : any):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/paquete/enviar`,datos);
+  }
+
+       recibirPaquete(datos : any):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/paquete/recibir`,datos);
+  }
+
+       entregarPaquete(datos : any):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/paquete/entregar`,datos);
+  }
+
+   cancelarPaquete(datos : any):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/paquete/cancelar`,datos);
+  }
+
+    obtenerTicketInterno(id : number):Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/paquete/${id}/ticketInterno`);
+  }
+
+    obtenerTicketCliente(id : number):Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/paquete/${id}/ticketCliente`);
+  }
 }

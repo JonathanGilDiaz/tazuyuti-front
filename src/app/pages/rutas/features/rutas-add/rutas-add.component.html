@@ -1,0 +1,109 @@
+<dinamic-form
+  nombreFormulario="Datos Generales"
+  [buttonText]="{
+    cancel: 'Cancelar',
+    submit: loading ? 'Guardando' : 'Guardar',
+    return: 'Regresar'
+  }"
+  (formCancelled)="eventoCancelar()"
+  (formSubmitted)="onSubmit()"
+>
+  <form [formGroup]="form">
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="viaje" class="form-label"
+          >Viaje:<span class="text-danger">*</span></label
+        >
+      </div>
+      <div class="col-12 col-md-7">
+        <select
+          formControlName="viaje"
+          class="form-select"
+          id="viaje"
+          data-placeholder="Selecciona un el viaje"
+          [class.campo-invalido]="
+            form.get('viaje').invalid && form.get('viaje').touched
+          "
+        >
+          <option value="">Seleccione el viaje</option>
+          <option value="Oaxaca-Juxtlahuaca">Oaxaca-Juxtlahuaca</option>
+          <option value="Juxtlahuaca-Oaxaca">Juxtlahuaca-Oaxaca</option>
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="unidad" class="form-label"
+          >Unidad<span class="text-danger">*</span></label
+        >
+      </div>
+      <div class="col-12 col-md-7">
+        <select
+          formControlName="unidad"
+          class="form-select"
+          id="unidad"
+          data-placeholder="Selecciona unidad"
+          [class.campo-invalido]="
+            form.get('unidad').invalid && form.get('unidad').touched
+          "
+        >
+          <option value="">Seleccione unidad</option>
+          @for (unidad of Unidades; track $index) {
+          <option [value]="unidad.id">{{ unidad.nombre }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <!-- Hora -->
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="hora" class="form-label"
+          >Hora de salida:<span class="text-danger">*</span></label
+        >
+      </div>
+      <div class="col-12 col-md-7">
+        <input
+          type="time"
+          formControlName="hora"
+          id="hora"
+          class="form-control"
+          [class.campo-invalido]="
+            form.get('hora').invalid && form.get('hora').touched
+          "
+        />
+      </div>
+    </div>
+
+    <!-- Repetición -->
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="repeticion" class="form-label"
+          >Repetición:<span class="text-danger">*</span></label
+        >
+      </div>
+      <div class="col-12 col-md-7">
+        <div class="d-flex flex-wrap gap-2">
+          <div *ngFor="let dia of diasSemana">
+            <input
+              type="checkbox"
+              [value]="dia.value"
+              (change)="onDiaChange($event)"
+              [checked]="diasSeleccionados.includes(dia.value)"
+            />
+            <label>{{ dia.label }}</label>
+          </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary ms-2"
+            (click)="seleccionarTodos()"
+          >
+            Toda la semana
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 mt-2 align-items-center">
+      <label><span class="text-danger">* Campos requeridos</span></label>
+    </div>
+  </form>
+</dinamic-form>

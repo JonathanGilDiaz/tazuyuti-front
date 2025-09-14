@@ -1,4 +1,4 @@
-import { Time } from "@angular/common";
+import { Time } from '@angular/common';
 
 //respuesta del api generica
 export interface ApiResponse<T> {
@@ -229,12 +229,12 @@ export interface Paquete {
   detallePaquete: DetallePaquete[];
 }
 
-export interface EstadoPaquete{
+export interface EstadoPaquete {
   id: number;
   nombre: string;
 }
 
-export interface Ruta{
+export interface Ruta {
   id: number;
   unidad: Unidad;
   viaje: String;
@@ -242,3 +242,53 @@ export interface Ruta{
   hora: Time;
   estado: boolean;
 }
+
+export interface PrecioBoleto {
+  id: number;
+  origen: Sucursal;
+  destino: string;
+  String: String;
+  precio: number;
+  estado: boolean;
+}
+
+export interface Boleto {
+  id: number;
+  usuario: Usuario;
+  formaPago: String;
+  total: number;
+  fechaCreacion: Date;
+  estado: boolean;
+  folio: string;
+  detalleRutaSalida: DetalleRuta;
+  precioBoleto: PrecioBoleto;
+  totalBoletos: number;
+  asientos: String;
+  pago: number;
+  cambio: number;
+  detallePaquete: DetalleBoleto[];
+}
+
+export interface DetalleRuta {
+  id: number;
+  ruta: Ruta;
+  fecha: Date;
+  disponibilidad: number;
+  ocupados: string;
+  salida: Sucursal;
+  llegada: Sucursal;
+  salidaHora: Time;
+  llegadaHora: Time;
+  estado: boolean;
+}
+
+export interface DetalleBoleto {
+  id: number;
+  boleto: Boleto;
+  precioBoleto: PrecioBoleto;
+  niño: boolean;
+  cantidad: number;
+  precio: number;
+  subtotal: number;
+}
+

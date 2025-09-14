@@ -198,7 +198,11 @@
 
         <!-- Botón Enviar (estado=1) -->
         <button
-          *ngIf="form.get('estado')?.value?.id === 1"
+          *ngIf="
+            form.get('estado')?.value?.id === 1 &&
+            form.get('usuario')?.value?.sucursal?.id ===
+              authService.getUsuario()?.sucursal?.id
+          "
           type="button"
           class="btn btn-primary"
           (click)="mostrarFormularioEnvio = true"
@@ -208,7 +212,11 @@
 
         <!-- Botón Recibir (estado=2) -->
         <button
-          *ngIf="form.get('estado')?.value?.id === 2"
+          *ngIf="
+            form.get('estado')?.value?.id === 2 &&
+            form.get('destino')?.value?.id ===
+              authService.getUsuario()?.sucursal?.id
+          "
           type="button"
           class="btn btn-info"
           (click)="mostrarFormularioRecibir = true"
@@ -218,7 +226,11 @@
 
         <!-- Botón Entregar (estado=3) -->
         <button
-          *ngIf="form.get('estado')?.value?.id === 3"
+          *ngIf="
+            form.get('estado')?.value?.id === 3 &&
+            form.get('destino')?.value?.id ===
+              authService.getUsuario()?.sucursal?.id
+          "
           type="button"
           class="btn btn-success"
           (click)="mostrarFormularioEntregar = true"

@@ -1,0 +1,287 @@
+<form [formGroup]="form" class="contenedor">
+  <!-- Paso 1: Fecha y Origen -->
+  <fieldset>
+    <legend>Datos del viaje</legend>
+    <div class="grid">
+      <div class="col">
+        <label class="form-label">Fecha*</label>
+        <input type="date" class="form-control" formControlName="fecha" />
+      </div>
+
+      <div class="col">
+        <label class="form-label">Origen*</label>
+        <select class="form-select" formControlName="origen">
+          <option [ngValue]="null" disabled>Seleccione...</option>
+          <option *ngFor="let s of sucursales()" [ngValue]="s.id">
+            {{ s.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label class="form-label">Destino*</label>
+        <select class="form-select" formControlName="destino">
+          <option [ngValue]="null" disabled>Seleccione...</option>
+          <option *ngFor="let p of destinosFiltrados()" [ngValue]="p.id">
+            {{ p.destino }} ({{ "$" + (p.precio | number : "1.2-2") }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label class="form-label">Hora de salida*</label>
+        <select class="form-select" formControlName="hora">
+          <option [ngValue]="null" disabled>Seleccione...</option>
+          <option *ngFor="let h of horarios()" [ngValue]="h.rutaId">
+            {{ h.hora }} — {{ h.unidad.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Paso 2: Boletos -->
+  <fieldset>
+    <legend>Boletos</legend>
+    <div class="grid">
+      <div class="col">
+        <label class="form-label">Boletos adultos*</label>
+        <input
+          type="number"
+          min="0"
+          class="form-control"
+          formControlName="adultos"
+        />
+      </div>
+      <div class="col">
+        <label class="form-label">Boletos niños*</label>
+        <input
+          type="number"
+          min="0"
+          class="form-control"
+          formControlName="ninos"
+        />
+      </div>
+      <div class="col info">
+        <div><strong>Capacidad:</strong> {{ capacidadActual() }}</div>
+        <div><strong>Ocupados:</strong> {{ asientosOcupados().size }}</div>
+        <div><strong>Disponibles:</strong> {{ disponibles() }}</div>
+        <div><strong>Requeridos:</strong> {{ requeridosNum }}</div>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Paso 3: Selección de Asientos -->
+  <fieldset>
+    <legend>Elegir asientos</legend>
+
+    <div class="asientos-wrapper" *ngIf="horarioSeleccionado(); else elijaHora">
+      <div class="layout">
+        <ng-container
+          *ngFor="let celda of layoutAsientos(); trackBy: trackByNum"
+        >
+          <div *ngIf="celda.tipo === 'chofer'" class="celda chofer">
+            {{ celda.texto }}
+          </div>
+          <div *ngIf="celda.tipo === 'espacio'" class="celda espacio"></div>
+
+          <div *ngIf="celda.tipo === 'etiqueta'" class="celda etiqueta">
+            {{ celda.texto }}
+          </div>
+          <div *ngIf="celda.tipo === 'linea'" class="separador"></div>
+          <div
+            *ngIf="celda.tipo === 'asiento'"
+            class="celda asiento"
+            [class.ocupado]="esOcupado(celda.num!)"
+            [class.seleccionado]="esSeleccionado(celda.num!)"
+            (click)="toggleAsiento(celda.num!)"
+            [attr.aria-disabled]="esOcupado(celda.num!) || null"
+          >
+            {{ celda.num }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="leyenda">
+        <span class="tag disp"></span> Disponible
+        <span class="tag sel"></span> Seleccionado
+        <span class="tag ocu"></span> Ocupado
+      </div>
+    </div>
+
+    <ng-template #elijaHora>
+      <div class="alerta">Seleccione hora para ver los asientos.</div>
+    </ng-template>
+  </fieldset>
+
+  <div class="acciones">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="asientosSeleccionados.set([])"
+    >
+      Limpiar selección
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [disabled]="
+        !form.valid ||
+        requeridosNum === 0 ||
+        asientosSeleccionados().length !== requeridosNum
+      "
+      (click)="continuar()"
+    >
+      Continuar
+    </button>
+  </div>
+  <!-- Paso 4: Datos del titular y resumen -->
+  <div *ngIf="continuarPaso2" class="resumen">
+    <fieldset>
+      <legend>Titular de la compra</legend>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="titular"
+        placeholder="Nombre del titular"
+      />
+    </fieldset>
+
+    <fieldset class="mt-3">
+      <legend>Resumen del viaje</legend>
+      <div><strong>Origen:</strong> {{ resumen?.origen }}</div>
+      <div><strong>Destino:</strong> {{ resumen?.destino }}</div>
+      <div><strong>Hora de salida:</strong> {{ resumen?.hora }}</div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Boleto Adulto</td>
+            <td>{{ form.value.adultos }}</td>
+            <td>{{ precioBoleto | currency }}</td>
+            <td>{{ subtotalAdultos() | currency }}</td>
+          </tr>
+          <tr>
+            <td>Boleto Niño</td>
+            <td>{{ form.value.ninos }}</td>
+            <td>{{ precioBoleto / 2 | currency }}</td>
+            <td>{{ subtotalNinos() | currency }}</td>
+          </tr>
+          <tr *ngFor="let eq of equipajesAgregados; let i = index">
+            <td>{{ eq.concepto.nombre }}</td>
+            <td>{{ eq.cantidad }}</td>
+            <td>{{ eq.concepto.precio | currency }}</td>
+            <td>{{ eq.cantidad * eq.concepto.precio | currency }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                (click)="eliminarEquipaje(i)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">
+              <label class="fw-bold d-block mb-2">Equipaje adicional</label>
+              <div class="row g-2 align-items-center">
+                <div class="col-md-6">
+                  <label>Concepto</label>
+                  <select class="form-select" formControlName="equipajeId">
+                    <option [ngValue]="null" disabled>
+                      Seleccione equipaje...
+                    </option>
+                    <option *ngFor="let eq of equipajesCatalogo" [ngValue]="eq">
+                      {{ eq.nombre }} — {{ eq.precio | currency }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label>Cantidad</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    min="1"
+                    formControlName="equipajeCantidad"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary w-100"
+                    (click)="agregarEquipaje()"
+                  >
+                    + Agregar equipaje
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Total</legend>
+      <h3>{{ calcularTotal() | currency }}</h3>
+
+      <label>Forma de pago:</label>
+      <select
+        class="form-select"
+        formControlName="formaPago"
+        (change)="calcularCambio()"
+      >
+        <option value="01 Efectivo">01 Efectivo</option>
+        <option value="03 Transferencia">03 Transferencia</option>
+        <option value="04 Tarjeta">04 Tarjeta</option>
+      </select>
+
+      <div *ngIf="form.get('formaPago')?.value === '01 Efectivo'" class="mt-2">
+        <label>Monto recibido:</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="montoPago"
+          (input)="calcularCambio()"
+        />
+        <div>
+          <strong>Cambio:</strong> {{ form.get("cambio")?.value | currency }}
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="acciones mt-3 d-flex gap-2">
+    <button
+      type="button"
+      class="btn btn-success flex-fill"
+      (click)="confirmarGuardar()"
+      [disabled]="
+        asientosSeleccionados().length !== requeridosNum ||
+        !form.get('titular')?.value ||
+        (form.get('formaPago')?.value === '01 Efectivo' &&
+          (form.get('montoPago')?.value ?? 0) < calcularTotal())
+      "
+    >
+      Guardar venta
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-outline-danger flex-fill"
+      (click)="cerrar()"
+    >
+      Cancelar
+    </button>
+  </div>
+</form>

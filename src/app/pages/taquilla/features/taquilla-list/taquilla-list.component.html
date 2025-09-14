@@ -1,0 +1,152 @@
+<app-layout>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="titulo">Taquilla</h3>
+        <p-button label="Nueva venta" (onClick)="agregar()" icon="pi pi-plus" styleClass="p-button-primary"></p-button>
+    </div>  
+    <div class="card">
+        <p-table [value]="datos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onPage)="pageChange($event)"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="folio">Folio<p-sortIcon field="folio"/></th>
+                    <th pSortableColumn="fechaCreacion">Compra<p-sortIcon field="fechaCreacion"/></th>
+                    <th pSortableColumn="fechaSalida">Fecha salida<p-sortIcon field="fechaSalida"/></th>
+                    <th pSortableColumn="viaje">Viaje<p-sortIcon field="viaje"/></th>
+                    <th pSortableColumn="asientos">Elección<p-sortIcon field="asientos"/></th>
+                    <th pSortableColumn="cliente">Cliente<p-sortIcon field="cliente"/></th>
+                    <th pSortableColumn="total">Total<p-sortIcon field="total"/></th>
+                    <th pSortableColumn="estado">Estado<p-sortIcon field="estado"/></th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="folio"
+                            matchMode="contains"
+                            placeholder="Busca folio" 
+                            ariaLabel="Buscar folio" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fechaCreacion"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fechaSalida"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="viaje"
+                            matchMode="contains"
+                            placeholder="Busca viaje" 
+                            ariaLabel="Buscar viaje" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="asientos"
+                            matchMode="contains"
+                            placeholder="Busca asientos" 
+                            ariaLabel="Buscar asientos" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="cliente"
+                            matchMode="contains"
+                            placeholder="Busca cliente" 
+                            ariaLabel="Buscar cliente" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="total"
+                            matchMode="contains"
+                            placeholder="Buscar total" 
+                            ariaLabel="Buscar total" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="estado"
+                            matchMode="contains"
+                            placeholder="Buscar estado" 
+                            ariaLabel="Buscar estado" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato>
+                <tr>
+                    <td>{{ dato?.folio }}</td>
+                    <td>{{ dato?.fechaCreacion }}</td>
+                    <td>{{ dato?.fechaSalida }}</td>
+                     <td>{{ dato?.viaje }}</td>
+                    <td>{{ dato?.asientos }}</td>
+                    <td>{{ dato?.cliente }}</td>
+                    <td>{{ '$' + (dato?.total | number:'1.2-2') }}</td>
+                    <td>{{ dato?.estado }}</td>
+                    <td>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </a>
+                        <!-- Acciones para ver y editar -->
+                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-eye" 
+                                    (click)="ver(dato)"
+                                    label="Ver"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Datos no encontrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mt-3">
+        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
+    </div>
+</app-layout>

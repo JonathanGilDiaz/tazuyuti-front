@@ -47,6 +47,14 @@ export const routes: Routes = [
         path: 'clientes',
         loadChildren: () => import('@app/pages/clientes/clientes.routes').then(m => m.ClienteRoutes),
       },
+      {
+        path: 'pasajes',
+        loadChildren: () => import('@app/pages/pasajes/precioBoletos.routes').then(m => m.PrecioBoletosRoutes),
+      },
+      {
+        path: 'taquilla',
+        loadChildren: () => import('@app/pages/taquilla/taquilla.routes').then(m => m.TaquillaRoutes),
+      },
        {
         path: 'paquetes',
         loadChildren: () => import('@app/pages/paquetes/paquetes.routes').then(m => m.PaquetesRoutes),

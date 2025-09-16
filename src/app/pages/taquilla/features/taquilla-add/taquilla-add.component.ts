@@ -630,7 +630,7 @@ export class TaquillaAddComponent implements OnInit {
           ? [
               {
                 precioBoleto: { id: this.form.value.destino },
-                niño: false,
+                nino: false,
                 cantidad: this.form.value.adultos,
                 precio: this.precioBoleto,
                 subtotal: this.subtotalAdultos(),
@@ -641,7 +641,7 @@ export class TaquillaAddComponent implements OnInit {
           ? [
               {
                 precioBoleto: { id: this.form.value.destino },
-                niño: true,
+                nino: true,
                 cantidad: this.form.value.ninos,
                 precio: this.precioBoleto / 2,
                 subtotal: this.subtotalNinos(),

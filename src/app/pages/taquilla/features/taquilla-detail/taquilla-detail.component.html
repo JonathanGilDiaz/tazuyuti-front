@@ -1,0 +1,227 @@
+<form [formGroup]="form" class="contenedor">
+  <!-- Paso 1: Fecha y Origen -->
+  <fieldset>
+    <legend>Datos del viaje</legend>
+    <!-- Condicional según estado del boleto -->
+    <div class="mb-3 text-center">
+      <button
+        *ngIf="form.get('estado')?.value === 'Activo'; else cancelado"
+        type="button"
+        class="btn btn-outline-danger"
+        (click)="cancelarBoleto()"
+      >
+        Cancelar Boleto
+      </button>
+
+      <ng-template #cancelado>
+        <span class="text-danger fs-5 fw-bold">Boleto cancelado</span>
+      </ng-template>
+    </div>
+
+    <div class="row g-3 mt-2 align-items-center">
+      <!-- Responsable -->
+      <div class="col-12 col-md-4">
+        <label for="responsable" class="form-label">Responsable:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="responsable"
+          disabled
+          [value]="form.get('usuario')?.value?.nombre"
+          aria-describedby="responsable"
+        />
+      </div>
+
+      <!-- Fecha -->
+      <div class="col-12 col-md-4">
+        <label for="fechaCreacion" class="form-label">Fecha de Registro:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fechaCreacion"
+          disabled
+          [value]="form.get('fechaCreacion')?.value"
+          aria-describedby="fechaCreacion"
+        />
+      </div>
+
+      <div class="col-12 col-md-4 text-center">
+        <label for="folio" class="form-label">Folio:</label>
+        <p class="fs-3 text-danger mb-1">{{ form.get("folio")?.value }}</p>
+        <button
+          class="btn btn-outline-primary btn-sm"
+          (click)="imprimirTicket()"
+        >
+          <i class="pi pi-print"></i> Imprimir Ticket
+        </button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col">
+        <label class="form-label">Fecha de salida</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fechaSalida"
+          disabled
+          [value]="form.get('fechaSalida')?.value"
+          aria-describedby="fechaSalida"
+        />
+      </div>
+
+      <div class="col">
+        <label class="form-label">Origen</label>
+        <input
+          type="text"
+          class="form-control"
+          id="origen"
+          disabled
+          [value]="form.get('origen')?.value"
+          aria-describedby="origen"
+        />
+      </div>
+
+      <div class="col">
+        <label class="form-label">Destino*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="destino"
+          disabled
+          [value]="form.get('destino')?.value"
+          aria-describedby="destino"
+        />
+      </div>
+
+      <div class="col">
+        <label class="form-label">Hora de salida*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="horarioSalida"
+          disabled
+          [value]="form.get('horarioSalida')?.value"
+          aria-describedby="horarioSalida"
+        />
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Elegir asientos</legend>
+
+    <div class="asientos-wrapper">
+      <div class="layout">
+        <ng-container
+          *ngFor="let celda of layoutAsientos(); trackBy: trackByNum"
+        >
+          <div *ngIf="celda.tipo === 'chofer'" class="celda chofer">
+            {{ celda.texto }}
+          </div>
+          <div *ngIf="celda.tipo === 'espacio'" class="celda espacio"></div>
+
+          <div *ngIf="celda.tipo === 'etiqueta'" class="celda etiqueta">
+            {{ celda.texto }}
+          </div>
+          <div *ngIf="celda.tipo === 'linea'" class="separador"></div>
+          <div
+            *ngIf="celda.tipo === 'asiento'"
+            class="celda asiento"
+            [class.ocupado]="esOcupado(celda.num!)"
+            [class.seleccionado]="esSeleccionado(celda.num!)"
+            [attr.aria-disabled]="esOcupado(celda.num!) || null"
+          >
+            {{ celda.num }}
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="leyenda"><span class="tag ocu"></span> Ocupado</div>
+    </div>
+  </fieldset>
+
+  <!-- Paso 4: Datos del titular y resumen -->
+  <div class="resumen">
+    <fieldset>
+      <legend>Titular de la compra</legend>
+      <input
+        type="text"
+        class="form-control"
+        id="cliente"
+        disabled
+        [value]="form.get('cliente')?.value"
+        aria-describedby="cliente"
+      />
+    </fieldset>
+
+    <fieldset class="mt-3">
+      <legend>Resumen del viaje</legend>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let boleto of detalleBoletos; let i = index">
+            <td>{{ boleto.nino ? "Boleto Niño" : "Boleto Adulto" }}</td>
+            <td>1</td>
+            <td>{{ boleto.precio | currency }}</td>
+            <td>{{ boleto.subtotal | currency }}</td>
+          </tr>
+
+          <tr *ngFor="let eq of detalleEquipajeBoleto; let i = index">
+            <td>{{ eq.precioEquipaje.nombre }}</td>
+            <td>{{ eq.cantidad }}</td>
+            <td>{{ eq.precio | currency }}</td>
+            <td>{{ eq.subtotal | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Total</legend>
+      <h3>{{ form.get("total")?.value | currency }}</h3>
+
+      <label>Forma de pago:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formaPago"
+        disabled
+        [value]="form.get('formaPago')?.value"
+        aria-describedby="formaPago"
+      />
+
+      <div *ngIf="form.get('formaPago')?.value === '01 Efectivo'" class="mt-2">
+        <label>Monto recibido:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="pago"
+          disabled
+          [value]="form.get('pago')?.value"
+          aria-describedby="pago"
+        />
+        <div>
+          <strong>Cambio:</strong> {{ form.get("cambio")?.value | currency }}
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div class="acciones mt-3 d-flex gap-2">
+    <button
+      type="button"
+      class="btn btn-outline-danger flex-fill"
+      (click)="cerrar()"
+    >
+      Cancelar
+    </button>
+  </div>
+</form>

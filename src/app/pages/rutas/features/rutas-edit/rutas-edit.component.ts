@@ -31,13 +31,13 @@ export class RutasEditComponent {
   loading: boolean = false;
   destroy$ = new Subject<void>();
   Unidades: Unidad[] = [];
-  diasSemana = [
+   diasSemana = [
     { label: 'Lunes', value: 'lunes' },
     { label: 'Martes', value: 'martes' },
-    { label: 'Miércoles', value: 'miercoles' },
+    { label: 'Miércoles', value: 'miércoles' },
     { label: 'Jueves', value: 'jueves' },
     { label: 'Viernes', value: 'viernes' },
-    { label: 'Sábado', value: 'sabado' },
+    { label: 'Sábado', value: 'sábado' },
     { label: 'Domingo', value: 'domingo' },
   ];
   diasSeleccionados: string[] = [];

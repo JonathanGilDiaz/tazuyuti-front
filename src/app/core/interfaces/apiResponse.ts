@@ -286,9 +286,17 @@ export interface DetalleBoleto {
   id: number;
   boleto: Boleto;
   precioBoleto: PrecioBoleto;
-  niño: boolean;
+  nino: boolean;
   cantidad: number;
   precio: number;
   subtotal: number;
 }
 
+export interface DetalleEquipajeBoleto {
+  id: number;
+  boleto: Boleto;
+  precioEquipaje: PrecioEquipaje;
+  cantidad: number;
+  precio: number;
+  subtotal: number;
+}

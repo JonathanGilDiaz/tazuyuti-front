@@ -16,6 +16,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { Boleto, Venta } from '@app/core/interfaces/apiResponse';
 import { BoletosService } from '@app/data/services/boletos.service';
 import { TaquillaAddComponent } from '../taquilla-add/taquilla-add.component';
+import { TaquillaDetailComponent } from '../taquilla-detail/taquilla-detail.component';
 
 @Component({
   selector: 'app-user-list',
@@ -101,11 +102,9 @@ export class TaquillaListComponent {
   }
 
   ver(dato: Boleto) {
-    /*
-    this.mostrarModalAdicional(VentasDetailComponent, 'Detalle de la venta', {
+    this.mostrarModalAdicional(TaquillaDetailComponent, 'Detalle de la venta', {
       id: dato.id,
     });
-    */
   }
 
   ngOnDestroy(): void {

@@ -1,0 +1,151 @@
+<app-layout>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="titulo">Bitácoras de viaje</h3>
+    </div>  
+    <div class="card">
+        <p-table [value]="datos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onPage)="pageChange($event)"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="salida.nombre">Salida<p-sortIcon field="salida.nombre"/></th>
+                     <th pSortableColumn="llegada.nombre">Llegada<p-sortIcon field="llegada.nombre"/></th>
+                    <th pSortableColumn="fecha">Fecha de salida<p-sortIcon field="fecha"/></th>
+                    <th pSortableColumn="salidaHora">Hora de salida<p-sortIcon field="salidaHora"/></th>
+                    <th pSortableColumn="ruta.unidad.nombre">Unidad<p-sortIcon field="ruta.unidad.nombre"/></th>
+                    <th pSortableColumn="ruta.unidad.capacidad">Capacidad<p-sortIcon field="ruta.unidad.capacidad"/></th>
+                    <th pSortableColumn="ruta.unidad.usuario.nombre">operador<p-sortIcon field="ruta.unidad.usuario.nombre"/></th>
+                    <th pSortableColumn="estado">Estado<p-sortIcon field="estado"/></th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="salida.nombre"
+                            matchMode="contains"
+                            placeholder="Busca salida" 
+                            ariaLabel="Buscar salida" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="llegada.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar llegada" 
+                            ariaLabel="Buscar llegada" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="date"
+                            field="fecha"
+                            matchMode="contains"
+                            placeholder="Buscar fecha" 
+                            ariaLabel="Buscar fecha" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="salidaHora"
+                            matchMode="contains"
+                            placeholder="Buscar hora" 
+                            ariaLabel="Buscar hora" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="ruta.unidad.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar unidad" 
+                            ariaLabel="Buscar unidad" />
+                    </th>
+                    <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="ruta.unidad.capacidad"
+                            matchMode="contains"
+                            placeholder="Buscar capacidad" 
+                            ariaLabel="Buscar capacidad" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="ruta.unidad.usuario.nombre"
+                            matchMode="contains"
+                            placeholder="Buscar operador" 
+                            ariaLabel="Buscar operador" />
+                    </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="estado"
+                            matchMode="contains"
+                            placeholder="Buscar estado" 
+                            ariaLabel="Buscar estado" />
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato>
+                <tr>
+                    <td>{{ dato?.salida?.nombre }}</td>
+                    <td>{{ dato?.llegada?.nombre }}</td>
+                    <td>{{ dato?.fecha }}</td>
+                    <td>{{ dato?.salidaHora }}</td>
+                     <td>{{ dato?.ruta?.unidad?.nombre }}</td>
+                     <td>{{ dato?.ruta?.unidad?.tipoCamioneta?.capacidad }}</td>
+                    <td>{{ dato?.ruta?.unidad?.usuario?.nombre }}</td>
+                    <td>{{ dato?.estado }}</td>
+                    <td>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </a>
+                        <!-- Acciones para ver y editar -->
+                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    type="button" 
+                                    icon="pi pi-eye" 
+                                    (click)="ver(dato)"
+                                    label="Ver"
+                                    class="p-button-rounded p-button-text dropdown-item">
+                                </button>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5">Datos no encontrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mt-3">
+        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
+    </div>
+</app-layout>

@@ -52,6 +52,10 @@ export const routes: Routes = [
         loadChildren: () => import('@app/pages/pasajes/precioBoletos.routes').then(m => m.PrecioBoletosRoutes),
       },
       {
+        path: 'bitacora',
+        loadChildren: () => import('@app/pages/bitacora/bitacora.routes').then(m => m.BitacoraRoutes),
+      },
+      {
         path: 'taquilla',
         loadChildren: () => import('@app/pages/taquilla/taquilla.routes').then(m => m.TaquillaRoutes),
       },

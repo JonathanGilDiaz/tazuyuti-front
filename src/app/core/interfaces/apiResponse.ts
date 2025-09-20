@@ -213,6 +213,7 @@ export interface DetallePaquete {
   cantidad: number;
   precio: number;
   subTotal: number;
+  precioPaquete: PrecioPaqueteria;
 }
 
 export interface Paquete {
@@ -267,6 +268,7 @@ export interface Boleto {
   pago: number;
   cambio: number;
   detallePaquete: DetalleBoleto[];
+  cliente: string;
 }
 
 export interface DetalleRuta {
@@ -299,4 +301,13 @@ export interface DetalleEquipajeBoleto {
   cantidad: number;
   precio: number;
   subtotal: number;
+}
+
+export interface Bitacora{
+  id: number;
+  usuario: Usuario;
+  total: number;
+  fechaCreacion: Date;
+  folio: string;
+  detalleRuta: DetalleRuta;
 }

@@ -1,0 +1,9 @@
+th {
+  text-align: center;
+  vertical-align: middle;
+}
+/* Centrar los encabezados de todas las tablas PrimeNG */
+:host ::ng-deep .p-table thead th {
+  text-align: center;
+  vertical-align: middle;
+}

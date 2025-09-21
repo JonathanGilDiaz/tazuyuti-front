@@ -1,0 +1,490 @@
+<app-layout>
+  <!-- Información de usuario -->
+  <div class="card mt-4 shadow-sm border-0">
+    <h4 class="titulo">Información del Corte</h4>
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="nombre" class="form-label">Usuario</label>
+      </div>
+      <div class="col-12 col-md-7">
+        <input
+          type="text"
+          class="form-control"
+          disabled
+          [value]="form.get('usuario')?.value?.nombre"
+          id="nombre"
+          aria-describedby="nombre"
+        />
+      </div>
+    </div>
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="nombre" class="form-label">Saldo inicial</label>
+      </div>
+      <div class="col-12 col-md-7">
+        <input
+          type="text"
+          class="form-control"
+          disabled
+          [value]="form.get('saldoInicial')?.value | currency"
+          id="nombre"
+          aria-describedby="nombre"
+        />
+      </div>
+    </div>
+    <div class="row g-3 mt-2 align-items-center">
+      <div class="col-12 col-md-5 text-center">
+        <label for="nombre" class="form-label">Fecha de inicio</label>
+      </div>
+      <div class="col-12 col-md-7">
+        <input
+          type="text"
+          class="form-control"
+          disabled
+          [value]="form.get('inicio')?.value | date : 'short'"
+          id="nombre"
+          aria-describedby="nombre"
+        />
+      </div>
+    </div>
+  </div>
+
+  <h4 class="titulo">Ventas</h4>
+  <div class="card">
+    <p-table
+      [value]="ventas"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [sortField]="'id'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['id']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onLazyLoad)="cargarDatos($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th>Forma pago</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato>
+        <tr>
+          <td>{{ dato?.folio }}</td>
+          <td>{{ dato?.fechaCreacion }}</td>
+          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+          <td>{{ dato?.formaPago }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-eye"
+                  (click)="verVenta(dato)"
+                  label="Ver"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Datos no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <br />
+
+  <h4 class="titulo">Boletos</h4>
+  <div class="card">
+    <p-table
+      [value]="boletos"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [sortField]="'id'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['id']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onLazyLoad)="cargarDatos($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Viaje</th>
+          <th>Total</th>
+          <th>Forma pago</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato>
+        <tr>
+          <td>{{ dato?.folio }}</td>
+          <td>{{ dato?.fechaCreacion }}</td>
+          <td>{{ dato?.cliente }}</td>
+          <td>{{ dato?.viaje }}</td>
+          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+          <td>{{ dato?.formaPago }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-eye"
+                  (click)="verBoleto(dato)"
+                  label="Ver"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Datos no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <br />
+
+  <h4 class="titulo">Paquetes</h4>
+  <div class="card">
+    <p-table
+      [value]="paquetes"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [sortField]="'id'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['id']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onLazyLoad)="cargarDatos($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Origen</th>
+          <th>Remitente</th>
+          <th>Destino</th>
+          <th>Destinatario</th>
+          <th>Total</th>
+          <th>Forma pago</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato>
+        <tr>
+          <td>{{ dato?.folio }}</td>
+          <td>{{ dato?.fechaCreacion }}</td>
+          <td>{{ dato?.usuario?.sucursal?.nombre }}</td>
+          <td>{{ dato?.remitente }}</td>
+          <td>{{ dato?.destino?.nombre }}</td>
+          <td>{{ dato?.destinatario }}</td>
+          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+          <td>{{ dato?.formaPago }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-eye"
+                  (click)="VerPaquete(dato)"
+                  label="Ver"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Datos no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <br />
+  <h4 class="titulo">Bitácoras</h4>
+  <div class="card">
+    <p-table
+      [value]="bitacoras"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [sortField]="'id'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['id']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onLazyLoad)="cargarDatos($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Folio</th>
+          <th>Fecha</th>
+          <th>Salida</th>
+          <th>Llegada</th>
+          <th>Hora</th>
+          <th>Operador</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dato>
+        <tr>
+          <td>{{ dato?.folio }}</td>
+          <td>{{ dato?.fechaCreacion }}</td>
+          <td>{{ dato?.detalleRuta?.salida?.nombre }}</td>
+          <td>{{ dato?.detalleRuta?.llegada?.nombre }}</td>
+          <td>{{ dato?.detalleRuta?.salidaHora }}</td>
+          <td>{{ dato?.detalleRuta?.ruta?.unidad?.usuario?.nombre }}</td>
+          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-eye"
+                  (click)="verBitacora(dato)"
+                  label="Ver"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Datos no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <div class="card mt-4 p-3">
+    <h5>Totales</h5>
+    <!-- Totales -->
+    <div class="card mt-4 shadow-sm border-0">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Cobros</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-5 text-center">
+            <label class="form-label">Efectivo</label>
+          </div>
+          <div class="col-12 col-md-7">
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              [value]="form.get('efectivo')?.value | currency"
+            />
+          </div>
+        </div>
+
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-5 text-center">
+            <label class="form-label">Transferencia</label>
+          </div>
+          <div class="col-12 col-md-7">
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              [value]="form.get('transferencia')?.value | currency"
+            />
+          </div>
+        </div>
+
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-5 text-center">
+            <label class="form-label">Tarjeta</label>
+          </div>
+          <div class="col-12 col-md-7">
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              [value]="form.get('tarjeta')?.value | currency"
+            />
+          </div>
+        </div>
+        <div class="row g-3 mt-2 align-items-center">
+          <div class="col-12 col-md-5 text-center">
+            <label class="form-label fw-bold">Total de cobros</label>
+          </div>
+          <div class="col-12 col-md-7">
+            <input
+              type="text"
+              class="form-control"
+              disabled
+              [value]="form.get('total')?.value | currency"
+            />
+          </div>
+        </div>
+        <div class="row g-3 mt-3 align-items-center border-top pt-3">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Retiros</h5>
+          </div>
+          <div class="row g-3 mt-2 align-items-center">
+            <div class="col-12 col-md-5 text-center">
+              <label class="form-label fw-bold">Bitácoras</label>
+            </div>
+            <div class="col-12 col-md-7">
+              <input
+                type="text"
+                class="form-control"
+                disabled
+                [value]="form.get('totalBitacoras')?.value | currency"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-3 align-items-center border-top pt-3">
+          <div class="col-12 col-md-5 text-center">
+            <label class="form-label text-primary fw-bold"
+              >Saldo en Caja:</label
+            >
+          </div>
+          <div class="col-12 col-md-7">
+            <input
+              type="text"
+              class="form-control fw-bold text-primary"
+              disabled
+              [value]="form.get('saldoCaja')?.value | currency"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT DE DINERO REAL EN CAJA -->
+    <div class="mt-3">
+      <label><b>Dinero real en caja:</b></label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="dineroRealCaja"
+        (input)="calcularFaltanteSobrante()"
+        placeholder="Ingresa el dinero contado"
+      />
+    </div>
+
+    <!-- FALTANTE / SOBRANTE -->
+    <div class="mt-2" *ngIf="faltanteSobrante !== null">
+      <span
+        [ngClass]="{
+          'text-danger': faltanteSobrante < 0,
+          'text-success': faltanteSobrante >= 0
+        }"
+      >
+        <b>{{ faltanteSobrante >= 0 ? "Sobrante" : "Faltante" }}:</b>
+        {{ faltanteSobrante | currency }}
+      </span>
+    </div>
+
+    <!-- RETIRO -->
+    <div class="mt-3">
+      <label><b>Monto a retirar:</b></label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="retiro"
+        (input)="calcularSaldoFinal()"
+        placeholder="Ingresa monto a retirar"
+      />
+    </div>
+
+    <!-- SALDO FINAL -->
+    <div class="mt-2">
+      <b>Saldo final en caja:</b> {{ saldoFinal | currency }}
+    </div>
+
+    <!-- BOTÓN DE CIERRE -->
+    <div class="mt-4 text-end">
+      <button
+        pButton
+        type="button"
+        label="Cerrar Corte"
+        class="p-button-danger"
+        [disabled]="!puedeCerrarCorte()"
+        (click)="confirmarCerrarCorte()"
+      ></button>
+    </div>
+  </div>
+</app-layout>

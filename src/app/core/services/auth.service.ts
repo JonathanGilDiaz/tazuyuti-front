@@ -6,11 +6,16 @@ import { environment } from 'src/environments/environment';
 import { LocalService } from '@app/data/services/local.service';
 import { DEFAULT_VALUES, MODULES_URLS } from '@app/constants/app.constants';
 import { Router } from '@angular/router';
-import { ApiResponse, MenuElement, Usuario, UsuarioData } from '../interfaces/apiResponse';
+import {
+  ApiResponse,
+  MenuElement,
+  Usuario,
+  UsuarioData,
+} from '../interfaces/apiResponse';
 import { LoginData } from '@app/data/models/login';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private user: Usuario | null = null;
@@ -19,7 +24,8 @@ export class AuthService {
   private expirationSubscription: Subscription | null = null;
   private expirationTimeSubject = new BehaviorSubject<number | null>(null);
   expirationTime$ = this.expirationTimeSubject.asObservable();
-  private readonly expirationTime = DEFAULT_VALUES.EXPIRATION_SESSION_TIME_IN_MINUTES * 60 * 1000;
+  private readonly expirationTime =
+    DEFAULT_VALUES.EXPIRATION_SESSION_TIME_IN_MINUTES * 60 * 1000;
 
   constructor(
     private httpClient: HttpClient,
@@ -33,7 +39,9 @@ export class AuthService {
     const storedExpirationTime = this.localStore.getData('expirationTime');
     if (storedExpirationTime) {
       const remainingTime = Number(storedExpirationTime) - Date.now();
-      remainingTime > 0 ? this.startSessionTimeout(remainingTime) : this.logout();
+      remainingTime > 0
+        ? this.startSessionTimeout(remainingTime)
+        : this.logout();
     } else {
       this.resetExpirationTime();
     }
@@ -65,7 +73,6 @@ export class AuthService {
     });
   }
 
-
   private clearSessionTimeout(): void {
     if (this.expirationTimeout) clearTimeout(this.expirationTimeout);
     this.expirationTimeout = null;
@@ -91,21 +98,31 @@ export class AuthService {
     return this.token;
   }
 
-  public login(dataLogin : LoginData): Observable<ApiResponse<UsuarioData>> {
+  public login(dataLogin: LoginData): Observable<ApiResponse<UsuarioData>> {
     const urlEndpoint = `${environment.baseUrl}/auth/login`;
-    return this.httpClient.post<ApiResponse<UsuarioData>>(urlEndpoint, dataLogin).pipe(
-      tap(response => {
-        if (response.success) {
-          this.guardarToken(response.data.token);
-          this.guardarUsuario(response.data.usuario);
-          this.resetExpirationTime();
-        }
-      }),
-      catchError(error => {
-        console.error('Login error:', error);
-        throw error;
-      })
-    );
+    return this.httpClient
+      .post<ApiResponse<UsuarioData>>(urlEndpoint, dataLogin)
+      .pipe(
+        tap((response) => {
+          if (response.success) {
+            this.guardarToken(response.data.token);
+            this.guardarUsuario(response.data.usuario);
+            this.resetExpirationTime();
+          }
+        }),
+        catchError((error) => {
+          console.error('Login error:', error);
+          throw error;
+        })
+      );
+  }
+
+  crearCorte(usuarioId: number, saldoInicial: number): Observable<any> {
+    const body = {
+      usuario: { id: usuarioId },
+      saldoInicial: saldoInicial,
+    };
+    return this.httpClient.post(`${environment.baseUrl}/corte/crear`, body);
   }
 
   public isAuthenticated(): boolean {
@@ -144,7 +161,6 @@ export class AuthService {
     this.user = null;
     this.token = null;
     this.localStore.clearData();
-    this.router.navigate([MODULES_URLS.AUTH.LOGIN]).then(() => {
-  });
+    this.router.navigate([MODULES_URLS.AUTH.LOGIN]).then(() => {});
   }
 }

@@ -46,3 +46,29 @@
     </div>
   </div>
 </footer>
+
+<ng-template #modalCorte let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Corte requerido</h5>
+  </div>
+  <div class="modal-body">
+    <p>Debes crear un corte antes de continuar. Ingresa tu saldo inicial:</p>
+    <form [formGroup]="formSaldo">
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Saldo inicial"
+        formControlName="saldoInicial"
+        [class.is-invalid]="formSaldo.get('saldoInicial').invalid && formSaldo.get('saldoInicial').touched"
+      />
+      <div class="invalid-feedback" *ngIf="formSaldo.get('saldoInicial').invalid && formSaldo.get('saldoInicial').touched">
+        El saldo inicial es requerido y debe ser mayor o igual a 0.
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="confirmarCorte()">Aceptar</button>
+  </div>
+</ng-template>
+

@@ -63,6 +63,14 @@ export const routes: Routes = [
         path: 'paquetes',
         loadChildren: () => import('@app/pages/paquetes/paquetes.routes').then(m => m.PaquetesRoutes),
       },
+      {
+        path: 'corte',
+        loadChildren: () => import('@app/pages/corte/corte.routes').then(m => m.PaquetesRoutes),
+      },
+        {
+        path: 'verCorte',
+        loadChildren: () => import('@app/pages/verCorte/verCorte.routes').then(m => m.verCorteRoutes),
+      },
        {
         path: 'unidades',
         loadChildren: () => import('@app/pages/unidades/unidades.routes').then(m => m.UnidadRoutes),

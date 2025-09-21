@@ -72,6 +72,7 @@ export interface UsuarioData {
   usuario: Usuario;
   menus: MenuElement[];
   token: string;
+   usuarioId?: number;
 }
 
 export interface MenuElement {
@@ -310,4 +311,26 @@ export interface Bitacora{
   fechaCreacion: Date;
   folio: string;
   detalleRuta: DetalleRuta;
+}
+
+export interface Corte{
+  id: number;
+  usuario: Usuario;
+  saldoInicial: number;
+  inicio: Date;
+  cierre: Date;
+  estado: String;
+  folio: String;
+  tarjeta: number;
+  transferencia: number;
+  efectivo: number;
+  totalCaja: number;
+  retiro: number;
+  saldoFinal: number;
+  observaciones: string;
+  faltante: number;
+  sobrante: number;
+  efectivoCaja: number;
+  totalCobros:number;
+  totalRetiros: number;
 }

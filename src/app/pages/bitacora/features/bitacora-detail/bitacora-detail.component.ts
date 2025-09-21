@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Boleto, DetalleRuta, Paquete } from '@app/core/interfaces/apiResponse';
+import {
+  Bitacora,
+  Boleto,
+  DetalleRuta,
+  Paquete,
+} from '@app/core/interfaces/apiResponse';
 import { PrimeNGModules } from '@app/primeng-config';
 import { DataTableParams } from '@app/shared/ui/datatables/interfaces/datatable';
 import { TableLazyLoadEvent } from 'primeng/table';
@@ -30,6 +35,7 @@ export class BitacoraDetailComponent {
   form: FormGroup;
   idDetalleRuta: number;
   loading: boolean = true;
+  bitacora: Bitacora;
   totalRecords: number = 0;
   dataTablesParams: DataTableParams = {
     page: 1,
@@ -98,7 +104,7 @@ export class BitacoraDetailComponent {
           this.boletosContinuan = datos.boletosSiguen || [];
           this.paquetesSuben = datos.paquetesEnviados || [];
           this.paquetesContinuan = datos.paquetesSiguen || [];
-
+          this.bitacora = datos.bitacora;
           this.capacidadCamioneta =
             datos.detalleRuta.ruta.unidad.tipoCamioneta.capacidad;
           const ocupados = datos.detalleRuta.ocupados
@@ -116,19 +122,17 @@ export class BitacoraDetailComponent {
             horarioSalida: datos.detalleRuta.salidaHora,
             cliente: datos.cliente,
             asientos: datos.asientos,
-            usuario: datos.usuario,
+            usuario: datos.bitacora.usuario,
             total: datos.total,
             cambio: datos.cambio,
             pago: datos.pago,
             formaPago: datos.formaPago,
             estado: datos.detalleRuta.estado,
-            folio: datos.folio,
-            fechaCreacion: datos.fechaCreacion,
+            folio: datos.bitacora.folio,
+            fechaCreacion: datos.bitacora.fechaCreacion,
             operador: datos.detalleRuta.ruta.unidad.nombre,
             unidad: datos.detalleRuta.ruta.unidad.usuario.nombre,
           });
-          console.log(datos.detalleRuta.estado);
-
           this.loading = false;
         }
       },
@@ -303,7 +307,7 @@ export class BitacoraDetailComponent {
           if (resp.resultado) {
             const bitacoraDatos = {
               usuario: { id: this.authService.getUsuario()?.id },
-              detalleRuta: { id: this.idDetalleRuta } 
+              detalleRuta: { id: this.idDetalleRuta },
             };
             this.bitacoraService.cerrarBitacora(bitacoraDatos).subscribe({
               next: (r) => {

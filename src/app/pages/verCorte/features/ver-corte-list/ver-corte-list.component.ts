@@ -13,10 +13,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AuthService } from '@app/core/services/auth.service';
-import { DetalleRuta, Venta } from '@app/core/interfaces/apiResponse';
+import { Corte, Venta } from '@app/core/interfaces/apiResponse';
 import { VentasService } from '@app/data/services/ventas.service';
-import { BitacoraService } from '@app/data/services/bitacora.service';
-import { BitacoraDetailComponent } from '../bitacora-detail/bitacora-detail.component';
+import { CorteService } from '@app/data/services/corte.service';
+import { CorteViewComponent } from '@app/pages/corte/features/corte-view/corte-view.component';
 
 @Component({
   selector: 'app-user-list',
@@ -29,11 +29,11 @@ import { BitacoraDetailComponent } from '../bitacora-detail/bitacora-detail.comp
     RouterLink,
     DropdownModule,
   ],
-  templateUrl: './bitacora-list.component.html',
-  styleUrl: './bitacora-list.component.css',
+  templateUrl: './ver-corte-list.component.html',
+  styleUrl: './ver-corte-list.component.css',
 })
-export class BitacoraListComponent {
-  datos: DetalleRuta[] = [];
+export class VerCorteListComponent {
+  datos: Corte[] = [];
   totalRecords: number = 0;
   loading: boolean = true;
   urlRegresar: string = MODULES_URLS.PUBLIC.DEFAULT;
@@ -46,7 +46,7 @@ export class BitacoraListComponent {
   first = 10;
   destroy$ = new Subject<void>();
   constructor(
-    private service: BitacoraService,
+    private service: CorteService,
     private modalService: ModalService,
     private datatableService: DatatableService,
     private dialogService: DialogService,
@@ -101,11 +101,10 @@ export class BitacoraListComponent {
     this.obtenerDatos(this.dataTablesParams);
   }
 
-  ver(dato: DetalleRuta) {
-    this.mostrarModalAdicional(BitacoraDetailComponent, 'Detalle de la bitácora', {
+  ver(dato: Corte) {
+    this.mostrarModalAdicional(CorteViewComponent, 'Detalle de la venta', {
       id: dato.id,
     });
-     this.obtenerDatos(this.dataTablesParams);
   }
 
   ngOnDestroy(): void {
@@ -125,5 +124,4 @@ export class BitacoraListComponent {
       },
     });
   }
-
 }

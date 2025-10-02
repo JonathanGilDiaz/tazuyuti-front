@@ -64,6 +64,10 @@ export const routes: Routes = [
         loadChildren: () => import('@app/pages/paquetes/paquetes.routes').then(m => m.PaquetesRoutes),
       },
       {
+        path: 'bitacoraOperador',
+        loadChildren: () => import('@app/pages/choferBitacora/choferBitacora.routes').then(m => m.ChoferBitacoraRoutes),
+      },
+      {
         path: 'corte',
         loadChildren: () => import('@app/pages/corte/corte.routes').then(m => m.PaquetesRoutes),
       },

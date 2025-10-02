@@ -1,13 +1,16 @@
 export const APP = {
   NAME: 'APP',
-  WELCOME: 'BIENVENIDO',
+  WELCOME: 'BIENVENID@',
 };
 // URLs de APIs agrupadas en un objeto
 export const API_URLS = {
   ///MAIN: 'https://qb-aprendizajelenguas.oaxaca.gob.mx/api',
   //MAIN: 'https://db-siacv2.oaxaca.gob.mx/api',
-  URL_SISTEMA : 'http://127.0.0.1:8080/api',
-  MAIN: 'http://127.0.0.1:8080/api',
+  URL_SISTEMA : 'https://tazuyuti.com/api',
+  MAIN: 'https://tazuyuti.com/api',
+
+  //URL_SISTEMA : 'http://127.0.0.1:8080/api',
+  //MAIN: 'http://127.0.0.1:8080/api',
   // LOCAL: 'http://172.16.37.132:8084/api',
   // LENGUAS: 'https://qb-aprendizajelenguas.oaxaca.gob.mx/api',
 };

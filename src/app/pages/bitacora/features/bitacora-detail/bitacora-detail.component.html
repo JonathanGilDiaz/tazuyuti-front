@@ -5,7 +5,10 @@
     <!-- Condicional según estado del boleto -->
     <div class="mb-3 text-center">
       <button
-        *ngIf="form.get('estado')?.value === 'Activo'; else cancelado"
+        *ngIf="
+          form.get('estado')?.value === 'Activo' && this.authService.getUsuario().rol.id !== 5;
+          else cancelado
+        "
         type="button"
         class="btn btn-outline-danger"
         (click)="CerrarBitacora()"
@@ -48,10 +51,8 @@
           />
         </div>
 
-         <div class="col-12 col-md-4">
-          <label for="folio" class="form-label"
-            >Folio:</label
-          >
+        <div class="col-12 col-md-4">
+          <label for="folio" class="form-label">Folio:</label>
           <input
             type="text"
             class="form-control"

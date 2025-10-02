@@ -19,6 +19,10 @@ export class BitacoraService {
     return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/taquilla/${id}/indexBitacoras`,datos);
   }
 
+  obtenerRegistrosChofer(id: number, datos : DataTableParams):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/taquilla/${id}/indexBitacorasChofer`,datos);
+  }
+
   obtenerRegistro(id : number):Observable<ApiResponse<any>>{
     return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/taquilla/${id}/detailDetalleRuta`);
   }

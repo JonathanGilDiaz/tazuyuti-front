@@ -24,7 +24,6 @@
                 <div class="col-12 col-md-7">
                     <input type="text" class="form-control" placeholder="Nombre(s)"
                     formControlName="nombre"
-                    onlyText
                     [class.campo-invalido]="form.get('nombre').invalid && form.get('nombre').touched"
                     id="nombre" 
                     aria-describedby="nombre">
@@ -63,6 +62,19 @@
                         formControlName="precio"
                         [class.campo-invalido]="form.get('precio').invalid && form.get('precio').touched"
                         id="precio" aria-describedby="precio">
+                </div>
+            </div>            
+             <div class="row g-3 mt-2 align-items-center">
+                <div class="col-12 col-md-5 text-center">
+                    <label for="cantidad" class="form-label">Cantidad actual del producto: <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-12 col-md-7">
+                  <input type="number" step="{{ form.get('unidad')?.value === 'Granel' ? '0.01' : '1' }}"
+                    class="form-control"
+                    placeholder="Cantidad actual del producto"
+                    formControlName="cantidad"
+                    [class.campo-invalido]="form.get('cantidad').invalid && form.get('cantidad').touched"
+                    id="cantidad" aria-describedby="cantidad">
                 </div>
             </div>            
             <div class="row g-3 mt-2 align-items-center">

@@ -188,6 +188,23 @@ export interface Venta {
   detalleVentas: DetalleVenta[];
 }
 
+export interface OrdenCompra {
+  id: number;
+  usuario: Usuario;
+  total: number;
+  fechaCreacion: Date;
+  detalleOrdenCompras: DetalleOrdenCompra[];
+}
+
+export interface DetalleOrdenCompra {
+  id: number;
+  orden: OrdenCompra;
+  producto: Producto;
+  cantidad: number;
+  precio: number;
+  subTotal: number;
+}
+
 export interface PrecioPaqueteria {
   id: number;
   nombre: string;

@@ -21,22 +21,19 @@ import { AuthService } from '@app/core/services/auth.service';
   standalone: true,
   imports: [CommonModule, PrimeNGModules, ReactiveFormsModule, DropdownModule],
   providers: [DialogService],
-  templateUrl: './ventas-add.component.html',
-  styleUrl: './ventas-add.component.css',
+  templateUrl: './orden-add.component.html',
+  styleUrl: './orden-add.component.css',
 })
-export class VentasAddComponent implements OnInit {
+export class OrdenAddComponent implements OnInit {
   form: FormGroup;
   loading: boolean = false;
   destroy$ = new Subject<void>();
   fechaFormateada: string;
   refDialog: DynamicDialogRef | undefined;
-  productos: Producto[] = []; 
-  sugerencias: Producto[] = []; 
-  detalleVentas: any[] = [];
+  productos: Producto[] = [];
+  sugerencias: Producto[] = [];
+  detalleOrdenCompras: any[] = [];
   total: number = 0;
-  formaPago: string = '01 Efectivo'; 
-  pago: number = 0;
-  cambio: number = 0;
   totalRecords: number = 0;
 
   constructor(
@@ -58,11 +55,6 @@ export class VentasAddComponent implements OnInit {
         }
       },
     });
-
-    this.form.get('pago')?.valueChanges.subscribe(() => this.calcularTotal());
-    this.form
-      .get('formaPago')
-      ?.valueChanges.subscribe(() => this.calcularTotal());
   }
 
   trackByProd = (_: number, p: Producto) => p.id;
@@ -101,13 +93,17 @@ export class VentasAddComponent implements OnInit {
   }
 
   agregarProducto(producto: Producto) {
-    const existente = this.detalleVentas.find((p) => p.id === producto.id);
+    const existente = this.detalleOrdenCompras.find(
+      (p) => p.id === producto.id
+    );
+
     if (existente) {
+      // ✅ Mantener precio editado por el usuario
       existente.cantidad += 1;
       existente.subtotal = existente.cantidad * existente.precio;
     } else {
-      this.detalleVentas = [
-        ...this.detalleVentas,
+      this.detalleOrdenCompras = [
+        ...this.detalleOrdenCompras,
         {
           id: producto.id,
           codigo: producto.codigo,
@@ -125,6 +121,16 @@ export class VentasAddComponent implements OnInit {
     this.sugerencias = [];
   }
 
+  editarPrecio(item: any) {
+    const nuevoPrecio = prompt('Precio unitario:', String(item.precio));
+    const precioNum = Number(nuevoPrecio);
+    if (!isNaN(precioNum) && precioNum > 0) {
+      item.precio = precioNum;
+      item.subtotal = item.precio * item.cantidad;
+      this.calcularTotal();
+    }
+  }
+
   editar(item: any) {
     const cantidad = prompt('Cantidad:', String(item.cantidad));
     const n = Number(cantidad);
@@ -136,22 +142,17 @@ export class VentasAddComponent implements OnInit {
   }
 
   eliminar(item: any) {
-    this.detalleVentas = this.detalleVentas.filter((p) => p.id !== item.id);
+    this.detalleOrdenCompras = this.detalleOrdenCompras.filter(
+      (p) => p.id !== item.id
+    );
     this.calcularTotal();
   }
 
   calcularTotal() {
-    this.total = this.detalleVentas.reduce((acc, p) => acc + p.subtotal, 0);
-
-    const formaPago = this.form.get('formaPago')?.value;
-    const pago = Number(this.form.get('pago')?.value || 0);
-
-    if (formaPago === '01 Efectivo') {
-      this.cambio = pago >= this.total ? pago - this.total : 0;
-    } else {
-      this.cambio = 0;
-      this.form.get('pago')?.setValue(0, { emitEvent: false });
-    }
+    this.total = this.detalleOrdenCompras.reduce(
+      (acc, p) => acc + p.subtotal,
+      0
+    );
   }
 
   cargarDatos(event: TableLazyLoadEvent) {}
@@ -160,8 +161,6 @@ export class VentasAddComponent implements OnInit {
     this.form = this.fb.group({
       total: [0, Validators.required],
       textoBusqueda: [''],
-      formaPago: ['01 Efectivo'],
-      pago: [0],
     });
   }
 
@@ -183,7 +182,7 @@ export class VentasAddComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.detalleVentas.length === 0 || this.total <= 0) {
+    if (this.detalleOrdenCompras.length === 0 || this.total <= 0) {
       this.modalService
         .openAlertModal(
           'error',
@@ -194,21 +193,7 @@ export class VentasAddComponent implements OnInit {
       return;
     }
 
-    const formaPago = this.form.get('formaPago')?.value;
-    const pago = Number(this.form.get('pago')?.value || 0);
-
-    if (formaPago === '01 Efectivo' && pago < this.total) {
-      this.modalService
-        .openAlertModal(
-          'error',
-          'Error',
-          'El pago debe ser igual o mayor al total.'
-        )
-        .subscribe();
-      return;
-    }
-
-    const detalleAdaptado = this.detalleVentas.map((prod) => ({
+    const detalleAdaptado = this.detalleOrdenCompras.map((prod) => ({
       producto: { id: prod.id },
       cantidad: prod.cantidad,
       precio: prod.precio,
@@ -217,11 +202,8 @@ export class VentasAddComponent implements OnInit {
 
     const venta = {
       usuario: { id: this.authService.getUsuario()?.id },
-      formaPago: formaPago,
       total: this.total,
-      pago: formaPago === '01 Efectivo' ? pago : this.total,
-      cambio: formaPago === '01 Efectivo' ? this.cambio : 0,
-      detalleVentas: detalleAdaptado,
+      detalleOrdenCompras: detalleAdaptado,
     };
 
     this.modalService
@@ -234,14 +216,13 @@ export class VentasAddComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           if (resp.resultado) {
-            this.ventaService.agregarRegistro(venta).subscribe({
+            this.ventaService.ordenAgregarRegistro(venta).subscribe({
               next: (resp) => {
                 if (resp.success) {
                   this.modalService
                     .openAlertModal('exito', 'Éxito', resp.message)
                     .subscribe(() => {
-                      // 👇 devolvemos el idVenta al cerrar
-                      this.ref.close({ idVenta: resp.data.id });
+                      this.ref.close();
                     });
                 } else {
                   this.modalService

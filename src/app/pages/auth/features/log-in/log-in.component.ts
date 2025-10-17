@@ -126,6 +126,11 @@ export class LogInComponent implements OnInit {
             this.usuarioIdFaltante = error.error.data?.usuarioId;
             this.loginDataPendiente = dataLogin;
             this.abrirModalCorte();
+          }else{
+              this.modalService
+              .openAlertModal('error', 'Error', error.error?.message)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe();        
           }
         },
       });

@@ -34,4 +34,20 @@ export class VentasService {
     obtenerTicket(id : number):Observable<ApiResponse<any>>{
     return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/venta/${id}/ticket`);
   }
+
+   ordenObtenerRegistros(id: number, datos : DataTableParams):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/ordenCompra/${id}/index`,datos);
+  }
+  
+  ordenAgregarRegistro(datos : any):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/ordenCompra/save`,datos);
+  }
+
+  ordenObtenerRegistro(id : number):Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/ordenCompra/${id}/detail`);
+  }
+
+  ordenEliminarRegistro(id : number):Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/ordenCompra/${id}/ticket`,{});
+  }
 }

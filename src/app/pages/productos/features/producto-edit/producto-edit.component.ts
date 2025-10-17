@@ -6,11 +6,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { DinamicFormComponent } from '@app/shared/ui/dinamic-form/dinamic-form/dinamic-form.component';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { ProductosService } from '@app/data/services/productos.service';
-import { Subject, switchMap, tap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -35,7 +34,6 @@ constructor(
   private fb: FormBuilder,
   private productosService: ProductosService,
   private modalService: ModalService,
-  private router: Router,
   public config: DynamicDialogConfig,
   public ref: DynamicDialogRef
   ) {
@@ -46,6 +44,21 @@ constructor(
   }
 
   ngOnInit(): void {
+    this.form.get('unidad')?.valueChanges.subscribe((unidad) => {
+      const cantidadCtrl = this.form.get('cantidad');
+      if (!cantidadCtrl) return;
+      let valorActual = cantidadCtrl.value;
+      if (unidad === 'Pieza') {
+        if (valorActual != null && valorActual !== '') {
+          valorActual = Math.round(parseFloat(valorActual));
+          cantidadCtrl.setValue(valorActual, { emitEvent: false });
+        }
+        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+      } else if (unidad === 'Granel') {
+        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]);
+      }
+      cantidadCtrl.updateValueAndValidity();
+    });
   }
 
   iniciarFormulario(): void {
@@ -62,6 +75,7 @@ constructor(
       unidad: ['Pieza', [Validators.required]],
       costo: ['', [Validators.required]],
       precio: ['', Validators.required],
+      cantidad: ['', Validators.required],
     });
   }
 

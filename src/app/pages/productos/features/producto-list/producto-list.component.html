@@ -27,6 +27,7 @@
                     <th pSortableColumn="unidad">Unidad<p-sortIcon field="unidad"/></th>
                     <th pSortableColumn="costo">Costo de compra<p-sortIcon field="costo"/></th>
                     <th pSortableColumn="precio">Precio de venta<p-sortIcon field="precio"/></th>
+                    <th pSortableColumn="cantidad">Existencia<p-sortIcon field="cantidad"/></th>
                     <th pSortableColumn="fechaCreacion">Creación<p-sortIcon field="fechaCreacion"/></th>
                     <th pSortableColumn="fechaActualizacion">Actualización<p-sortIcon field="fechaActualizacion"/></th>
                     <th>Acciones</th>
@@ -77,6 +78,15 @@
                             placeholder="Buscar precio" 
                             ariaLabel="Buscar precio" />
                     </th>
+                     <th>
+                        <p-columnFilter
+                        [showMenu]="false" 
+                            type="text"
+                            field="cantidad"
+                            matchMode="contains"
+                            placeholder="Buscar existencia" 
+                            ariaLabel="Buscar existencia" />
+                    </th>
                     <th>
                         <p-columnFilter
                         [showMenu]="false" 
@@ -105,6 +115,7 @@
                     <td>{{ dato?.unidad }}</td>
                     <td>{{ '$' + (dato?.costo | number:'1.2-2') }}</td>
                     <td>{{ '$' + (dato?.precio | number:'1.2-2') }}</td>
+                    <td>{{ dato?.cantidad }}</td>
                     <td>{{ dato?.fechaCreacion }}</td>
                     <td>{{ dato?.fechaActualizacion }}</td>
 

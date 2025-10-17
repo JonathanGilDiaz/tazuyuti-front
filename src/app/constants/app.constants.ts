@@ -6,9 +6,14 @@ export const APP = {
 export const API_URLS = {
   ///MAIN: 'https://qb-aprendizajelenguas.oaxaca.gob.mx/api',
   //MAIN: 'https://db-siacv2.oaxaca.gob.mx/api',
+
+  //URL_SISTEMA : 'http://localhost:8080/api',
+  //MAIN: 'http://localhost:8080/api',
   URL_SISTEMA : 'https://tazuyuti.com/api',
   MAIN: 'https://tazuyuti.com/api',
 
+  //URL_SISTEMA : 'https://tazuyuti.com/api',
+  //MAIN: 'https://tazuyuti.com/api',
   //URL_SISTEMA : 'http://127.0.0.1:8080/api',
   //MAIN: 'http://127.0.0.1:8080/api',
   // LOCAL: 'http://172.16.37.132:8084/api',
@@ -56,7 +61,7 @@ export const MODULES_URLS = {
     LOGOUT: '/auth/logout',
   },
   PUBLIC: {
-    DEFAULT: '/dashboard',
+    DEFAULT: '/auth/login',
   },
   USER: {
     INDEX: '',

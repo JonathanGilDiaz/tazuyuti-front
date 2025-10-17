@@ -60,6 +60,10 @@ export const routes: Routes = [
         loadChildren: () => import('@app/pages/taquilla/taquilla.routes').then(m => m.TaquillaRoutes),
       },
        {
+        path: 'orden',
+        loadChildren: () => import('@app/pages/orden/orden.routes').then(m => m.OrdenRoutes),
+      },
+       {
         path: 'paquetes',
         loadChildren: () => import('@app/pages/paquetes/paquetes.routes').then(m => m.PaquetesRoutes),
       },

@@ -6,15 +6,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { DinamicFormComponent } from '@app/shared/ui/dinamic-form/dinamic-form/dinamic-form.component';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { ProductosService } from '@app/data/services/productos.service';
-import { OnlyTextDirective } from '@app/shared/directives/only-text.directive';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { Subject, takeUntil } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
-import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-user-add',
@@ -23,7 +21,6 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
     CommonModule,
     DinamicFormComponent,
     ReactiveFormsModule,
-    OnlyTextDirective,
     DropdownModule,
   ],
   templateUrl: './producto-add.component.html',
@@ -42,7 +39,24 @@ export class ProductoAddComponent implements OnInit {
   ) {
     this.iniciarFormulario();
   }
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+    this.form.get('unidad')?.valueChanges.subscribe((unidad) => {
+      const cantidadCtrl = this.form.get('cantidad');
+      if (!cantidadCtrl) return;
+      let valorActual = cantidadCtrl.value;
+      if (unidad === 'Pieza') {
+        if (valorActual != null && valorActual !== '') {
+          valorActual = Math.round(parseFloat(valorActual));
+          cantidadCtrl.setValue(valorActual, { emitEvent: false });
+        }
+        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+      } else if (unidad === 'Granel') {
+        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]);
+      }
+      cantidadCtrl.updateValueAndValidity();
+    });
+  }
 
   iniciarFormulario(): void {
     this.form = this.fb.group({
@@ -57,6 +71,7 @@ export class ProductoAddComponent implements OnInit {
       unidad: ['Pieza', [Validators.required]],
       costo: ['', [Validators.required]],
       precio: ['', Validators.required],
+      cantidad: ['', Validators.required],
     });
   }
 

@@ -99,53 +99,33 @@ export class PrecioPaqueteriaListComponent {
     this.obtenerDatos(this.dataTablesParams);
   }
 
-
-
   eliminar(producto: PrecioPaqueteria) {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de eliminar el registro?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          this.loading = true;
-          if (response.resultado) {
-            this.service.eliminarRegistro(producto.id).subscribe({
-              next: (response) => {
-                if (response.success) {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', response.message)
-                    .subscribe({
-                      complete: () => {
-                        this.datos = [];
-                        this.obtenerDatos(this.dataTablesParams);
-                      },
-                    });
-                } else {
-                  this.loading = false;
-                  if (!response.data?.description?.includes('expirado')) {
-                    this.modalService
-                      .openAlertModal('error', 'Error', response.message)
-                      .subscribe();
-                  }
-                }
-              },
-              error: (err: GlobalError) => {
-                this.loading = false;
-                this.modalService
-                  .openAlertModal('error', 'Error', err.error.message)
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe();
-              },
-            });
-          }
+    this.loading = true;
+    this.service.eliminarRegistro(producto.id).subscribe({
+      next: (response) => {
+        if (response.success) {
           this.loading = false;
-        },
-      });
+          this.datos = [];
+          this.obtenerDatos(this.dataTablesParams);
+        } else {
+          this.loading = false;
+          if (!response.data?.description?.includes('expirado')) {
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .subscribe();
+          }
+        }
+      },
+      error: (err: GlobalError) => {
+        this.loading = false;
+        this.modalService
+          .openAlertModal('error', 'Error', err.error.message)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe();
+      },
+    });
+
+    this.loading = false;
   }
 
   editar(precio: PrecioPaqueteria) {

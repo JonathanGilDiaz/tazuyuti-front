@@ -153,14 +153,8 @@ export class RutasListComponent {
               next: (response) => {
                 if (response.success) {
                   this.loading = false;
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', response.message)
-                    .subscribe({
-                      complete: () => {
-                        this.datos = [];
-                        this.obtenerDatos(this.dataTablesParams);
-                      },
-                    });
+                  this.datos = [];
+                  this.obtenerDatos(this.dataTablesParams);
                 } else {
                   this.loading = false;
                   if (!response.data?.description?.includes('expirado')) {

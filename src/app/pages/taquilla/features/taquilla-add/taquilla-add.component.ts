@@ -662,13 +662,7 @@ export class TaquillaAddComponent implements OnInit {
     this.boletoService.agregarRegistro(boletoPayload).subscribe({
       next: (resp) => {
         if (resp.success) {
-          this.modalService
-            .openAlertModal('exito', 'Éxito', resp.message)
-            .subscribe({
-              complete: () => {
-                this.ref.close(true);
-              },
-            });
+          this.ref.close(true);
         } else {
           this.modalService.openAlertModal(
             'error',
@@ -691,20 +685,7 @@ export class TaquillaAddComponent implements OnInit {
   }
 
   confirmarGuardar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de guardar los datos?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            this.guardar();
-          }
-        },
-      });
+    this.guardar();
   }
 
   cerrar() {

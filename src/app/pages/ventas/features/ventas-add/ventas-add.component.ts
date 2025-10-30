@@ -30,11 +30,11 @@ export class VentasAddComponent implements OnInit {
   destroy$ = new Subject<void>();
   fechaFormateada: string;
   refDialog: DynamicDialogRef | undefined;
-  productos: Producto[] = []; 
-  sugerencias: Producto[] = []; 
+  productos: Producto[] = [];
+  sugerencias: Producto[] = [];
   detalleVentas: any[] = [];
   total: number = 0;
-  formaPago: string = '01 Efectivo'; 
+  formaPago: string = '01 Efectivo';
   pago: number = 0;
   cambio: number = 0;
   totalRecords: number = 0;
@@ -166,20 +166,7 @@ export class VentasAddComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(false);
-          }
-        },
-      });
+    this.ref.close(false);
   }
 
   onSubmit() {
@@ -223,36 +210,21 @@ export class VentasAddComponent implements OnInit {
       cambio: formaPago === '01 Efectivo' ? this.cambio : 0,
       detalleVentas: detalleAdaptado,
     };
-
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de guardar la venta?',
-        true
-      )
-      .subscribe({
-        next: (resp) => {
-          if (resp.resultado) {
-            this.ventaService.agregarRegistro(venta).subscribe({
-              next: (resp) => {
-                if (resp.success) {
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', resp.message)
-                    .subscribe(() => {
-                      // 👇 devolvemos el idVenta al cerrar
-                      this.ref.close({ idVenta: resp.data.id });
-                    });
-                } else {
-                  this.modalService
-                    .openAlertModal('error', 'Error', resp.message)
-                    .subscribe();
-                }
-              },
+    this.ventaService.agregarRegistro(venta).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.modalService
+            .openAlertModal('exito', 'Éxito', resp.message)
+            .subscribe(() => {
+              this.ref.close({ idVenta: resp.data.id });
             });
-          }
-        },
-      });
+        } else {
+          this.modalService
+            .openAlertModal('error', 'Error', resp.message)
+            .subscribe();
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {

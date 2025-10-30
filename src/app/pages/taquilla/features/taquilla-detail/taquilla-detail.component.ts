@@ -80,7 +80,7 @@ export class TaquillaDetailComponent {
       formaPago: [''],
       folio: [''],
       fechaCreacion: [''],
-      estado:['']
+      estado: [''],
     });
   }
 
@@ -280,31 +280,12 @@ export class TaquillaDetailComponent {
   }
 
   cancelarBoleto() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar este bolto?',
-        true
-      )
-      .subscribe({
-        next: (resp) => {
-          if (resp.resultado) {
-            this.boletoService.cancelarBolet( this.idVenta).subscribe({
-              next: (r) => {
-                if (r.success) {
-                  this.modalService
-                    .openAlertModal(
-                      'exito',
-                      'Éxito',
-                      r.message || 'Boleto cancelado'
-                    )
-                    .subscribe(() => this.ref.close(true));
-                }
-              },
-            });
-          }
-        },
-      });
+    this.boletoService.cancelarBolet(this.idVenta).subscribe({
+      next: (r) => {
+        if (r.success) {
+          this.ref.close(true);
+        }
+      },
+    });
   }
 }

@@ -104,20 +104,7 @@ export class RutasAddComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(null);
-          }
-        },
-      });
+    this.ref.close(null);
   }
 
   onSubmit() {
@@ -154,13 +141,7 @@ export class RutasAddComponent implements OnInit {
                 next: (response) => {
                   this.loading = false;
                   if (response.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', response.message)
-                      .subscribe({
-                        complete: () => {
-                          this.ref.close(true);
-                        },
-                      });
+                    this.ref.close(true);
                   } else {
                     if (!response.data.description?.includes('expirado')) {
                       this.modalService

@@ -2,7 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PrimeNGModules } from '@app/primeng-config';
 import { RouterLink } from '@angular/router';
-import { PrecioBoleto, PrecioPaqueteria } from '@app/core/interfaces/apiResponse';
+import {
+  PrecioBoleto,
+  PrecioPaqueteria,
+} from '@app/core/interfaces/apiResponse';
 import { DataTableParams } from '@app/shared/ui/datatables/interfaces/datatable';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { DEFAULT_VALUES, MODULES_URLS } from '@app/constants/app.constants';
@@ -100,53 +103,33 @@ export class PasajesListComponent {
     this.obtenerDatos(this.dataTablesParams);
   }
 
-
-
   eliminar(producto: PrecioPaqueteria) {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de eliminar el registro?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          this.loading = true;
-          if (response.resultado) {
-            this.service.eliminarRegistro(producto.id).subscribe({
-              next: (response) => {
-                if (response.success) {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', response.message)
-                    .subscribe({
-                      complete: () => {
-                        this.datos = [];
-                        this.obtenerDatos(this.dataTablesParams);
-                      },
-                    });
-                } else {
-                  this.loading = false;
-                  if (!response.data?.description?.includes('expirado')) {
-                    this.modalService
-                      .openAlertModal('error', 'Error', response.message)
-                      .subscribe();
-                  }
-                }
-              },
-              error: (err: GlobalError) => {
-                this.loading = false;
-                this.modalService
-                  .openAlertModal('error', 'Error', err.error.message)
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe();
-              },
-            });
-          }
+    this.loading = true;
+    this.service.eliminarRegistro(producto.id).subscribe({
+      next: (response) => {
+        if (response.success) {
           this.loading = false;
-        },
-      });
+          this.datos = [];
+          this.obtenerDatos(this.dataTablesParams);
+        } else {
+          this.loading = false;
+          if (!response.data?.description?.includes('expirado')) {
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .subscribe();
+          }
+        }
+      },
+      error: (err: GlobalError) => {
+        this.loading = false;
+        this.modalService
+          .openAlertModal('error', 'Error', err.error.message)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe();
+      },
+    });
+
+    this.loading = false;
   }
 
   editar(precio: PrecioBoleto) {
@@ -182,10 +165,7 @@ export class PasajesListComponent {
   }
 
   agregarProducto() {
-    this.mostrarModalAdicional(
-      PasajesAddComponent,
-      'Registrar nuevo precio'
-    );
+    this.mostrarModalAdicional(PasajesAddComponent, 'Registrar nuevo precio');
     this.refDialog.onClose
       .pipe(takeUntil(this.destroy$))
       .subscribe((resultado: boolean) => {

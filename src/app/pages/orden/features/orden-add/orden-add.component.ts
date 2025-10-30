@@ -165,20 +165,7 @@ export class OrdenAddComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(false);
-          }
-        },
-      });
+    this.ref.close(false);
   }
 
   onSubmit() {
@@ -205,35 +192,17 @@ export class OrdenAddComponent implements OnInit {
       total: this.total,
       detalleOrdenCompras: detalleAdaptado,
     };
-
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de guardar la venta?',
-        true
-      )
-      .subscribe({
-        next: (resp) => {
-          if (resp.resultado) {
-            this.ventaService.ordenAgregarRegistro(venta).subscribe({
-              next: (resp) => {
-                if (resp.success) {
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', resp.message)
-                    .subscribe(() => {
-                      this.ref.close();
-                    });
-                } else {
-                  this.modalService
-                    .openAlertModal('error', 'Error', resp.message)
-                    .subscribe();
-                }
-              },
-            });
-          }
-        },
-      });
+    this.ventaService.ordenAgregarRegistro(venta).subscribe({
+      next: (resp) => {
+        if (resp.success) {
+          this.ref.close();
+        } else {
+          this.modalService
+            .openAlertModal('error', 'Error', resp.message)
+            .subscribe();
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {

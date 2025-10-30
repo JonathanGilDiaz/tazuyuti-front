@@ -30,17 +30,17 @@ export class ProductoEditComponent {
   loading: boolean = false;
   destroy$ = new Subject<void>();
 
-constructor(
-  private fb: FormBuilder,
-  private productosService: ProductosService,
-  private modalService: ModalService,
-  public config: DynamicDialogConfig,
-  public ref: DynamicDialogRef
+  constructor(
+    private fb: FormBuilder,
+    private productosService: ProductosService,
+    private modalService: ModalService,
+    public config: DynamicDialogConfig,
+    public ref: DynamicDialogRef
   ) {
     this.iniciarFormulario();
-      if (this.config?.data?.producto) {
-    this.form.patchValue(this.config.data.producto);
-  }
+    if (this.config?.data?.producto) {
+      this.form.patchValue(this.config.data.producto);
+    }
   }
 
   ngOnInit(): void {
@@ -53,9 +53,15 @@ constructor(
           valorActual = Math.round(parseFloat(valorActual));
           cantidadCtrl.setValue(valorActual, { emitEvent: false });
         }
-        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+        cantidadCtrl.setValidators([
+          Validators.required,
+          Validators.pattern(/^\d+$/),
+        ]);
       } else if (unidad === 'Granel') {
-        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]);
+        cantidadCtrl.setValidators([
+          Validators.required,
+          Validators.pattern(/^\d+(\.\d+)?$/),
+        ]);
       }
       cantidadCtrl.updateValueAndValidity();
     });
@@ -64,14 +70,8 @@ constructor(
   iniciarFormulario(): void {
     this.form = this.fb.group({
       id: [null],
-         codigo: ['', [Validators.required]],
-      nombre: [
-        '',
-        [
-          Validators.required,
-         
-        ],
-      ],
+      codigo: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
       unidad: ['Pieza', [Validators.required]],
       costo: ['', [Validators.required]],
       precio: ['', Validators.required],
@@ -86,7 +86,7 @@ constructor(
         let datos: any = {
           ...response.data,
         };
-        this.form.patchValue(datos);           
+        this.form.patchValue(datos);
         this.form.updateValueAndValidity();
         this.loading = false;
       },
@@ -102,100 +102,74 @@ constructor(
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
+    this.ref.close(true);
+  }
+
+  onSubmit() {
+    if (this.form.valid) {
+      // Normaliza los valores vacíos a null
+      Object.keys(this.form.controls).forEach((key) => {
+        if (this.form.controls[key].value === '') {
+          this.form.controls[key].setValue(null);
+        }
+      });
+      this.loading = true;
+      const datos = new FormData();
+      Object.keys(this.form.controls).forEach((key) => {
+        const value = this.form.controls[key].value;
+        if (value !== null && value !== undefined) {
+          datos.append(key, value);
+        }
+      });
+
+      this.productosService.actualizarRegistro(datos).subscribe({
         next: (response) => {
-          if (response.resultado) {
+          this.loading = false;
+          if (response.success) {
             this.ref.close(true);
+          } else {
+            const info =
+              Object.keys(response.data || {}).length > 0
+                ? response.data.errors
+                : response.message;
+
+            if (!response.data?.description?.includes('expirado')) {
+              this.modalService
+                .openAlertModal('error', 'Error', info)
+                .subscribe({
+                  next: () => {
+                    Object.keys(this.form.controls).forEach((key) => {
+                      this.form.controls[key].markAsTouched();
+                    });
+                  },
+                });
+            }
           }
         },
+        error: (err) => {
+          this.loading = false;
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .subscribe();
+        },
       });
-  }
-
-onSubmit() {
-  if (this.form.valid) {
-    // Normaliza los valores vacíos a null
-    Object.keys(this.form.controls).forEach((key) => {
-      if (this.form.controls[key].value === '') {
-        this.form.controls[key].setValue(null);
-      }
-    });
-
-    this.modalService.openAlertModal(
-      'advertencia',
-      'Atención',
-      '¿Está seguro de guardar los datos?',
-      true
-    ).subscribe({
-      next: (response) => {
-        if (response.resultado) {
-          this.loading = true;
-
-          const datos = new FormData();
-          Object.keys(this.form.controls).forEach((key) => {
-            const value = this.form.controls[key].value;
-            if (value !== null && value !== undefined) {
-              datos.append(key, value);
-            }
-          });
-
-          this.productosService.actualizarRegistro(datos).subscribe({
-            next: (response) => {
-              this.loading = false;
-              if (response.success) {
-                this.modalService
-                  .openAlertModal('exito', 'Éxito', response.message)
-                  .subscribe({
-                    complete: () => {
-                      this.ref.close(true); // ✅ cierra el modal y avisa al padre que refresque
-                    },
-                  });
-              } else {
-                const info = Object.keys(response.data || {}).length > 0
-                  ? response.data.errors
-                  : response.message;
-
-                if (!response.data?.description?.includes('expirado')) {
-                  this.modalService.openAlertModal('error', 'Error', info).subscribe({
-                    next: () => {
-                      Object.keys(this.form.controls).forEach((key) => {
-                        this.form.controls[key].markAsTouched();
-                      });
-                    },
-                  });
-                }
-              }
-            },
-            error: (err) => {
-              this.loading = false;
-              this.modalService.openAlertModal('error', 'Error', err.error.message).subscribe();
-            },
-          });
-        }
-      }
-    });
-  } else {
-    this.modalService.openAlertModal(
-      'error',
-      'Error',
-      'Hay datos del formulario que son requeridos, favor de ingresarlos para completar el registro.'
-    ).subscribe({
-      next: () => {
-        Object.keys(this.form.controls).forEach((key) => {
-          this.form.controls[key].markAsTouched();
+    } else {
+      this.modalService
+        .openAlertModal(
+          'error',
+          'Error',
+          'Hay datos del formulario que son requeridos, favor de ingresarlos para completar el registro.'
+        )
+        .subscribe({
+          next: () => {
+            Object.keys(this.form.controls).forEach((key) => {
+              this.form.controls[key].markAsTouched();
+            });
+          },
         });
-      }
-    });
+    }
   }
-}
 
-  
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();

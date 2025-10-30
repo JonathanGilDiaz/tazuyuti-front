@@ -22,65 +22,72 @@ import { GlobalError } from '@app/core/interfaces/errors.interface';
     LayoutComponent,
     PrimeNGModules,
     RouterLink,
-    DropdownModule
-],
+    DropdownModule,
+  ],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styleUrl: './user-list.component.css',
 })
 export class UserListComponent {
   activos!: any[];
   usuarios: Usuario[] = [];
   totalRecords: number = 0;
   loading: boolean = true;
-  urlRegresar : string = MODULES_URLS.PUBLIC.DEFAULT;
-  rowsPerPageOptions =[DEFAULT_VALUES.PAGE_SIZE,DEFAULT_VALUES.PAGE_SIZE*2]
+  urlRegresar: string = MODULES_URLS.PUBLIC.DEFAULT;
+  rowsPerPageOptions = [DEFAULT_VALUES.PAGE_SIZE, DEFAULT_VALUES.PAGE_SIZE * 2];
   dataTablesParams: DataTableParams = {
-    "page": 1,
-    "size": 50
-  }
-  first =10;
+    page: 1,
+    size: 50,
+  };
+  first = 10;
   destroy$ = new Subject<void>();
   constructor(
-    private usuariosService : UsuariosService,
+    private usuariosService: UsuariosService,
     private modalService: ModalService,
-    private router : Router,
+    private router: Router,
     private datatableService: DatatableService
-  ){}
+  ) {}
 
   ngOnInit(): void {
     this.activos = [
-      {etiqueta: 'Activo', valor: true},
-      {etiqueta: 'Inactivo', valor: false}
+      { etiqueta: 'Activo', valor: true },
+      { etiqueta: 'Inactivo', valor: false },
     ];
   }
 
-  obtenerUsuarios(dataTablesParams: DataTableParams){
-    this.usuariosService.obtenerRegistros(dataTablesParams).pipe(takeUntil(this.destroy$)).subscribe({
-      next : response =>{
-        if(response.success){
-          if(response.data && response.data.content){
-            this.usuarios = response.data.content;
-            this.totalRecords = response.data.totalElements;
+  obtenerUsuarios(dataTablesParams: DataTableParams) {
+    this.usuariosService
+      .obtenerRegistros(dataTablesParams)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            if (response.data && response.data.content) {
+              this.usuarios = response.data.content;
+              this.totalRecords = response.data.totalElements;
+            } else this.usuarios = [];
+            this.loading = false;
+          } else {
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe();
           }
-          else
-            this.usuarios = [];
-          this.loading = false;
-        }else{
-          this.modalService.openAlertModal('error','Error', response.message).pipe(takeUntil(this.destroy$)).subscribe();
-        }
-      },
-      error : (err : GlobalError) => {
-        this.modalService.openAlertModal('error', 'Error', err.error.message).pipe(takeUntil(this.destroy$)).subscribe();
-      }
-    });
+        },
+        error: (err: GlobalError) => {
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        },
+      });
   }
 
   pageChange(event) {
-    const page = (event.first/event.rows) + 1;
+    const page = event.first / event.rows + 1;
     this.dataTablesParams.page = page;
   }
-  cargarUsuarios(event : TableLazyLoadEvent){
-    const page = (event.first/event.rows) + 1; // Calcular la página actual
+  cargarUsuarios(event: TableLazyLoadEvent) {
+    const page = event.first / event.rows + 1; // Calcular la página actual
     const size = event.rows; // Tamaño de la página
 
     // Procesa los filtros y el ordenamiento utilizando los métodos del servicio
@@ -88,48 +95,59 @@ export class UserListComponent {
     const sort = this.datatableService.procesarOrdenamiento(event);
 
     this.dataTablesParams = {
-      size :size,
-      page : page,
+      size: size,
+      page: page,
       sort: sort,
-      filters: filters
+      filters: filters,
     };
     this.obtenerUsuarios(this.dataTablesParams);
   }
 
-  ver(usuario : Usuario){
-    this.router.navigate(['usuarios',usuario.id]);
+  ver(usuario: Usuario) {
+    this.router.navigate(['usuarios', usuario.id]);
   }
 
-  editar(usuario : Usuario){
-    this.router.navigate(['usuarios/editar',usuario.id]);
+  editar(usuario: Usuario) {
+    this.router.navigate(['usuarios/editar', usuario.id]);
   }
 
-  deshabilitar(usuario : Usuario){
-    this.modalService.openAlertModal('advertencia','Atención', `Está apunto de deshabilitar el usuario ${usuario.usuario}. ¿Está seguro de continuar?`,true).pipe(takeUntil(this.destroy$)).subscribe({
-      next : response =>{
-        if(response.resultado){
-          usuario.activo = false;
-          this.usuariosService.activarUsuario(usuario).pipe(takeUntil(this.destroy$)).subscribe(
-            {
-              next: response=> {
-                if(response.success){
-                  this.modalService.openAlertModal('exito','Éxito', response.message).pipe(takeUntil(this.destroy$)).subscribe({
-                    complete : () =>{
-                      this.obtenerUsuarios(this.dataTablesParams);
-                    }
-                  });
-                }else {
-                  this.modalService.openAlertModal('error', 'Error', response.message).pipe(takeUntil(this.destroy$)).subscribe();
-                }
-              },
-              error : (err : GlobalError) => {
-                this.modalService.openAlertModal('error', 'Error', err.error.message).pipe(takeUntil(this.destroy$)).subscribe();
-              }
-            }
-          );
-        }
-      }
-    });  
+  deshabilitar(usuario: Usuario) {
+    this.modalService
+      .openAlertModal(
+        'advertencia',
+        'Atención',
+        `Está apunto de deshabilitar el usuario ${usuario.usuario}. ¿Está seguro de continuar?`,
+        true
+      )
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.resultado) {
+            usuario.activo = false;
+            this.usuariosService
+              .activarUsuario(usuario)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (response) => {
+                  if (response.success) {
+                    this.obtenerUsuarios(this.dataTablesParams);
+                  } else {
+                    this.modalService
+                      .openAlertModal('error', 'Error', response.message)
+                      .pipe(takeUntil(this.destroy$))
+                      .subscribe();
+                  }
+                },
+                error: (err: GlobalError) => {
+                  this.modalService
+                    .openAlertModal('error', 'Error', err.error.message)
+                    .pipe(takeUntil(this.destroy$))
+                    .subscribe();
+                },
+              });
+          }
+        },
+      });
   }
 
   ngOnDestroy(): void {

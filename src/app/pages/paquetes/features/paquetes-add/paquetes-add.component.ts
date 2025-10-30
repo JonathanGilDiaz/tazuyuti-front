@@ -283,11 +283,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
             this.paqueteService.agregarRegistro(payload).subscribe({
               next: (r) => {
                 if (r.success) {
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', r.message)
-                    .subscribe(() => {
-                      this.ref.close({ idVenta: r.data.id });
-                    });
+                  this.ref.close({ idVenta: r.data.id });
                 } else {
                   this.modalService
                     .openAlertModal('error', 'Error', r.message)

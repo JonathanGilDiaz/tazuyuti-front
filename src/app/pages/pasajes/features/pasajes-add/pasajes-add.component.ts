@@ -96,77 +96,47 @@ export class PasajesAddComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(null);
-          }
-        },
-      });
+    this.ref.close(null);
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.modalService
-        .openAlertModal(
-          'advertencia',
-          'Atención',
-          '¿Está seguro de guardar el nuevo precio de boleto?',
-          true
-        )
-        .subscribe({
-          next: (response) => {
-            if (response.resultado) {
-              const datos = new FormData();
-              const value = this.form.value;
+      const datos = new FormData();
+      const value = this.form.value;
 
-              datos.append('origen', value.origen);
-              datos.append('destino', value.destino);
-              datos.append('precio', value.precio);
+      datos.append('origen', value.origen);
+      datos.append('destino', value.destino);
+      datos.append('precio', value.precio);
 
-              if (value.tipoDestino === 'base') {
-                datos.append('entre1', value.sucursalDestino);
-                datos.append('entre2', value.sucursalDestino);
-              } else if (value.tipoDestino === 'intermedio') {
-                if (!this.validarRuta()) return;
-                datos.append('entre1', value.intermedio.entre1);
-                datos.append('entre2', value.intermedio.entre2);
-              }
+      if (value.tipoDestino === 'base') {
+        datos.append('entre1', value.sucursalDestino);
+        datos.append('entre2', value.sucursalDestino);
+      } else if (value.tipoDestino === 'intermedio') {
+        if (!this.validarRuta()) return;
+        datos.append('entre1', value.intermedio.entre1);
+        datos.append('entre2', value.intermedio.entre2);
+      }
 
-              this.loading = true;
-              this.service.agregarRegistro(datos).subscribe({
-                next: (response) => {
-                  this.loading = false;
-                  if (response.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', response.message)
-                      .subscribe(() => {
-                        this.ref.close(true);
-                      });
-                  } else {
-                    this.modalService
-                      .openAlertModal('error', 'Error', response.message)
-                      .subscribe();
-                  }
-                },
-                error: (err: GlobalError) => {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('error', 'Error', err.error.message)
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe();
-                },
-              });
-            }
-          },
-        });
+      this.loading = true;
+      this.service.agregarRegistro(datos).subscribe({
+        next: (response) => {
+          this.loading = false;
+          if (response.success) {
+            this.ref.close(true);
+          } else {
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .subscribe();
+          }
+        },
+        error: (err: GlobalError) => {
+          this.loading = false;
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        },
+      });
     } else {
       this.modalService
         .openAlertModal(

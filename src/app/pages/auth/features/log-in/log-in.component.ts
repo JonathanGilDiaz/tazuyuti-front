@@ -159,15 +159,11 @@ export class LogInComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           if (!resp.success) return;
-
           this.modalRef.close();
-
-          // Mostrar alerta de éxito
           this.modalService
             .openAlertModal('exito', 'Éxito', 'Corte creado exitosamente')
             .subscribe({
               complete: () => {
-                // Dar un pequeño retraso antes de recargar
                 setTimeout(() => window.location.reload(), 100);
               },
             });

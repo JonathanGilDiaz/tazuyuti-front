@@ -295,35 +295,16 @@ export class BitacoraDetailComponent {
   }
 
   CerrarBitacora() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar este bolto?',
-        true
-      )
-      .subscribe({
-        next: (resp) => {
-          if (resp.resultado) {
-            const bitacoraDatos = {
-              usuario: { id: this.authService.getUsuario()?.id },
-              detalleRuta: { id: this.idDetalleRuta },
-            };
-            this.bitacoraService.cerrarBitacora(bitacoraDatos).subscribe({
-              next: (r) => {
-                if (r.success) {
-                  this.modalService
-                    .openAlertModal(
-                      'exito',
-                      'Éxito',
-                      r.message || 'Boleto cancelado'
-                    )
-                    .subscribe(() => this.ref.close(true));
-                }
-              },
-            });
-          }
-        },
-      });
+    const bitacoraDatos = {
+      usuario: { id: this.authService.getUsuario()?.id },
+      detalleRuta: { id: this.idDetalleRuta },
+    };
+    this.bitacoraService.cerrarBitacora(bitacoraDatos).subscribe({
+      next: (r) => {
+        if (r.success) {
+          this.ref.close(true);
+        }
+      },
+    });
   }
 }

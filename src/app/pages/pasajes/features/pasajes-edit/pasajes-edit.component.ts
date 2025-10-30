@@ -150,77 +150,47 @@ export class PasajesEditComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(true);
-          }
-        },
-      });
+    this.ref.close(true);
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.modalService
-        .openAlertModal(
-          'advertencia',
-          'Atención',
-          '¿Está seguro de actualizar el precio?',
-          true
-        )
-        .subscribe({
-          next: (response) => {
-            if (response.resultado) {
-              this.loading = true;
-              const value = this.form.value;
-              const datos = new FormData();
+      this.loading = true;
+      const value = this.form.value;
+      const datos = new FormData();
 
-              datos.append('id', value.id);
-              datos.append('origen', value.origen);
-              datos.append('destino', value.destino);
-              datos.append('precio', value.precio);
+      datos.append('id', value.id);
+      datos.append('origen', value.origen);
+      datos.append('destino', value.destino);
+      datos.append('precio', value.precio);
 
-              if (value.tipoDestino === 'base') {
-                datos.append('entre1', value.sucursalDestino);
-                datos.append('entre2', value.sucursalDestino);
-              } else if (value.tipoDestino === 'intermedio') {
-                if (!this.validarRuta()) return;
-                datos.append('entre1', value.intermedio.entre1);
-                datos.append('entre2', value.intermedio.entre2);
-              }
+      if (value.tipoDestino === 'base') {
+        datos.append('entre1', value.sucursalDestino);
+        datos.append('entre2', value.sucursalDestino);
+      } else if (value.tipoDestino === 'intermedio') {
+        if (!this.validarRuta()) return;
+        datos.append('entre1', value.intermedio.entre1);
+        datos.append('entre2', value.intermedio.entre2);
+      }
 
-              this.service.actualizarRegistro(datos).subscribe({
-                next: (resp) => {
-                  this.loading = false;
-                  if (resp.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', resp.message)
-                      .subscribe(() => {
-                        this.ref.close(true);
-                      });
-                  } else {
-                    this.modalService
-                      .openAlertModal('error', 'Error', resp.message)
-                      .subscribe();
-                  }
-                },
-                error: (err) => {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('error', 'Error', err.error.message)
-                    .subscribe();
-                },
-              });
-            }
-          },
-        });
+      this.service.actualizarRegistro(datos).subscribe({
+        next: (resp) => {
+          this.loading = false;
+          if (resp.success) {
+            this.ref.close(true);
+          } else {
+            this.modalService
+              .openAlertModal('error', 'Error', resp.message)
+              .subscribe();
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .subscribe();
+        },
+      });
     } else {
       this.modalService
         .openAlertModal(

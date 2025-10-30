@@ -35,7 +35,7 @@ export class ProductoAddComponent implements OnInit {
     private fb: FormBuilder,
     private productosService: ProductosService,
     private modalService: ModalService,
-    public ref: DynamicDialogRef,
+    public ref: DynamicDialogRef
   ) {
     this.iniciarFormulario();
   }
@@ -50,9 +50,15 @@ export class ProductoAddComponent implements OnInit {
           valorActual = Math.round(parseFloat(valorActual));
           cantidadCtrl.setValue(valorActual, { emitEvent: false });
         }
-        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+        cantidadCtrl.setValidators([
+          Validators.required,
+          Validators.pattern(/^\d+$/),
+        ]);
       } else if (unidad === 'Granel') {
-        cantidadCtrl.setValidators([Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]);
+        cantidadCtrl.setValidators([
+          Validators.required,
+          Validators.pattern(/^\d+(\.\d+)?$/),
+        ]);
       }
       cantidadCtrl.updateValueAndValidity();
     });
@@ -61,13 +67,7 @@ export class ProductoAddComponent implements OnInit {
   iniciarFormulario(): void {
     this.form = this.fb.group({
       codigo: ['', [Validators.required]],
-      nombre: [
-        '',
-        [
-          Validators.required,
-         
-        ],
-      ],
+      nombre: ['', [Validators.required]],
       unidad: ['Pieza', [Validators.required]],
       costo: ['', [Validators.required]],
       precio: ['', Validators.required],
@@ -76,20 +76,7 @@ export class ProductoAddComponent implements OnInit {
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(null);
-          }
-        },
-      });
+    this.ref.close(null);
   }
 
   onSubmit() {
@@ -100,64 +87,45 @@ export class ProductoAddComponent implements OnInit {
         }
       });
 
-      this.modalService
-        .openAlertModal(
-          'advertencia',
-          'Atención',
-          '¿Está seguro de guardar los datos?',
-          true
-        )
-        .subscribe({
-          next: (response) => {
-            if (response.resultado) {
-              this.loading = true;
+      this.loading = true;
 
-              const datos = new FormData();
+      const datos = new FormData();
 
-              Object.keys(this.form.controls).forEach((key) => {
-                const value = this.form.controls[key].value;
-              
-                if (value !== null && value !== undefined) {
-                  datos.append(key, value);
-                }
-              });
-            
-              this.productosService.agregarRegistro(datos).subscribe({
-                next: (response) => {
-                  this.loading = false;
-                  if (response.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', response.message)
-                      .subscribe({
-                        complete: () => {
-                          this.ref.close(true);
-                        },
-                      });
-                  } else {
-                    if (!response.data.description?.includes('expirado')) {
-                      this.modalService
-                        .openAlertModal('error', 'Error', response.message)
-                        .subscribe({
-                          next: () => {
-                            Object.keys(this.form.controls).forEach((key) => {
-                              this.form.controls[key].markAsTouched();
-                            });
-                          },
-                        });
-                    }
-                  }
-                },
-                error: (err: GlobalError) => {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('error', 'Error', err.error.message)
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe();
-                },
-              });
+      Object.keys(this.form.controls).forEach((key) => {
+        const value = this.form.controls[key].value;
+
+        if (value !== null && value !== undefined) {
+          datos.append(key, value);
+        }
+      });
+
+      this.productosService.agregarRegistro(datos).subscribe({
+        next: (response) => {
+          this.loading = false;
+          if (response.success) {
+            this.ref.close(true);
+          } else {
+            if (!response.data.description?.includes('expirado')) {
+              this.modalService
+                .openAlertModal('error', 'Error', response.message)
+                .subscribe({
+                  next: () => {
+                    Object.keys(this.form.controls).forEach((key) => {
+                      this.form.controls[key].markAsTouched();
+                    });
+                  },
+                });
             }
-          },
-        });
+          }
+        },
+        error: (err: GlobalError) => {
+          this.loading = false;
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        },
+      });
     } else {
       this.modalService
         .openAlertModal(

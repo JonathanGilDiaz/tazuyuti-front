@@ -43,7 +43,7 @@ export class ClienteListComponent {
     page: 1,
     size: 50,
   };
-  refDialog:                  DynamicDialogRef | undefined;
+  refDialog: DynamicDialogRef | undefined;
   first = 10;
   destroy$ = new Subject<void>();
   constructor(
@@ -52,11 +52,10 @@ export class ClienteListComponent {
     private router: Router,
     private datatableService: DatatableService,
     private dialogService: DialogService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   obtenerDatos(dataTablesParams: DataTableParams) {
     this.service
@@ -105,104 +104,79 @@ export class ClienteListComponent {
   }
 
   ver(dato: Cliente) {
-    this.mostrarModalAdicional(
-      ClienteDetailComponent,
-      'Detalle del cliente',
-      { dato } 
-    );
+    this.mostrarModalAdicional(ClienteDetailComponent, 'Detalle del cliente', {
+      dato,
+    });
   }
 
   eliminar(dato: Cliente) {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de eliminar el registro?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          this.loading = true;
-          if (response.resultado) {
-            this.service.eliminarRegistro(dato.id).subscribe({
-              next: (response) => {
-                if (response.success) {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', response.message)
-                    .subscribe({
-                      complete: () => {
-                        this.datos = [];
-                        this.obtenerDatos(this.dataTablesParams);
-                      },
-                    });
-                } else {
-                  this.loading = false;
-                  if (!response.data?.description?.includes('expirado')) {
-                    this.modalService
-                      .openAlertModal('error', 'Error', response.message)
-                      .subscribe();
-                  }
-                }
-              },
-              error: (err: GlobalError) => {
-                this.loading = false;
-                this.modalService
-                  .openAlertModal('error', 'Error', err.error.message)
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe();
-              },
-            });
-          }
+    this.loading = true;
+    this.service.eliminarRegistro(dato.id).subscribe({
+      next: (response) => {
+        if (response.success) {
           this.loading = false;
-        },
-      });
+          this.datos = [];
+          this.obtenerDatos(this.dataTablesParams);
+        } else {
+          this.loading = false;
+          if (!response.data?.description?.includes('expirado')) {
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .subscribe();
+          }
+        }
+      },
+      error: (err: GlobalError) => {
+        this.loading = false;
+        this.modalService
+          .openAlertModal('error', 'Error', err.error.message)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe();
+      },
+    });
+    this.loading = false;
   }
 
-editar(dato: Cliente) {
-  this.mostrarModalAdicional(
-    ClienteEditComponent,
-    'Editar cliente',
-    { dato } 
-  );
-
-  this.refDialog?.onClose
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((resultado: boolean) => {
-      if (resultado) {
-        this.obtenerDatos(this.dataTablesParams);
-      }
+  editar(dato: Cliente) {
+    this.mostrarModalAdicional(ClienteEditComponent, 'Editar cliente', {
+      dato,
     });
-}
+
+    this.refDialog?.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: boolean) => {
+        if (resultado) {
+          this.obtenerDatos(this.dataTablesParams);
+        }
+      });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
 
-  mostrarModalAdicional(component : any, titulo : string, data? : any): void{
+  mostrarModalAdicional(component: any, titulo: string, data?: any): void {
     this.refDialog = this.dialogService.open(component, {
       header: titulo,
-      width: data?.width? data.width : '70vw',
-      data : data,
-      contentStyle: { 'z-index': 1036},
+      width: data?.width ? data.width : '70vw',
+      data: data,
+      contentStyle: { 'z-index': 1036 },
       breakpoints: {
-          '960px': '75vw',
-          '640px': '90vw'
-      }
+        '960px': '75vw',
+        '640px': '90vw',
+      },
     });
   }
 
   agregar() {
-    this.mostrarModalAdicional(
-      ClienteAddComponent,
-      'Registrar Nuevo cliente'
-    );
-    this.refDialog.onClose.pipe(takeUntil(this.destroy$)).subscribe((resultado: boolean) => {
-      if(resultado){
-        this.obtenerDatos(this.dataTablesParams);
-      }
-    });
+    this.mostrarModalAdicional(ClienteAddComponent, 'Registrar Nuevo cliente');
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: boolean) => {
+        if (resultado) {
+          this.obtenerDatos(this.dataTablesParams);
+        }
+      });
   }
-
 }

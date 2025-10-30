@@ -31,7 +31,7 @@ export class RutasEditComponent {
   loading: boolean = false;
   destroy$ = new Subject<void>();
   Unidades: Unidad[] = [];
-   diasSemana = [
+  diasSemana = [
     { label: 'Lunes', value: 'lunes' },
     { label: 'Martes', value: 'martes' },
     { label: 'Miércoles', value: 'miércoles' },
@@ -130,20 +130,7 @@ export class RutasEditComponent {
     });
   }
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(true);
-          }
-        },
-      });
+    this.ref.close(true);
   }
 
   onSubmit() {
@@ -178,13 +165,7 @@ export class RutasEditComponent {
                 next: (response) => {
                   this.loading = false;
                   if (response.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', response.message)
-                      .subscribe({
-                        complete: () => {
-                          this.ref.close(true); // ✅ cierra el modal y avisa al padre que refresque
-                        },
-                      });
+                    this.ref.close(true);
                   } else {
                     const info =
                       Object.keys(response.data || {}).length > 0

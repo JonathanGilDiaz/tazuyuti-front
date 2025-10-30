@@ -48,290 +48,321 @@
       </div>
     </div>
   </div>
-
-  <h4 class="titulo">Ventas</h4>
-  <div class="card">
-    <p-table
-      [value]="ventas"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 20, 50]"
-      [loading]="loading"
-      [sortField]="'id'"
-      [totalRecords]="totalRecords"
-      sortMode="multiple"
-      [globalFilterFields]="['id']"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-      [lazy]="true"
-      (onLazyLoad)="cargarDatos($event)"
-      [filterDelay]="0"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Folio</th>
-          <th>Fecha</th>
-          <th>Total</th>
-          <th>Forma pago</th>
-          <th>Acciones</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-dato>
-        <tr>
-          <td>{{ dato?.folio }}</td>
-          <td>{{ dato?.fechaCreacion }}</td>
-          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
-          <td>{{ dato?.formaPago }}</td>
-          <td>
-            <a
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="pi pi-ellipsis-v"></i>
-            </a>
-            <!-- Acciones para ver y editar -->
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  icon="pi pi-eye"
-                  (click)="verVenta(dato)"
-                  label="Ver"
-                  class="p-button-rounded p-button-text dropdown-item"
-                ></button>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">Datos no encontrados.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div
+    *ngIf="
+      this.authService.getUsuario()?.rol.id == 1 ||
+      this.authService.getUsuario()?.rol.id == 3 ||
+      this.authService.getUsuario()?.rol.id == 4
+    "
+  >
+    <h4 class="titulo">Ventas</h4>
+    <div class="card">
+      <p-table
+        [value]="ventas"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Forma pago</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato?.folio }}</td>
+            <td>{{ dato?.fechaCreacion }}</td>
+            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ dato?.formaPago }}</td>
+            <td>
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="pi pi-ellipsis-v"></i>
+              </a>
+              <!-- Acciones para ver y editar -->
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-eye"
+                    (click)="verVenta(dato)"
+                    label="Ver"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Datos no encontrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
   <br />
 
-  <h4 class="titulo">Boletos</h4>
-  <div class="card">
-    <p-table
-      [value]="boletos"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 20, 50]"
-      [loading]="loading"
-      [sortField]="'id'"
-      [totalRecords]="totalRecords"
-      sortMode="multiple"
-      [globalFilterFields]="['id']"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-      [lazy]="true"
-      (onLazyLoad)="cargarDatos($event)"
-      [filterDelay]="0"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Folio</th>
-          <th>Fecha</th>
-          <th>Cliente</th>
-          <th>Viaje</th>
-          <th>Total</th>
-          <th>Forma pago</th>
-          <th>Acciones</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-dato>
-        <tr>
-          <td>{{ dato?.folio }}</td>
-          <td>{{ dato?.fechaCreacion }}</td>
-          <td>{{ dato?.cliente }}</td>
-          <td>{{ dato?.viaje }}</td>
-          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
-          <td>{{ dato?.formaPago }}</td>
-          <td>
-            <a
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="pi pi-ellipsis-v"></i>
-            </a>
-            <!-- Acciones para ver y editar -->
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  icon="pi pi-eye"
-                  (click)="verBoleto(dato)"
-                  label="Ver"
-                  class="p-button-rounded p-button-text dropdown-item"
-                ></button>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">Datos no encontrados.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div
+    *ngIf="
+      this.authService.getUsuario()?.rol.id == 1 ||
+      this.authService.getUsuario()?.rol.id == 2 ||
+      this.authService.getUsuario()?.rol.id == 4
+    "
+  >
+    <h4 class="titulo">Boletos</h4>
+    <div class="card">
+      <p-table
+        [value]="boletos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Viaje</th>
+            <th>Total</th>
+            <th>Forma pago</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato?.folio }}</td>
+            <td>{{ dato?.fechaCreacion }}</td>
+            <td>{{ dato?.cliente }}</td>
+            <td>{{ dato?.viaje }}</td>
+            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ dato?.formaPago }}</td>
+            <td>
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="pi pi-ellipsis-v"></i>
+              </a>
+              <!-- Acciones para ver y editar -->
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-eye"
+                    (click)="verBoleto(dato)"
+                    label="Ver"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Datos no encontrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
   <br />
 
-  <h4 class="titulo">Paquetes</h4>
-  <div class="card">
-    <p-table
-      [value]="paquetes"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 20, 50]"
-      [loading]="loading"
-      [sortField]="'id'"
-      [totalRecords]="totalRecords"
-      sortMode="multiple"
-      [globalFilterFields]="['id']"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-      [lazy]="true"
-      (onLazyLoad)="cargarDatos($event)"
-      [filterDelay]="0"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Folio</th>
-          <th>Fecha</th>
-          <th>Origen</th>
-          <th>Remitente</th>
-          <th>Destino</th>
-          <th>Destinatario</th>
-          <th>Total</th>
-          <th>Forma pago</th>
-          <th>Acciones</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-dato>
-        <tr>
-          <td>{{ dato?.folio }}</td>
-          <td>{{ dato?.fechaCreacion }}</td>
-          <td>{{ dato?.usuario?.sucursal?.nombre }}</td>
-          <td>{{ dato?.remitente }}</td>
-          <td>{{ dato?.destino?.nombre }}</td>
-          <td>{{ dato?.destinatario }}</td>
-          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
-          <td>{{ dato?.formaPago }}</td>
-          <td>
-            <a
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="pi pi-ellipsis-v"></i>
-            </a>
-            <!-- Acciones para ver y editar -->
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  icon="pi pi-eye"
-                  (click)="VerPaquete(dato)"
-                  label="Ver"
-                  class="p-button-rounded p-button-text dropdown-item"
-                ></button>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">Datos no encontrados.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div
+    *ngIf="
+      this.authService.getUsuario()?.rol.id == 1 ||
+      this.authService.getUsuario()?.rol.id == 2 ||
+      this.authService.getUsuario()?.rol.id == 4
+    "
+  >
+    <h4 class="titulo">Paquetes</h4>
+    <div class="card">
+      <p-table
+        [value]="paquetes"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Origen</th>
+            <th>Remitente</th>
+            <th>Destino</th>
+            <th>Destinatario</th>
+            <th>Total</th>
+            <th>Forma pago</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato?.folio }}</td>
+            <td>{{ dato?.fechaCreacion }}</td>
+            <td>{{ dato?.usuario?.sucursal?.nombre }}</td>
+            <td>{{ dato?.remitente }}</td>
+            <td>{{ dato?.destino?.nombre }}</td>
+            <td>{{ dato?.destinatario }}</td>
+            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ dato?.formaPago }}</td>
+            <td>
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="pi pi-ellipsis-v"></i>
+              </a>
+              <!-- Acciones para ver y editar -->
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-eye"
+                    (click)="VerPaquete(dato)"
+                    label="Ver"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Datos no encontrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
-
   <br />
-  <h4 class="titulo">Bitácoras</h4>
-  <div class="card">
-    <p-table
-      [value]="bitacoras"
-      [rows]="10"
-      [rowsPerPageOptions]="[10, 20, 50]"
-      [loading]="loading"
-      [sortField]="'id'"
-      [totalRecords]="totalRecords"
-      sortMode="multiple"
-      [globalFilterFields]="['id']"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-      [lazy]="true"
-      (onLazyLoad)="cargarDatos($event)"
-      [filterDelay]="0"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Folio</th>
-          <th>Fecha</th>
-          <th>Salida</th>
-          <th>Llegada</th>
-          <th>Hora</th>
-          <th>Operador</th>
-          <th>Total</th>
-          <th>Acciones</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-dato>
-        <tr>
-          <td>{{ dato?.folio }}</td>
-          <td>{{ dato?.fechaCreacion }}</td>
-          <td>{{ dato?.detalleRuta?.salida?.nombre }}</td>
-          <td>{{ dato?.detalleRuta?.llegada?.nombre }}</td>
-          <td>{{ dato?.detalleRuta?.salidaHora }}</td>
-          <td>{{ dato?.detalleRuta?.ruta?.unidad?.usuario?.nombre }}</td>
-          <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
-          <td>
-            <a
-              class="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="pi pi-ellipsis-v"></i>
-            </a>
-            <!-- Acciones para ver y editar -->
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  icon="pi pi-eye"
-                  (click)="verBitacora(dato)"
-                  label="Ver"
-                  class="p-button-rounded p-button-text dropdown-item"
-                ></button>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="5">Datos no encontrados.</td>
-        </tr>
-      </ng-template>
-    </p-table>
+
+  <div
+    *ngIf="
+      this.authService.getUsuario()?.rol.id == 1 ||
+      this.authService.getUsuario()?.rol.id == 2 ||
+      this.authService.getUsuario()?.rol.id == 4
+    "
+  >
+    <h4 class="titulo">Bitácoras</h4>
+    <div class="card">
+      <p-table
+        [value]="bitacoras"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Salida</th>
+            <th>Llegada</th>
+            <th>Hora</th>
+            <th>Operador</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato?.folio }}</td>
+            <td>{{ dato?.fechaCreacion }}</td>
+            <td>{{ dato?.detalleRuta?.salida?.nombre }}</td>
+            <td>{{ dato?.detalleRuta?.llegada?.nombre }}</td>
+            <td>{{ dato?.detalleRuta?.salidaHora }}</td>
+            <td>{{ dato?.detalleRuta?.ruta?.unidad?.usuario?.nombre }}</td>
+            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>
+              <a
+                class="nav-link dropdown-toggle"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="pi pi-ellipsis-v"></i>
+              </a>
+              <!-- Acciones para ver y editar -->
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-eye"
+                    (click)="verBitacora(dato)"
+                    label="Ver"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Datos no encontrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </div>
 
   <div class="card mt-4 p-3">

@@ -7,7 +7,6 @@ import { DEFAULT_VALUES, MODULES_URLS } from '@app/constants/app.constants';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { LayoutComponent } from '@app/shared/ui/layout/layout.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { DatatableService } from '@app/shared/ui/datatables/services/datatable.service';
 import { Subject, takeUntil } from 'rxjs';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -56,10 +55,9 @@ export class CorteDetailComponent {
   constructor(
     private service: CorteService,
     private modalService: ModalService,
-    private datatableService: DatatableService,
     private dialogService: DialogService,
-    private authService: AuthService,
-    private fb: FormBuilder
+    public authService: AuthService,
+    private fb: FormBuilder,
   ) {
     this.iniciarFormulario();
     this.obtenerRegistro();
@@ -199,7 +197,7 @@ export class CorteDetailComponent {
         )
         .subscribe();
       return;
-    } 
+    }
     // Copiamos todos los valores del formulario y calculados
     const cortePayload: Corte = {
       ...this.corte, // copia los datos existentes
@@ -223,11 +221,7 @@ export class CorteDetailComponent {
     this.service.cerrarCorte(cortePayload).subscribe({
       next: (response) => {
         if (response.success) {
-          this.modalService
-            .openAlertModal('exito', 'Éxito', response.message)
-            .subscribe({
-              complete: () => this.authService.logout(),
-            });
+          this.authService.logout();
         }
       },
     });
@@ -245,16 +239,6 @@ export class CorteDetailComponent {
       retiro: this.retiro,
       saldoFinal: this.saldoFinal,
     });
-
-    // Mensaje de éxito
-    this.modalService
-      .openAlertModal(
-        'exito',
-        'Corte cerrado',
-        'El corte se cerró correctamente.',
-        false // solo botón aceptar
-      )
-      .subscribe();
   }
 
   verBoleto(dato: Boleto) {
@@ -270,9 +254,12 @@ export class CorteDetailComponent {
   }
 
   verBitacora(dato: DetalleRuta) {
-      this.mostrarModalAdicional(BitacoraDetailComponent, 'Detalle de la bitácora', {
+    this.mostrarModalAdicional(
+      BitacoraDetailComponent,
+      'Detalle de la bitácora',
+      {
         id: dato.id,
-      });
-    }
-  
+      }
+    );
+  }
 }

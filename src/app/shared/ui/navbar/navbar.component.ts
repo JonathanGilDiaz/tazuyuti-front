@@ -12,19 +12,19 @@ import { Router } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 
 @Component({
-    selector: 'app-navbar',
-    standalone: true,
-    imports: [
-        CommonModule,
-        SidebarModule,
-        FormsModule,
-        CalendarModule,
-        PanelMenuModule,
-        MenubarModule,
-    ],
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    SidebarModule,
+    FormsModule,
+    CalendarModule,
+    PanelMenuModule,
+    MenubarModule,
+  ],
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavbarComponent {
   logoNav = 'assets/template/images/logo-blanco-2-min.png';
@@ -62,7 +62,7 @@ export class NavbarComponent {
     }
     return menuData.map((menuItem) => {
       const hasSubMenus = menuItem.subMenus && menuItem.subMenus.length > 0;
-  
+
       const adaptedMenu: MenuItem = {
         label: menuItem.menu.opcion.opcion,
         icon: menuItem.menu.opcion.icono || 'pi pi-fw pi-folder',
@@ -73,27 +73,14 @@ export class NavbarComponent {
               icon: subMenu.opcion.icono || 'pi pi-fw pi-file',
               routerLink: subMenu.opcion.url ? `/${subMenu.opcion.url}` : null,
             }))
-          : undefined , // No agregar `items` si no tiene submenús
+          : undefined, // No agregar `items` si no tiene submenús
       };
-  
+
       return adaptedMenu;
     });
   }
 
   cerrarSesion(event: Event) {
-    event.preventDefault(); // Prevenir recarga de la página
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Confirmación',
-        '¿Está seguro de cerrar sesión?',
-        true // Modal con opciones "Sí" y "No"
-      )
-      .subscribe((response) => {
-        if (response.resultado) {
-          // Lógica para cerrar sesión
-          this.authService.logout(); // Llama al servicio de autenticación para cerrar sesión
-        }
-      });
+    this.authService.logout();
   }
 }

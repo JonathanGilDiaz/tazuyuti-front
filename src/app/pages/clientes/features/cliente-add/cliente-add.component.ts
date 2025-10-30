@@ -48,41 +48,22 @@ export class ClienteAddComponent implements OnInit {
 
   iniciarFormulario(): void {
     this.form = this.fb.group({
-      nombre: [
-        '',
-        [
-          Validators.required,
-         
-        ],
-      ],
-      apellidoPaterno: ['',],
-      apellidoMaterno: ['',],
-      nombreComercial: ['',],
-      rfc: ['',],
-      sociedad: ['',],
-      telefono: ['',],
-      regimenFiscal: ['',],
-      direccion: ['',],
-      codigoPostal: ['',],
-      tipoPersona: ['Persona Física',],
+      nombre: ['', [Validators.required]],
+      apellidoPaterno: [''],
+      apellidoMaterno: [''],
+      nombreComercial: [''],
+      rfc: [''],
+      sociedad: [''],
+      telefono: [''],
+      regimenFiscal: [''],
+      direccion: [''],
+      codigoPostal: [''],
+      tipoPersona: ['Persona Física'],
     });
   }
 
   eventoCancelar() {
-    this.modalService
-      .openAlertModal(
-        'advertencia',
-        'Atención',
-        '¿Está seguro de cancelar la acción?',
-        true
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.resultado) {
-            this.ref.close(null);
-          }
-        },
-      });
+    this.ref.close(null);
   }
 
   onSubmit() {
@@ -92,65 +73,42 @@ export class ClienteAddComponent implements OnInit {
           this.form.controls[key].setValue(null);
         }
       });
+      this.loading = true;
+      const datos = new FormData();
+      Object.keys(this.form.controls).forEach((key) => {
+        const value = this.form.controls[key].value;
 
-      this.modalService
-        .openAlertModal(
-          'advertencia',
-          'Atención',
-          '¿Está seguro de guardar los datos?',
-          true
-        )
-        .subscribe({
-          next: (response) => {
-            if (response.resultado) {
-              this.loading = true;
-
-              const datos = new FormData();
-
-              Object.keys(this.form.controls).forEach((key) => {
-                const value = this.form.controls[key].value;
-              
-                if (value !== null && value !== undefined) {
-                  datos.append(key, value);
-                }
-              });
-            
-              this.service.agregarRegistro(datos).subscribe({
-                next: (response) => {
-                  this.loading = false;
-                  if (response.success) {
-                    this.modalService
-                      .openAlertModal('exito', 'Éxito', response.message)
-                      .subscribe({
-                        complete: () => {
-                          this.ref.close(true);
-                        },
-                      });
-                  } else {
-                    if (!response.data.description?.includes('expirado')) {
-                      this.modalService
-                        .openAlertModal('error', 'Error', response.message)
-                        .subscribe({
-                          next: () => {
-                            Object.keys(this.form.controls).forEach((key) => {
-                              this.form.controls[key].markAsTouched();
-                            });
-                          },
-                        });
-                    }
-                  }
-                },
-                error: (err: GlobalError) => {
-                  this.loading = false;
-                  this.modalService
-                    .openAlertModal('error', 'Error', err.error.message)
-                    .pipe(takeUntil(this.destroy$))
-                    .subscribe();
-                },
-              });
+        if (value !== null && value !== undefined) {
+          datos.append(key, value);
+        }
+      });
+      this.service.agregarRegistro(datos).subscribe({
+        next: (response) => {
+          this.loading = false;
+          if (response.success) {
+            this.ref.close(true);
+          } else {
+            if (!response.data.description?.includes('expirado')) {
+              this.modalService
+                .openAlertModal('error', 'Error', response.message)
+                .subscribe({
+                  next: () => {
+                    Object.keys(this.form.controls).forEach((key) => {
+                      this.form.controls[key].markAsTouched();
+                    });
+                  },
+                });
             }
-          },
-        });
+          }
+        },
+        error: (err: GlobalError) => {
+          this.loading = false;
+          this.modalService
+            .openAlertModal('error', 'Error', err.error.message)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe();
+        },
+      });
     } else {
       this.modalService
         .openAlertModal(

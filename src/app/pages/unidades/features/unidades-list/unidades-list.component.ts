@@ -42,7 +42,7 @@ export class UnidadesListComponent {
     page: 1,
     size: 50,
   };
-  refDialog:                  DynamicDialogRef | undefined;
+  refDialog: DynamicDialogRef | undefined;
   first = 10;
   destroy$ = new Subject<void>();
   constructor(
@@ -51,11 +51,10 @@ export class UnidadesListComponent {
     private router: Router,
     private datatableService: DatatableService,
     private dialogService: DialogService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   obtenerDatos(dataTablesParams: DataTableParams) {
     this.service
@@ -119,14 +118,8 @@ export class UnidadesListComponent {
               next: (response) => {
                 if (response.success) {
                   this.loading = false;
-                  this.modalService
-                    .openAlertModal('exito', 'Éxito', response.message)
-                    .subscribe({
-                      complete: () => {
-                        this.datos = [];
-                        this.obtenerDatos(this.dataTablesParams);
-                      },
-                    });
+                  this.datos = [];
+                  this.obtenerDatos(this.dataTablesParams);
                 } else {
                   this.loading = false;
                   if (!response.data?.description?.includes('expirado')) {
@@ -150,50 +143,46 @@ export class UnidadesListComponent {
       });
   }
 
-editar(dato: Unidad) {
-  this.mostrarModalAdicional(
-    UnidadesEditComponent,
-    'Editar Unidad',
-    { dato } 
-  );
-
-  this.refDialog?.onClose
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((resultado: boolean) => {
-      if (resultado) {
-        this.obtenerDatos(this.dataTablesParams);
-      }
+  editar(dato: Unidad) {
+    this.mostrarModalAdicional(UnidadesEditComponent, 'Editar Unidad', {
+      dato,
     });
-}
+
+    this.refDialog?.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: boolean) => {
+        if (resultado) {
+          this.obtenerDatos(this.dataTablesParams);
+        }
+      });
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
   }
 
-  mostrarModalAdicional(component : any, titulo : string, data? : any): void{
+  mostrarModalAdicional(component: any, titulo: string, data?: any): void {
     this.refDialog = this.dialogService.open(component, {
       header: titulo,
-      width: data?.width? data.width : '70vw',
-      data : data,
-      contentStyle: { 'z-index': 1036},
+      width: data?.width ? data.width : '70vw',
+      data: data,
+      contentStyle: { 'z-index': 1036 },
       breakpoints: {
-          '960px': '75vw',
-          '640px': '90vw'
-      }
+        '960px': '75vw',
+        '640px': '90vw',
+      },
     });
   }
 
   agregar() {
-    this.mostrarModalAdicional(
-      UnidadesAddComponent,
-      'Registrar Nueva unidad'
-    );
-    this.refDialog.onClose.pipe(takeUntil(this.destroy$)).subscribe((resultado: boolean) => {
-      if(resultado){
-        this.obtenerDatos(this.dataTablesParams);
-      }
-    });
+    this.mostrarModalAdicional(UnidadesAddComponent, 'Registrar Nueva unidad');
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: boolean) => {
+        if (resultado) {
+          this.obtenerDatos(this.dataTablesParams);
+        }
+      });
   }
-
 }

@@ -128,7 +128,7 @@ export class PaquetesDetailComponent {
         'advertencia',
         'Atención',
         '¿Está seguro de enviar este paquete?',
-        true // 👈 activa botones Aceptar / Cancelar
+        true
       )
       .subscribe({
         next: (resp) => {
@@ -136,15 +136,7 @@ export class PaquetesDetailComponent {
             this.paqueteService.enviarPaquete(payload).subscribe({
               next: (r) => {
                 if (r.success) {
-                  this.modalService
-                    .openAlertModal(
-                      'exito',
-                      'Éxito',
-                      r.message || 'Paquete enviado correctamente'
-                    )
-                    .subscribe(() => {
-                      this.ref.close(true);
-                    });
+                  this.ref.close(true);
                 } else {
                   this.modalService
                     .openAlertModal(
@@ -357,7 +349,7 @@ export class PaquetesDetailComponent {
     });
   }
 
-   imprimirTicketInterno() {
+  imprimirTicketInterno() {
     this.paqueteService.obtenerTicketInterno(this.config.data.id).subscribe({
       next: (response) => {
         if (response.success && response.data?.archivo) {

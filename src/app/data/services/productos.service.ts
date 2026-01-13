@@ -38,4 +38,8 @@ export class ProductosService {
    obtenerTodos():Observable<ApiResponse<any>>{
     return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/producto/getAll`);
   }
+
+    exportarExcel(idUsuario:number):Observable<ApiResponse<any>>{
+    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/producto/${idUsuario}/excel`,{});
+  }
 }

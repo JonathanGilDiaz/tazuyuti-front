@@ -7,10 +7,10 @@ export const API_URLS = {
   ///MAIN: 'https://qb-aprendizajelenguas.oaxaca.gob.mx/api',
   //MAIN: 'https://db-siacv2.oaxaca.gob.mx/api',
 
-  //URL_SISTEMA : 'http://localhost:8080/api',
-  //MAIN: 'http://localhost:8080/api',
-  URL_SISTEMA : 'https://tazuyuti.com/api',
-  MAIN: 'https://tazuyuti.com/api',
+  URL_SISTEMA : 'http://localhost:8080/api',
+  MAIN: 'http://localhost:8080/api',
+  //URL_SISTEMA : 'https://tazuyuti.com/api',
+  //MAIN: 'https://tazuyuti.com/api',
 
   //URL_SISTEMA : 'https://tazuyuti.com/api',
   //MAIN: 'https://tazuyuti.com/api',

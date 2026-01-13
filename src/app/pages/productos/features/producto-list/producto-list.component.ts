@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PrimeNGModules } from '@app/primeng-config';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Producto } from '@app/core/interfaces/apiResponse';
 import { ProductosService } from '@app/data/services/productos.service';
 import { DataTableParams } from '@app/shared/ui/datatables/interfaces/datatable';
@@ -49,7 +49,6 @@ export class ProductoListComponent {
   constructor(
     private service: ProductosService,
     private modalService: ModalService,
-    private router: Router,
     private datatableService: DatatableService,
     private dialogService: DialogService,
     private authService: AuthService
@@ -184,6 +183,46 @@ export class ProductoListComponent {
         if (resultado) {
           this.obtenerDatos(this.dataTablesParams);
         }
+      });
+  }
+
+  exportarExcel() {
+    this.service
+      .exportarExcel(this.authService.getUsuario()?.id)
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data?.base64Content) {
+            const byteCharacters = atob(response.data.base64Content);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], {
+              type: response.data.mimeType,
+            });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Reporte_Productos.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            this.modalService
+              .openAlertModal(
+                'advertencia',
+                'Atención',
+                'No se encontraron peticiones para esta solicitud.'
+              )
+              .subscribe();
+          }
+        },
+        error: (err) => {
+          this.modalService
+            .openAlertModal('error', 'Error', 'No se pudo generar el archivo.')
+            .subscribe();
+        },
       });
   }
 }

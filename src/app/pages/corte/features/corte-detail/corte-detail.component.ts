@@ -17,6 +17,7 @@ import {
   Corte,
   DetalleRuta,
   Paquete,
+  ResumenProducto,
   Venta,
 } from '@app/core/interfaces/apiResponse';
 import { CorteService } from '@app/data/services/corte.service';
@@ -39,6 +40,7 @@ export class CorteDetailComponent {
   paquetes: Paquete[] = [];
   ventas: Venta[] = [];
   bitacoras: Bitacora[] = [];
+  resumenProductos: ResumenProducto[] = [];
   corte: Corte;
   totalRecords: number = 0;
   loading: boolean = true;
@@ -91,7 +93,7 @@ export class CorteDetailComponent {
             this.ventas = response.data.ventas;
             this.bitacoras = response.data.bitacoras;
             this.corte = response.data.corte;
-
+            this.resumenProductos = response.data.resumenProductos || [];
             const datos: any = response.data;
             this.form.patchValue({
               efectivo: datos.totales.efectivo,
@@ -193,7 +195,7 @@ export class CorteDetailComponent {
         .openAlertModal(
           'error',
           'Error',
-          'El retiro no puede ser mayor al saldo en caja.'
+          'El retiro no puede ser mayor al saldo en caja.',
         )
         .subscribe();
       return;
@@ -259,7 +261,7 @@ export class CorteDetailComponent {
       'Detalle de la bitácora',
       {
         id: dato.id,
-      }
+      },
     );
   }
 }

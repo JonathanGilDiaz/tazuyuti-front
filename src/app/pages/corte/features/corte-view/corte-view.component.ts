@@ -17,6 +17,7 @@ import {
   Corte,
   DetalleRuta,
   Paquete,
+  ResumenProducto,
   Venta,
 } from '@app/core/interfaces/apiResponse';
 import { CorteService } from '@app/data/services/corte.service';
@@ -39,6 +40,7 @@ export class CorteViewComponent {
   paquetes: Paquete[] = [];
   ventas: Venta[] = [];
   bitacoras: Bitacora[] = [];
+  resumenProductos: ResumenProducto[] = [];
   corte: Corte;
   totalRecords: number = 0;
   loading: boolean = true;
@@ -57,7 +59,7 @@ export class CorteViewComponent {
     private dialogService: DialogService,
     private fb: FormBuilder,
     public config: DynamicDialogConfig,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
   ) {
     this.iniciarFormulario();
   }
@@ -81,8 +83,8 @@ export class CorteViewComponent {
             this.ventas = data.ventas || [];
             this.bitacoras = data.bitacoras || [];
             this.corte = data.corte;
+            this.resumenProductos = response.data.resumenProductos || [];
 
-            // Patch con todos los valores ya calculados
             this.form.patchValue({
               efectivo: this.corte.efectivo,
               transferencia: this.corte.transferencia,
@@ -187,7 +189,7 @@ export class CorteViewComponent {
       'Detalle de la bitácora',
       {
         id: dato.id,
-      }
+      },
     );
   }
 

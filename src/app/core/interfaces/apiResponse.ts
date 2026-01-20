@@ -175,6 +175,11 @@ export interface DetalleVenta {
   subTotal: number;
 }
 
+export interface ResumenProducto {
+  producto: Producto;
+  cantidad: number;
+}
+
 export interface Venta {
   id: number;
   usuario: Usuario;

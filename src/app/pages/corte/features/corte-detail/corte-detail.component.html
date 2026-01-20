@@ -41,7 +41,7 @@
           type="text"
           class="form-control"
           disabled
-          [value]="form.get('inicio')?.value | date : 'short'"
+          [value]="form.get('inicio')?.value"
           id="nombre"
           aria-describedby="nombre"
         />
@@ -84,7 +84,7 @@
           <tr>
             <td>{{ dato?.folio }}</td>
             <td>{{ dato?.fechaCreacion }}</td>
-            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ "$" + (dato?.total | number: "1.2-2") }}</td>
             <td>{{ dato?.formaPago }}</td>
             <td>
               <a
@@ -110,6 +110,55 @@
                   ></button>
                 </li>
               </ul>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Datos no encontrados.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <br>
+    <h5 class="titulo">Resumen de productos vendidos</h5>
+    <div class="card">
+      <p-table
+        [value]="resumenProductos"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 20, 50]"
+        [loading]="loading"
+        [sortField]="'id'"
+        [totalRecords]="totalRecords"
+        sortMode="multiple"
+        [globalFilterFields]="['id']"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+        [lazy]="true"
+        (onLazyLoad)="cargarDatos($event)"
+        [filterDelay]="0"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Cantidad</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Unidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dato>
+          <tr>
+            <td>{{ dato?.cantidad }}</td>
+            <td>{{ dato?.producto?.codigo }}</td>
+            <td>{{ dato?.producto?.nombre }}</td>
+            <td>{{ dato?.producto?.unidad }}</td>
+            <td>{{ dato?.producto?.precio | number: "1.2-2" }}</td>
+            <td>
+              {{
+                "$" +
+                  (dato?.cantidad * dato?.producto?.precio | number: "1.2-2")
+              }}
             </td>
           </tr>
         </ng-template>
@@ -163,7 +212,7 @@
             <td>{{ dato?.fechaCreacion }}</td>
             <td>{{ dato?.cliente }}</td>
             <td>{{ dato?.viaje }}</td>
-            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ "$" + (dato?.total | number: "1.2-2") }}</td>
             <td>{{ dato?.formaPago }}</td>
             <td>
               <a
@@ -246,7 +295,7 @@
             <td>{{ dato?.remitente }}</td>
             <td>{{ dato?.destino?.nombre }}</td>
             <td>{{ dato?.destinatario }}</td>
-            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ "$" + (dato?.total | number: "1.2-2") }}</td>
             <td>{{ dato?.formaPago }}</td>
             <td>
               <a
@@ -328,7 +377,7 @@
             <td>{{ dato?.detalleRuta?.llegada?.nombre }}</td>
             <td>{{ dato?.detalleRuta?.salidaHora }}</td>
             <td>{{ dato?.detalleRuta?.ruta?.unidad?.usuario?.nombre }}</td>
-            <td>{{ "$" + (dato?.total | number : "1.2-2") }}</td>
+            <td>{{ "$" + (dato?.total | number: "1.2-2") }}</td>
             <td>
               <a
                 class="nav-link dropdown-toggle"
@@ -481,7 +530,7 @@
       <span
         [ngClass]="{
           'text-danger': faltanteSobrante < 0,
-          'text-success': faltanteSobrante >= 0
+          'text-success': faltanteSobrante >= 0,
         }"
       >
         <b>{{ faltanteSobrante >= 0 ? "Sobrante" : "Faltante" }}:</b>

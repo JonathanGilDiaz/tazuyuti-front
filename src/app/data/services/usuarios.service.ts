@@ -6,36 +6,60 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsuariosService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor(
-    private httpClient : HttpClient
-  ) { }
-
-
-  obtenerRegistros(datos : DataTableParams):Observable<ApiResponse<any>>{
-    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/usuarios`,datos);
-  }
-  
-  agregarRegistro(usuario:Usuario):Observable<ApiResponse<any>>{
-    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/usuarios/save`,usuario);
+  obtenerRegistros(datos: DataTableParams): Observable<ApiResponse<any>> {
+    return this.httpClient.post<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios`,
+      datos,
+    );
   }
 
-  actualizarRegistro(usuario:Usuario):Observable<ApiResponse<any>>{
-    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/usuarios/update`,usuario);
+  agregarRegistro(usuario: Usuario): Observable<ApiResponse<any>> {
+    return this.httpClient.post<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/save`,
+      usuario,
+    );
   }
 
-  activarUsuario(usuario:Usuario):Observable<ApiResponse<any>>{
-    return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/usuarios/active`,usuario);
+  actualizarRegistro(usuario: Usuario): Observable<ApiResponse<any>> {
+    return this.httpClient.post<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/update`,
+      usuario,
+    );
   }
 
-  obtenerRegistro(id : number):Observable<ApiResponse<any>>{
-    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/usuarios/${id}/detail`);
+  activarUsuario(usuario: Usuario): Observable<ApiResponse<any>> {
+    return this.httpClient.post<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/active`,
+      usuario,
+    );
   }
 
-  catalogos():Observable<ApiResponse<any>>{
-    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/usuarios/catalogs`);
+  obtenerRegistro(id: number): Observable<ApiResponse<any>> {
+    return this.httpClient.get<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/${id}/detail`,
+    );
+  }
+
+  catalogos(): Observable<ApiResponse<any>> {
+    return this.httpClient.get<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/catalogs`,
+    );
+  }
+
+  detailTransferencias(id: number, fechaInicio: string, fechaFin: string) {
+    return this.httpClient.get<ApiResponse<any>>(
+      `${environment.baseUrl}/usuarios/${id}/detailTransferencias`,
+      {
+        params: {
+          fechaInicio,
+          fechaFin,
+        },
+      },
+    );
   }
 }

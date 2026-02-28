@@ -69,6 +69,7 @@ export interface DetalleBoton {
 }
 
 export interface UsuarioData {
+  requiereCorte: boolean;
   usuario: Usuario;
   menus: MenuElement[];
   token: string;
@@ -191,6 +192,7 @@ export interface Venta {
   estado: boolean;
   folio: string;
   detalleVentas: DetalleVenta[];
+  cliente: Cliente;
 }
 
 export interface OrdenCompra {

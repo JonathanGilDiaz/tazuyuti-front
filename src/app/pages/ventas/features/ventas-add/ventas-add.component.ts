@@ -38,6 +38,9 @@ export class VentasAddComponent implements OnInit {
   pago: number = 0;
   cambio: number = 0;
   totalRecords: number = 0;
+  productoSeleccionado: Producto | null = null;
+  cantidadSeleccionada: number | null = null;
+  guardando: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -45,7 +48,7 @@ export class VentasAddComponent implements OnInit {
     private productoService: ProductosService,
     private modalService: ModalService,
     private authService: AuthService,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
   ) {
     this.iniciarFormulario();
   }
@@ -71,58 +74,84 @@ export class VentasAddComponent implements OnInit {
     const texto: string = (this.form.get('textoBusqueda')?.value || '')
       .toLowerCase()
       .trim();
-
     if (!texto) {
       this.sugerencias = [];
+      this.productoSeleccionado = null;
       return;
     }
-
     const productoPorCodigo = this.productos.find(
-      (p) => p.codigo?.toLowerCase() === texto
+      (p) => p.codigo?.toLowerCase() === texto,
     );
     if (productoPorCodigo) {
-      this.agregarProducto(productoPorCodigo);
+      this.seleccionarProducto(productoPorCodigo);
       return;
     }
-
+    if (
+      this.productoSeleccionado &&
+      this.productoSeleccionado.nombre.toLowerCase() !== texto &&
+      this.productoSeleccionado.codigo?.toLowerCase() !== texto
+    ) {
+      this.productoSeleccionado = null;
+    }
     this.sugerencias = this.productos.filter(
       (p) =>
         p.nombre?.toLowerCase().includes(texto) ||
-        p.codigo?.toLowerCase().includes(texto)
+        p.codigo?.toLowerCase().includes(texto),
     );
   }
 
-  buscarPorCodigo() {
-    const texto: string = (this.form.get('textoBusqueda')?.value || '').trim();
-    const producto = this.productos.find(
-      (p) => p.codigo?.toLowerCase() === texto.toLowerCase()
-    );
-    if (producto) this.agregarProducto(producto);
+  seleccionarProducto(producto: Producto) {
+    this.productoSeleccionado = producto;
+    this.form.get('textoBusqueda')?.setValue(producto.nombre);
+    this.sugerencias = [];
+    setTimeout(() => {
+      const inputCantidad = document.querySelector(
+        'input[formControlName="cantidad"]',
+      ) as HTMLInputElement;
+      inputCantidad?.focus();
+    });
   }
 
-  agregarProducto(producto: Producto) {
-    const existente = this.detalleVentas.find((p) => p.id === producto.id);
+  confirmarAgregar() {
+    if (!this.productoSeleccionado) {
+      this.modalService
+        .openAlertModal('error', 'Error', 'Debe seleccionar un producto.')
+        .subscribe();
+      return;
+    }
+    const cantidadControl = this.form.get('cantidad');
+    if (!cantidadControl || cantidadControl.invalid) {
+      cantidadControl?.markAsTouched();
+      this.modalService
+        .openAlertModal('error', 'Error', 'Debe ingresar una cantidad válida.')
+        .subscribe();
+      return;
+    }
+    const cantidad = Number(cantidadControl.value);
+    const existente = this.detalleVentas.find(
+      (p) => p.id === this.productoSeleccionado!.id,
+    );
     if (existente) {
-      existente.cantidad += 1;
+      existente.cantidad += cantidad;
       existente.subtotal = existente.cantidad * existente.precio;
     } else {
       this.detalleVentas = [
         ...this.detalleVentas,
         {
-          id: producto.id,
-          codigo: producto.codigo,
-          nombre: producto.nombre,
-          unidad: producto.unidad,
-          precio: producto.precio,
-          cantidad: 1,
-          subtotal: producto.precio,
+          id: this.productoSeleccionado.id,
+          codigo: this.productoSeleccionado.codigo,
+          nombre: this.productoSeleccionado.nombre,
+          unidad: this.productoSeleccionado.unidad,
+          precio: this.productoSeleccionado.precio,
+          cantidad: cantidad,
+          subtotal: this.productoSeleccionado.precio * cantidad,
         },
       ];
     }
-
     this.calcularTotal();
+    this.productoSeleccionado = null;
     this.form.get('textoBusqueda')?.setValue('');
-    this.sugerencias = [];
+    this.form.get('cantidad')?.setValue(null);
   }
 
   editar(item: any) {
@@ -162,6 +191,7 @@ export class VentasAddComponent implements OnInit {
       textoBusqueda: [''],
       formaPago: ['01 Efectivo'],
       pago: [0],
+      cantidad: [null, [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -170,12 +200,13 @@ export class VentasAddComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.guardando) return;
     if (this.detalleVentas.length === 0 || this.total <= 0) {
       this.modalService
         .openAlertModal(
           'error',
           'Error',
-          'Debe agregar al menos un producto y el total debe ser mayor a 0.'
+          'Debe agregar al menos un producto y el total debe ser mayor a 0.',
         )
         .subscribe();
       return;
@@ -189,12 +220,12 @@ export class VentasAddComponent implements OnInit {
         .openAlertModal(
           'error',
           'Error',
-          'El pago debe ser igual o mayor al total.'
+          'El pago debe ser igual o mayor al total.',
         )
         .subscribe();
       return;
     }
-
+    this.guardando = true;
     const detalleAdaptado = this.detalleVentas.map((prod) => ({
       producto: { id: prod.id },
       cantidad: prod.cantidad,
@@ -212,6 +243,7 @@ export class VentasAddComponent implements OnInit {
     };
     this.ventaService.agregarRegistro(venta).subscribe({
       next: (resp) => {
+        this.guardando = false;
         if (resp.success) {
           this.modalService
             .openAlertModal('exito', 'Éxito', resp.message)
@@ -223,6 +255,9 @@ export class VentasAddComponent implements OnInit {
             .openAlertModal('error', 'Error', resp.message)
             .subscribe();
         }
+      },
+      error: () => {
+        this.guardando = false;
       },
     });
   }

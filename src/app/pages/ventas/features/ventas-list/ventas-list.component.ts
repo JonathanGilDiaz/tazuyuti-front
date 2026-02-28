@@ -17,6 +17,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { VentasDetailComponent } from '../ventas-detail/ventas-detail.component';
 import { Venta } from '@app/core/interfaces/apiResponse';
 import { VentasService } from '@app/data/services/ventas.service';
+import { VentasFacturaComponent } from '../ventas-factura/ventas-factura.component';
 
 @Component({
   selector: 'app-user-list',
@@ -50,7 +51,7 @@ export class VentasListComponent {
     private modalService: ModalService,
     private datatableService: DatatableService,
     private dialogService: DialogService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {}
@@ -107,6 +108,19 @@ export class VentasListComponent {
     });
   }
 
+  facturar(dato: Venta) {
+    this.mostrarModalAdicional(VentasFacturaComponent, 'Facturar venta', {
+      id: dato.id,
+    });
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: any) => {
+        if (resultado) {
+          this.obtenerDatos(this.dataTablesParams);
+        }
+      });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.unsubscribe();
@@ -144,7 +158,7 @@ export class VentasListComponent {
                   if (base64Data.startsWith('data:application/pdf')) {
                     base64Data = base64Data.replace(
                       /^data:application\/pdf;base64,/,
-                      ''
+                      '',
                     );
                   }
                 }

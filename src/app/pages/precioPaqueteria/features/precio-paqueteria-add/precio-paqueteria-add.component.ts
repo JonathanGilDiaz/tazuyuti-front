@@ -35,7 +35,7 @@ export class PrecioPaqueteriaAddComponent implements OnInit {
     private fb: FormBuilder,
     private productosService: preciosPaqueteriaService,
     private modalService: ModalService,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
   ) {
     this.iniciarFormulario();
   }
@@ -79,7 +79,7 @@ export class PrecioPaqueteriaAddComponent implements OnInit {
         next: (response) => {
           this.loading = false;
           if (response.success) {
-            this.ref.close(true);
+            this.ref.close(response.data);
           } else {
             if (!response.data.description?.includes('expirado')) {
               this.modalService
@@ -107,7 +107,7 @@ export class PrecioPaqueteriaAddComponent implements OnInit {
         .openAlertModal(
           'error',
           'Error',
-          'Hay datos del formulario que son requeridos, favor de ingresarlos para completar el registro.'
+          'Hay datos del formulario que son requeridos, favor de ingresarlos para completar el registro.',
         )
         .subscribe({
           next: () => {

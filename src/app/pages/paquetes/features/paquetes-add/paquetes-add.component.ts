@@ -15,6 +15,7 @@ import { PrecioPaqueteria } from '@app/core/interfaces/apiResponse';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { AuthService } from '@app/core/services/auth.service';
 import { PaquetesService } from '@app/data/services/paquetes.service';
+import { PrecioPaqueteriaAddComponent } from '@app/pages/precioPaqueteria/features/precio-paqueteria-add/precio-paqueteria-add.component';
 
 @Component({
   selector: 'app-user-add',
@@ -28,11 +29,10 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = false;
   private destroy$ = new Subject<void>();
-
   precios: PrecioPaqueteria[] = [];
   sucursales: any[] = [];
   sucursalesFiltradas: any[] = [];
-
+  refDialog: DynamicDialogRef | undefined;
   detallePaquete: Array<{
     id: number;
     nombre: string;
@@ -53,17 +53,53 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
     private paqueteService: PaquetesService,
     private modalService: ModalService,
     private authService: AuthService,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
+    private dialogService: DialogService,
   ) {
     this.iniciarFormulario();
   }
 
+  abrirModalNuevoPrecio(): void {
+    this.refDialog = this.dialogService.open(PrecioPaqueteriaAddComponent, {
+      header: 'Registrar nuevo precio',
+      width: '60vw',
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+          this.recargarPrecios(true); 
+
+      });
+  }
+  private recargarPrecios(seleccionarUltimo: boolean = false): void {
+    this.paqueteService
+      .catalogos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (resp) => {
+          if (resp.success) {
+            this.precios = resp.data.precios || [];
+
+            if (seleccionarUltimo && this.precios.length > 0) {
+              const ultimo = this.precios[this.precios.length - 1];
+
+              this.form.patchValue({
+                precioSeleccionadoId: ultimo.id,
+              });
+            }
+          }
+        },
+      });
+  }
+
   ngOnInit(): void {
     const usuario = this.authService.getUsuario();
-    console.log(usuario);
     this.baseOrigenId = usuario?.sucursal?.id ?? null;
     this.baseOrigenNombre = usuario?.sucursal?.nombre ?? '';
-
     this.paqueteService
       .catalogos()
       .pipe(takeUntil(this.destroy$))
@@ -74,7 +110,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
             this.sucursales = resp.data.sucursal || [];
 
             this.sucursalesFiltradas = this.sucursales.filter(
-              (s: any) => s.id !== this.baseOrigenId
+              (s: any) => s.id !== this.baseOrigenId,
             );
           }
         },
@@ -129,7 +165,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         .openAlertModal(
           'error',
           'Error',
-          'La cantidad debe ser un número mayor a 0.'
+          'La cantidad debe ser un número mayor a 0.',
         )
         .subscribe();
       return;
@@ -141,13 +177,13 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         'precioId recibido:',
         precioId,
         'lista de precios:',
-        this.precios
+        this.precios,
       );
       this.modalService
         .openAlertModal(
           'error',
           'Error',
-          'El precio seleccionado no es válido.'
+          'El precio seleccionado no es válido.',
         )
         .subscribe();
       return;
@@ -171,7 +207,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
 
     this.form.patchValue(
       { precioSeleccionadoId: null, cantidadAgregar: 1 },
-      { emitEvent: false }
+      { emitEvent: false },
     );
 
     this.calcularTotal();
@@ -217,7 +253,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         .openAlertModal(
           'error',
           'Error',
-          'Completa los datos obligatorios del envío.'
+          'Completa los datos obligatorios del envío.',
         )
         .subscribe();
       return;
@@ -228,7 +264,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         .openAlertModal(
           'error',
           'Error',
-          'Debe agregar al menos un concepto y el total debe ser mayor a 0.'
+          'Debe agregar al menos un concepto y el total debe ser mayor a 0.',
         )
         .subscribe();
       return;
@@ -242,7 +278,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         .openAlertModal(
           'error',
           'Error',
-          'El pago debe ser igual o mayor al total.'
+          'El pago debe ser igual o mayor al total.',
         )
         .subscribe();
       return;
@@ -275,7 +311,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
         'advertencia',
         'Atención',
         '¿Está seguro de guardar la venta?',
-        true
+        true,
       )
       .subscribe({
         next: (resp) => {
@@ -295,7 +331,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
                   .openAlertModal(
                     'error',
                     'Error',
-                    'Ocurrió un problema al guardar.'
+                    'Ocurrió un problema al guardar.',
                   )
                   .subscribe();
                 console.error(e);

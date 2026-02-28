@@ -14,7 +14,7 @@ import { BoletosService } from '@app/data/services/boletos.service';
 import { PrecioEquipaje } from '@app/core/interfaces/apiResponse';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-
+import { DialogModule } from 'primeng/dialog';
 type Id = number;
 
 interface Sucursal {
@@ -56,7 +56,13 @@ interface CatalogosTaquilla {
 @Component({
   selector: 'app-taquilla-guardar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PrimeNGModules, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    PrimeNGModules,
+    FormsModule,
+    DialogModule,
+  ],
   templateUrl: './taquilla-add.component.html',
   styleUrls: ['./taquilla-add.component.css'],
 })
@@ -80,15 +86,15 @@ export class TaquillaAddComponent implements OnInit {
 
   // resumen
   capacidadActual = computed(
-    () => this.horarioSeleccionado()?.unidad.capacidad ?? 0
+    () => this.horarioSeleccionado()?.unidad.capacidad ?? 0,
   );
   disponibles = computed(
-    () => this.capacidadActual() - this.asientosOcupados().size
+    () => this.capacidadActual() - this.asientosOcupados().size,
   );
   requeridos = computed(
     () =>
       Number(this.form.get('adultos')?.value || 0) +
-      Number(this.form.get('ninos')?.value || 0)
+      Number(this.form.get('ninos')?.value || 0),
   );
 
   resumen: { origen: string; destino: string; hora: string } | null = null;
@@ -107,13 +113,16 @@ export class TaquillaAddComponent implements OnInit {
   montoPago = 0;
   cambio = 0;
 
+  mostrarModalCambiarHora = false;
+  nuevaHora: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private auth: AuthService,
     private boletoService: BoletosService,
     private modalService: ModalService,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
   ) {}
 
   // ===================== EFFECTS =====================
@@ -135,7 +144,7 @@ export class TaquillaAddComponent implements OnInit {
       this.asientosOcupados.set(new Set());
       this.asientosSeleccionados.set([]);
     },
-    { allowSignalWrites: true }
+    { allowSignalWrites: true },
   );
 
   destinoFechaEffect = effect(
@@ -160,7 +169,7 @@ export class TaquillaAddComponent implements OnInit {
         hastaId: (direccion as any).hasta,
       });
     },
-    { allowSignalWrites: true }
+    { allowSignalWrites: true },
   );
 
   horaEffect = effect(
@@ -184,11 +193,11 @@ export class TaquillaAddComponent implements OnInit {
       this.asientosOcupados.set(new Set(hSel.ocupadosUnion || []));
       this.asientosSeleccionados.set(
         this.asientosSeleccionados().filter(
-          (n) => !(hSel.ocupadosUnion || []).includes(n)
-        )
+          (n) => !(hSel.ocupadosUnion || []).includes(n),
+        ),
       );
     },
-    { allowSignalWrites: true } // 👈 importante
+    { allowSignalWrites: true }, // 👈 importante
   );
 
   requeridosEffect = effect(
@@ -197,7 +206,7 @@ export class TaquillaAddComponent implements OnInit {
       console.log('🟢 requeridosEffect actual:', req);
       // Ya no recortamos aquí
     },
-    { allowSignalWrites: true }
+    { allowSignalWrites: true },
   );
 
   // ===================== INIT =====================
@@ -205,6 +214,33 @@ export class TaquillaAddComponent implements OnInit {
   // 👈 elimina esta línea
   // horaSignal = toSignal(this.form.get('hora')!.valueChanges, { initialValue: null });
   requeridosNum = 0;
+
+  confirmarCambioHora() {
+    if (!this.nuevaHora || !this.detalleRutaId) return;
+    this.boletoService
+      .cambiarHoraDetalleRuta(this.detalleRutaId, this.nuevaHora)
+      .subscribe({
+        next: (resp) => {
+          const horario = this.horarioSeleccionado();
+          if (!horario) return;
+          horario.hora = this.nuevaHora!;
+          this.horarioSeleccionado.set({ ...horario });
+          if (this.resumen) {
+            this.resumen.hora = this.nuevaHora!;
+          }
+          this.mostrarModalCambiarHora = false;
+          this.nuevaHora = null;
+        },
+        error: () => {
+          this.modalService.openAlertModal(
+            'error',
+            'Error',
+            'No se pudo actualizar la hora',
+            false,
+          );
+        },
+      });
+  }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -281,8 +317,8 @@ export class TaquillaAddComponent implements OnInit {
       this.asientosOcupados.set(new Set(hSel.ocupadosUnion || []));
       this.asientosSeleccionados.set(
         this.asientosSeleccionados().filter(
-          (n) => !(hSel.ocupadosUnion || []).includes(n)
-        )
+          (n) => !(hSel.ocupadosUnion || []).includes(n),
+        ),
       );
     });
 
@@ -315,7 +351,7 @@ export class TaquillaAddComponent implements OnInit {
     // ✅ solo aquí se recortan los seleccionados
     if (this.asientosSeleccionados().length > this.requeridosNum) {
       this.asientosSeleccionados.set(
-        this.asientosSeleccionados().slice(0, this.requeridosNum)
+        this.asientosSeleccionados().slice(0, this.requeridosNum),
       );
     }
   }
@@ -379,7 +415,7 @@ export class TaquillaAddComponent implements OnInit {
         params.fecha,
         params.origenId,
         params.destinoIdPrecio,
-        params.hastaId
+        params.hastaId,
       )
       .subscribe({
         next: (response) => {
@@ -516,7 +552,7 @@ export class TaquillaAddComponent implements OnInit {
     if (this.asientosSeleccionados().length !== this.requeridosNum) return;
 
     const destino = this.destinosFiltrados().find(
-      (p) => p.id === this.form.value.destino
+      (p) => p.id === this.form.value.destino,
     );
 
     this.resumen = {
@@ -608,7 +644,7 @@ export class TaquillaAddComponent implements OnInit {
     if (!this.horarioSeleccionado()) return;
 
     const destino = this.destinosFiltrados().find(
-      (p) => p.id === this.form.value.destino
+      (p) => p.id === this.form.value.destino,
     );
 
     const boletoPayload = {
@@ -668,7 +704,7 @@ export class TaquillaAddComponent implements OnInit {
             'error',
             'Error',
             resp.message || 'No se pudo guardar',
-            false
+            false,
           );
         }
       },
@@ -678,7 +714,7 @@ export class TaquillaAddComponent implements OnInit {
           'error',
           'Error',
           'Ocurrió un problema al guardar',
-          false
+          false,
         );
       },
     });

@@ -1,148 +1,194 @@
 <app-layout>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="titulo">Administrador de Usuarios</h3>
-        <p-button label="Nuevo Usuario" routerLink="agregar" icon="pi pi-plus" styleClass="p-button-primary"></p-button>
-    </div>  
-    <div class="card">
-        <p-table [value]="usuarios"
-        [rows]="10"
-        [rowsPerPageOptions]="[10, 20, 50]"
-        [loading]="loading"
-        [paginator]="true"
-        [showCurrentPageReport]="true"
-        [sortField]="'nombre'"
-        [totalRecords]="totalRecords"
-        sortMode="multiple"
-        [globalFilterFields]="['nombre']"
-        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-        [lazy]="true"
-        (onPage)="pageChange($event)"
-        (onLazyLoad)="cargarUsuarios($event)"
-        [filterDelay]="0"
-        >
-            <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"/></th>
-                    <th pSortableColumn="sucursal.nombre">Sucursal<p-sortIcon field="sucursal.nombre"/></th>
-                    <th pSortableColumn="rol.rol">Rol<p-sortIcon field="rol.rol"/></th>
-                    <th pSortableColumn="activo">Estado<p-sortIcon field="activo"/></th>
-                    <th>Acciones</th>
-                </tr>
-                <tr>
-                    <th>
-                        <p-columnFilter
-                        [showMenu]="false" 
-                            type="text"
-                            field="nombre"
-                            matchMode="contains"
-                            placeholder="Busca nombre" 
-                            ariaLabel="Buscar Nombre" />
-                    </th>
-                    <th>
-                        <p-columnFilter
-                        [showMenu]="false" 
-                            type="text"
-                            field="sucursal.nombre"
-                            matchMode="contains"
-                            placeholder="Buscar sucursal" 
-                            ariaLabel="Buscar sucursal" />
-                    </th>
-                    <th>
-                        <p-columnFilter
-                            [showMenu]="false"
-                            type="text"
-                            field="rol.rol"
-                            matchMode="contains"
-                            placeholder="Buscar Rol" 
-                            ariaLabel="Buscar Rol" />
-                    </th>
-                    <th>
-                        <p-columnFilter field="activo" matchMode="equals" [showMenu]="false">
-                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                                <p-dropdown
-                                    [ngModel]="value"
-                                    [options]="activos"
-                                    optionLabel="etiqueta"
-                                    optionValue="valor"
-                                    placeholder="Todos"
-                                    (onChange)="filter($event.value)">
-                                    <ng-template let-option pTemplate="selectedItem">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option?.etiqueta || 'Todos' }}</span>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template let-option pTemplate="item">
-                                        <div class="inline-block vertical-align-middle">
-                                            <span class="ml-1 mt-1">{{ option.etiqueta }}</span>
-                                        </div>
-                                    </ng-template>
-                                </p-dropdown>
-                            </ng-template>
-                        </p-columnFilter>                        
-                    </th>
-                    <th></th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-user>
-                <tr>
-                    <td>{{ user?.nombre }}</td>
-                    <td>{{ user?.sucursal?.nombre }}</td>
-                    <td>{{ user?.rol?.rol }}</td>
-                    <td>{{ (user?.activo)? 'Activo' : 'Inactivo' }}</td>
-                    <td>
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="pi pi-ellipsis-v"></i>
-                        </a>
-                        <!-- Acciones para ver y editar -->
-                        <ul  class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    type="button" 
-                                    icon="pi pi-eye" 
-                                    (click)="ver(user)"
-                                    label="Ver"
-                                    class="p-button-rounded p-button-text dropdown-item">
-                                </button>
-                            </li>
-                            <li>
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    type="button" 
-                                    icon="pi pi-pencil" 
-                                    (click)="editar(user)"
-                                    label="Editar"
-                                    class="p-button-rounded p-button-text dropdown-item">
-                                </button>
-                            </li>
-                            <!-- Mostrar deshabilitar solo si el usuario está activo -->
-                            @if(user.activo){
-                            <li>
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    type="button" 
-                                    icon="pi pi-ban" 
-                                    (click)="deshabilitar(user)"
-                                    label="Deshabilitar"
-                                    class="p-button-rounded p-button-text dropdown-item">
-                                </button>
-                            </li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="5">Usuarios no encontrados.</td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-    <div class="d-flex justify-content-end align-items-center mt-3">
-        <p-button label="Regresar" [routerLink]="urlRegresar" icon="pi pi-arrow-left" styleClass="p-button-primary"></p-button>
-    </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="titulo">Administrador de Usuarios</h3>
+    <p-button
+      label="Nuevo Usuario"
+      routerLink="agregar"
+      icon="pi pi-plus"
+      styleClass="p-button-primary"
+    ></p-button>
+  </div>
+  <div class="card">
+    <p-table
+      [value]="usuarios"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [loading]="loading"
+      [paginator]="true"
+      [showCurrentPageReport]="true"
+      [sortField]="'nombre'"
+      [totalRecords]="totalRecords"
+      sortMode="multiple"
+      [globalFilterFields]="['nombre']"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [lazy]="true"
+      (onPage)="pageChange($event)"
+      (onLazyLoad)="cargarUsuarios($event)"
+      [filterDelay]="0"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre" /></th>
+          <th pSortableColumn="sucursal.nombre">
+            Sucursal<p-sortIcon field="sucursal.nombre" />
+          </th>
+          <th pSortableColumn="rol.rol">Rol<p-sortIcon field="rol.rol" /></th>
+          <th pSortableColumn="activo">Estado<p-sortIcon field="activo" /></th>
+          <th>Acciones</th>
+        </tr>
+        <tr>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="nombre"
+              matchMode="contains"
+              placeholder="Busca nombre"
+              ariaLabel="Buscar Nombre"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="sucursal.nombre"
+              matchMode="contains"
+              placeholder="Buscar sucursal"
+              ariaLabel="Buscar sucursal"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              [showMenu]="false"
+              type="text"
+              field="rol.rol"
+              matchMode="contains"
+              placeholder="Buscar Rol"
+              ariaLabel="Buscar Rol"
+            />
+          </th>
+          <th>
+            <p-columnFilter
+              field="activo"
+              matchMode="equals"
+              [showMenu]="false"
+            >
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-dropdown
+                  [ngModel]="value"
+                  [options]="activos"
+                  optionLabel="etiqueta"
+                  optionValue="valor"
+                  placeholder="Todos"
+                  (onChange)="filter($event.value)"
+                >
+                  <ng-template let-option pTemplate="selectedItem">
+                    <div class="inline-block vertical-align-middle">
+                      <span class="ml-1 mt-1">{{
+                        option?.etiqueta || "Todos"
+                      }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template let-option pTemplate="item">
+                    <div class="inline-block vertical-align-middle">
+                      <span class="ml-1 mt-1">{{ option.etiqueta }}</span>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </ng-template>
+            </p-columnFilter>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user?.nombre }}</td>
+          <td>{{ user?.sucursal?.nombre }}</td>
+          <td>{{ user?.rol?.rol }}</td>
+          <td>{{ user?.activo ? "Activo" : "Inactivo" }}</td>
+          <td>
+            <a
+              class="nav-link dropdown-toggle"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="pi pi-ellipsis-v"></i>
+            </a>
+            <!-- Acciones para ver y editar -->
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-eye"
+                  (click)="ver(user)"
+                  label="Ver"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+              <li>
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  icon="pi pi-pencil"
+                  (click)="editar(user)"
+                  label="Editar"
+                  class="p-button-rounded p-button-text dropdown-item"
+                ></button>
+              </li>
+              <!-- Mostrar deshabilitar solo si el usuario está activo -->
+              @if (user.activo) {
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-ban"
+                    (click)="deshabilitar(user)"
+                    label="Deshabilitar"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              }
+              @if (user?.rol?.id === 5) {
+                <li>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-money-bill"
+                    (click)="verBoletosPorTransferencia(user)"
+                    label="Ver Transferencias"
+                    class="p-button-rounded p-button-text dropdown-item"
+                  ></button>
+                </li>
+              }
+            </ul>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">Usuarios no encontrados.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="d-flex justify-content-end align-items-center mt-3">
+    <p-button
+      label="Regresar"
+      [routerLink]="urlRegresar"
+      icon="pi pi-arrow-left"
+      styleClass="p-button-primary"
+    ></p-button>
+  </div>
 </app-layout>

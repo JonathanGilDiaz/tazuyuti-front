@@ -13,6 +13,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DatatableService } from '@app/shared/ui/datatables/services/datatable.service';
 import { Subject, takeUntil } from 'rxjs';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { UserTransferenciaComponent } from '../user-transferencia/user-transferencia.component';
 
 @Component({
   selector: 'app-user-list',
@@ -24,6 +26,7 @@ import { GlobalError } from '@app/core/interfaces/errors.interface';
     RouterLink,
     DropdownModule,
   ],
+  providers: [DialogService],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
 })
@@ -40,11 +43,14 @@ export class UserListComponent {
   };
   first = 10;
   destroy$ = new Subject<void>();
+  refDialog: DynamicDialogRef | undefined;
+
   constructor(
     private usuariosService: UsuariosService,
     private modalService: ModalService,
     private router: Router,
-    private datatableService: DatatableService
+    private datatableService: DatatableService,
+    private dialogService: DialogService,
   ) {}
 
   ngOnInit(): void {
@@ -117,7 +123,7 @@ export class UserListComponent {
         'advertencia',
         'Atención',
         `Está apunto de deshabilitar el usuario ${usuario.usuario}. ¿Está seguro de continuar?`,
-        true
+        true,
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -148,6 +154,32 @@ export class UserListComponent {
           }
         },
       });
+  }
+
+  mostrarModalAdicional(component: any, titulo: string, data?: any): void {
+    this.refDialog = this.dialogService.open(component, {
+      header: titulo,
+      width: data?.width ? data.width : '70vw',
+      data: data,
+      contentStyle: { 'z-index': 1036 },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+    });
+  }
+
+  verBoletosPorTransferencia(dato: Usuario) {
+    this.mostrarModalAdicional(
+      UserTransferenciaComponent,
+      'Boletos por transferencia',
+      {
+        id: dato.id,
+      },
+    );
+    this.refDialog.onClose
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resultado: any) => {});
   }
 
   ngOnDestroy(): void {

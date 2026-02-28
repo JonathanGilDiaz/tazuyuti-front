@@ -24,6 +24,7 @@ import { LoginData } from '@app/data/models/login';
 import { Subject, takeUntil } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ModalService } from '@app/shared/ui/modal/services/modal.service';
+import { RecaptchaComponent } from 'ng-recaptcha-2';
 
 @Component({
   selector: 'app-log-in',
@@ -47,23 +48,21 @@ export class LogInComponent implements OnInit {
   logoTecnologias = 'assets/template/images/TECNOLOGIAS.png';
   captcha = 'assets/template/images/captcha.png';
   siteKey = environment.recaptcha.siteKey;
-
   formLogin: FormGroup;
   formSaldo: FormGroup;
   destroy$ = new Subject<void>();
-
   private modalRef: NgbModalRef;
   private usuarioIdFaltante: number;
   private loginDataPendiente: LoginData;
-
+  @ViewChild('recaptchaRef') recaptcha!: RecaptchaComponent;
   @ViewChild('modalCorte') modalCorteTpl: TemplateRef<any>;
-
+  isLoading = false;
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
     private modal: NgbModal,
-    private modalService: ModalService
+    private modalService: ModalService,
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +92,7 @@ export class LogInComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-
+    this.isLoading = true;
     let username = form.controls['usuario'].value;
     let password = form.controls['contrasenia'].value;
 
@@ -101,6 +100,7 @@ export class LogInComponent implements OnInit {
       usuario: username,
       password: password,
       recaptchaResponse: this.formLogin.get('token').value,
+      loginPostCorte: false,
     };
 
     this.authService
@@ -108,29 +108,46 @@ export class LogInComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if (response.success) {
-            this.authService.guardarUsuario(response.data.usuario);
-            this.authService.guardarToken(response.data.token);
-            this.authService.guardarMenu(response.data.menus);
-            this.router.navigate(['dashboard']);
-          } else {
-            if (response.message.includes('Falta crear un corte')) {
-              this.usuarioIdFaltante = response.data?.usuarioId;
-              this.loginDataPendiente = dataLogin;
-              this.abrirModalCorte();
-            }
+          this.isLoading = false;
+
+          if (!response.success) {
+            this.recaptcha?.reset();
+            this.formLogin.get('token')?.reset();
+
+            this.modalService
+              .openAlertModal('error', 'Error', response.message)
+              .subscribe();
+            return;
           }
+
+          // 🔥 SI REQUIERE CORTE → NO GUARDAR TOKEN
+          if (response.data.requiereCorte) {
+            this.usuarioIdFaltante = response.data.usuarioId;
+            this.loginDataPendiente = dataLogin; // 👈 IMPORTANTE
+            this.abrirModalCorte();
+            return;
+          }
+
+          // 🔥 SOLO AQUÍ GUARDAMOS
+          this.authService.guardarToken(response.data.token);
+          this.authService.guardarUsuario(response.data.usuario);
+          this.authService.guardarMenu(response.data.menus);
+
+          this.router.navigate(['dashboard']);
         },
         error: (error) => {
+          this.isLoading = false;
+          this.recaptcha.reset();
+          this.formLogin.get('token')?.reset();
           if (error.error?.message?.includes('Falta crear un corte')) {
             this.usuarioIdFaltante = error.error.data?.usuarioId;
             this.loginDataPendiente = dataLogin;
             this.abrirModalCorte();
-          }else{
-              this.modalService
+          } else {
+            this.modalService
               .openAlertModal('error', 'Error', error.error?.message)
               .pipe(takeUntil(this.destroy$))
-              .subscribe();        
+              .subscribe();
           }
         },
       });
@@ -159,16 +176,26 @@ export class LogInComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           if (!resp.success) return;
+
           this.modalRef.close();
-          this.modalService
-            .openAlertModal('exito', 'Éxito', 'Corte creado exitosamente')
-            .subscribe({
-              complete: () => {
-                setTimeout(() => window.location.reload(), 100);
-              },
+
+          const segundoLogin: LoginData = {
+            usuario: this.loginDataPendiente.usuario,
+            password: this.loginDataPendiente.password,
+            loginPostCorte: true, // 🔥 aquí está la magia
+          };
+          this.authService
+            .login(segundoLogin)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((loginResp) => {
+              if (loginResp.success) {
+                this.authService.guardarToken(loginResp.data.token);
+                this.authService.guardarUsuario(loginResp.data.usuario);
+                this.authService.guardarMenu(loginResp.data.menus);
+                this.router.navigate(['dashboard']);
+              }
             });
         },
-        error: (err) => console.error('Error al crear corte', err),
       });
   }
 

@@ -109,7 +109,6 @@ export class CorteDetailComponent {
 
             this.totalRecords = response.data.totalElements || 0;
 
-            // 👇 aquí apagas el loading
             this.loading = false;
           } else {
             this.loading = false;
@@ -157,7 +156,6 @@ export class CorteDetailComponent {
   retiro: number | null = null;
   saldoFinal: number = 0;
 
-  // Cálculo de faltante/sobrante
   calcularFaltanteSobrante() {
     const saldoCalculado = this.form.get('saldoCaja')?.value || 0;
     if (this.dineroRealCaja !== null) {
@@ -166,80 +164,72 @@ export class CorteDetailComponent {
     }
   }
 
-  // Cálculo de saldo final con retiro
   calcularSaldoFinal() {
     if (this.dineroRealCaja !== null) {
       const retiro = this.retiro || 0;
+      if (retiro > this.dineroRealCaja) {
+        this.saldoFinal = 0;
+        return;
+      }
       this.saldoFinal = this.dineroRealCaja - retiro;
     }
   }
 
-  // Validación: no se puede cerrar sin llenar datos
   puedeCerrarCorte(): boolean {
-    return (
-      this.dineroRealCaja !== null &&
-      this.retiro !== null &&
-      this.saldoFinal >= 0
-    );
+    if (this.dineroRealCaja === null) return false;
+    if (this.retiro === null) return false;
+    if (this.retiro > this.dineroRealCaja) return false;
+    return true;
   }
 
   confirmarCerrarCorte() {
     if (!this.corte?.id) return;
-
-    const saldoCaja = this.form.get('saldoCaja')?.value || 0;
+    const dineroReal = this.dineroRealCaja || 0;
     const retiro = this.retiro || 0;
-
-    // Validación: el retiro no puede ser mayor al saldo en caja
-    if (retiro > saldoCaja) {
+    if (this.dineroRealCaja === null) {
       this.modalService
         .openAlertModal(
           'error',
           'Error',
-          'El retiro no puede ser mayor al saldo en caja.',
+          'Debes ingresar el dinero real en caja.',
         )
         .subscribe();
       return;
     }
-    // Copiamos todos los valores del formulario y calculados
+    if (retiro > dineroReal) {
+      this.modalService
+        .openAlertModal(
+          'error',
+          'Error',
+          'El retiro no puede ser mayor al dinero real en caja.',
+        )
+        .subscribe();
+      return;
+    }
     const cortePayload: Corte = {
-      ...this.corte, // copia los datos existentes
+      ...this.corte,
       efectivo: this.form.get('efectivo')?.value,
       transferencia: this.form.get('transferencia')?.value,
       tarjeta: this.form.get('tarjeta')?.value,
       totalCaja: this.form.get('saldoCaja')?.value,
       saldoFinal: this.saldoFinal,
       totalRetiros: this.form.get('totalBitacoras')?.value,
-      retiro: this.retiro,
+      retiro: retiro,
       faltante:
         this.faltanteSobrante! < 0 ? Math.abs(this.faltanteSobrante!) : 0,
       sobrante: this.faltanteSobrante! > 0 ? this.faltanteSobrante! : 0,
-      efectivoCaja: this.dineroRealCaja!,
+      efectivoCaja: dineroReal,
       totalCobros:
         this.ventas.reduce((sum, v) => sum + v.total, 0) +
         this.boletos.reduce((sum, b) => sum + b.total, 0) +
         this.paquetes.reduce((sum, p) => sum + p.total, 0),
     };
-
     this.service.cerrarCorte(cortePayload).subscribe({
       next: (response) => {
         if (response.success) {
           this.authService.logout();
         }
       },
-    });
-  }
-
-  // Acción final de cierre
-  cerrarCorte() {
-    // Aquí va tu lógica para cerrar el corte en backend
-    console.log('Corte cerrado:', {
-      usuario: this.form.get('usuario')?.value,
-      inicio: this.form.get('inicio')?.value,
-      saldoInicial: this.form.get('saldoInicial')?.value,
-      dineroRealCaja: this.dineroRealCaja,
-      faltanteSobrante: this.faltanteSobrante,
-      retiro: this.retiro,
-      saldoFinal: this.saldoFinal,
     });
   }
 

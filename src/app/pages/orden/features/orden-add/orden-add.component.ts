@@ -35,14 +35,14 @@ export class OrdenAddComponent implements OnInit {
   detalleOrdenCompras: any[] = [];
   total: number = 0;
   totalRecords: number = 0;
-
+  productoSeleccionado: Producto | null = null;
   constructor(
     private fb: FormBuilder,
     private ventaService: VentasService,
     private productoService: ProductosService,
     private modalService: ModalService,
     private authService: AuthService,
-    public ref: DynamicDialogRef
+    public ref: DynamicDialogRef,
   ) {
     this.iniciarFormulario();
   }
@@ -63,43 +63,100 @@ export class OrdenAddComponent implements OnInit {
     const texto: string = (this.form.get('textoBusqueda')?.value || '')
       .toLowerCase()
       .trim();
-
     if (!texto) {
       this.sugerencias = [];
+      this.productoSeleccionado = null;
       return;
     }
-
     const productoPorCodigo = this.productos.find(
-      (p) => p.codigo?.toLowerCase() === texto
+      (p) => p.codigo?.toLowerCase() === texto,
     );
     if (productoPorCodigo) {
-      this.agregarProducto(productoPorCodigo);
+      this.seleccionarProducto(productoPorCodigo);
       return;
     }
-
+    if (
+      this.productoSeleccionado &&
+      this.productoSeleccionado.nombre.toLowerCase() !== texto &&
+      this.productoSeleccionado.codigo?.toLowerCase() !== texto
+    ) {
+      this.productoSeleccionado = null;
+    }
     this.sugerencias = this.productos.filter(
       (p) =>
         p.nombre?.toLowerCase().includes(texto) ||
-        p.codigo?.toLowerCase().includes(texto)
+        p.codigo?.toLowerCase().includes(texto),
     );
+  }
+
+  seleccionarProducto(producto: Producto) {
+    this.productoSeleccionado = producto;
+    this.form.get('textoBusqueda')?.setValue(producto.nombre);
+    this.sugerencias = [];
+  }
+
+  confirmarAgregar() {
+    const cantidadControl = this.form.get('cantidad');
+    if (!this.productoSeleccionado) {
+      this.modalService
+        .openAlertModal('error', 'Error', 'Debe seleccionar un producto.')
+        .subscribe();
+      return;
+    }
+    if (!cantidadControl || cantidadControl.invalid) {
+      cantidadControl?.markAsTouched();
+      this.modalService
+        .openAlertModal('error', 'Error', 'Debe ingresar una cantidad válida.')
+        .subscribe();
+      return;
+    }
+    const cantidad = Number(cantidadControl.value);
+    const existente = this.detalleOrdenCompras.find(
+      (p) => p.id === this.productoSeleccionado!.id,
+    );
+    if (existente) {
+      existente.cantidad += cantidad;
+      existente.subtotal = existente.cantidad * existente.precio;
+    } else {
+      this.detalleOrdenCompras = [
+        ...this.detalleOrdenCompras,
+        {
+          id: this.productoSeleccionado.id,
+          codigo: this.productoSeleccionado.codigo,
+          nombre: this.productoSeleccionado.nombre,
+          unidad: this.productoSeleccionado.unidad,
+          precio: this.productoSeleccionado.precio,
+          cantidad: cantidad,
+          subtotal: this.productoSeleccionado.precio * cantidad,
+        },
+      ];
+    }
+    this.calcularTotal();
+    this.productoSeleccionado = null;
+    this.form.get('textoBusqueda')?.setValue('');
+    this.form.get('cantidad')?.setValue('');
   }
 
   buscarPorCodigo() {
     const texto: string = (this.form.get('textoBusqueda')?.value || '').trim();
     const producto = this.productos.find(
-      (p) => p.codigo?.toLowerCase() === texto.toLowerCase()
+      (p) => p.codigo?.toLowerCase() === texto.toLowerCase(),
     );
     if (producto) this.agregarProducto(producto);
   }
 
   agregarProducto(producto: Producto) {
+    const cantidadControl = this.form.get('cantidad');
+    if (!cantidadControl || cantidadControl.invalid) {
+      cantidadControl?.markAsTouched();
+      return;
+    }
+    const cantidad = Number(cantidadControl.value);
     const existente = this.detalleOrdenCompras.find(
-      (p) => p.id === producto.id
+      (p) => p.id === producto.id,
     );
-
     if (existente) {
-      // ✅ Mantener precio editado por el usuario
-      existente.cantidad += 1;
+      existente.cantidad += cantidad;
       existente.subtotal = existente.cantidad * existente.precio;
     } else {
       this.detalleOrdenCompras = [
@@ -110,14 +167,14 @@ export class OrdenAddComponent implements OnInit {
           nombre: producto.nombre,
           unidad: producto.unidad,
           precio: producto.precio,
-          cantidad: 1,
-          subtotal: producto.precio,
+          cantidad: cantidad,
+          subtotal: producto.precio * cantidad,
         },
       ];
     }
-
     this.calcularTotal();
     this.form.get('textoBusqueda')?.setValue('');
+    this.form.get('cantidad')?.setValue('');
     this.sugerencias = [];
   }
 
@@ -143,7 +200,7 @@ export class OrdenAddComponent implements OnInit {
 
   eliminar(item: any) {
     this.detalleOrdenCompras = this.detalleOrdenCompras.filter(
-      (p) => p.id !== item.id
+      (p) => p.id !== item.id,
     );
     this.calcularTotal();
   }
@@ -151,7 +208,7 @@ export class OrdenAddComponent implements OnInit {
   calcularTotal() {
     this.total = this.detalleOrdenCompras.reduce(
       (acc, p) => acc + p.subtotal,
-      0
+      0,
     );
   }
 
@@ -161,6 +218,7 @@ export class OrdenAddComponent implements OnInit {
     this.form = this.fb.group({
       total: [0, Validators.required],
       textoBusqueda: [''],
+      cantidad: ['', [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -174,7 +232,7 @@ export class OrdenAddComponent implements OnInit {
         .openAlertModal(
           'error',
           'Error',
-          'Debe agregar al menos un producto y el total debe ser mayor a 0.'
+          'Debe agregar al menos un producto y el total debe ser mayor a 0.',
         )
         .subscribe();
       return;

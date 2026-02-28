@@ -35,6 +35,10 @@ export class VentasService {
     return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/venta/${id}/ticket`);
   }
 
+    obtenerTicketFactura(id : number,idCliente: number):Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/venta/${id}/ticketFactura/${idCliente}`);
+  }
+
    ordenObtenerRegistros(id: number, datos : DataTableParams):Observable<ApiResponse<any>>{
     return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/ordenCompra/${id}/index`,datos);
   }

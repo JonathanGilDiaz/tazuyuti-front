@@ -23,7 +23,7 @@
         <select class="form-select" formControlName="destino">
           <option [ngValue]="null" disabled>Seleccione...</option>
           <option *ngFor="let p of destinosFiltrados()" [ngValue]="p.id">
-            {{ p.destino }} ({{ "$" + (p.precio | number : "1.2-2") }})
+            {{ p.destino }} ({{ "$" + (p.precio | number: "1.2-2") }})
           </option>
         </select>
       </div>
@@ -36,6 +36,16 @@
             {{ h.hora }} — {{ h.unidad.nombre }}
           </option>
         </select>
+
+        <div *ngIf="form.get('hora')?.value" class="mt-2">
+          <button
+            type="button"
+            class="btn btn-outline-primary btn-sm"
+            (click)="mostrarModalCambiarHora = true"
+          >
+            Cambiar hora
+          </button>
+        </div>
       </div>
     </div>
   </fieldset>
@@ -284,4 +294,39 @@
       Cancelar
     </button>
   </div>
+
+  <p-dialog
+    header="Cambiar hora de salida"
+    [(visible)]="mostrarModalCambiarHora"
+    [modal]="true"
+    [style]="{ width: '350px' }"
+  >
+    <div class="mb-3">
+      <label>Nueva hora</label>
+      <input
+        type="time"
+        class="form-control"
+        [(ngModel)]="nuevaHora"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="mostrarModalCambiarHora = false"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!nuevaHora"
+        (click)="confirmarCambioHora()"
+      >
+        Aceptar
+      </button>
+    </ng-template>
+  </p-dialog>
 </form>

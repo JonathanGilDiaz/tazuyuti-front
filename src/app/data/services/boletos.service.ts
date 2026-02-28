@@ -13,24 +13,24 @@ export class BoletosService {
 
   obtenerRegistros(
     id: number,
-    datos: DataTableParams
+    datos: DataTableParams,
   ): Observable<ApiResponse<any>> {
     return this.httpClient.post<ApiResponse<any>>(
       `${environment.baseUrl}/taquilla/${id}/index`,
-      datos
+      datos,
     );
   }
 
   agregarRegistro(datos: any): Observable<ApiResponse<any>> {
     return this.httpClient.post<ApiResponse<any>>(
       `${environment.baseUrl}/taquilla/save`,
-      datos
+      datos,
     );
   }
 
   catalogos(): Observable<ApiResponse<any>> {
     return this.httpClient.get<ApiResponse<any>>(
-      `${environment.baseUrl}/taquilla/catalogs`
+      `${environment.baseUrl}/taquilla/catalogs`,
     );
   }
 
@@ -38,7 +38,7 @@ export class BoletosService {
     fecha: string,
     origenId: number,
     precioId: number,
-    hastaId: number | null
+    hastaId: number | null,
   ): Observable<ApiResponse<any>> {
     return this.httpClient.get<ApiResponse<any>>(
       `${environment.baseUrl}/taquilla/horarios`,
@@ -49,22 +49,35 @@ export class BoletosService {
           precioId,
           hasta: String(hastaId ?? ''),
         },
-      }
+      },
     );
   }
 
   obtenerRegistro(id: number): Observable<ApiResponse<any>> {
     return this.httpClient.get<ApiResponse<any>>(
-      `${environment.baseUrl}/taquilla/${id}/detail`
+      `${environment.baseUrl}/taquilla/${id}/detail`,
     );
   }
 
-  
-    obtenerTicket(id : number):Observable<ApiResponse<any>>{
-    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/taquilla/${id}/ticket`);
+  obtenerTicket(id: number): Observable<ApiResponse<any>> {
+    return this.httpClient.get<ApiResponse<any>>(
+      `${environment.baseUrl}/taquilla/${id}/ticket`,
+    );
   }
 
-   cancelarBolet(id : number):Observable<ApiResponse<any>>{
-    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/taquilla/${id}/cancelar`);
+  cancelarBolet(id: number): Observable<ApiResponse<any>> {
+    return this.httpClient.get<ApiResponse<any>>(
+      `${environment.baseUrl}/taquilla/${id}/cancelar`,
+    );
+  }
+
+  cambiarHoraDetalleRuta(
+    id: number,
+    hora: string,
+  ): Observable<ApiResponse<any>> {
+    return this.httpClient.post<ApiResponse<any>>(
+      `${environment.baseUrl}/taquilla/${id}/cambiar-hora`,
+      { hora },
+    );
   }
 }

@@ -34,4 +34,8 @@ export class ClienteService {
   eliminarRegistro(id : number):Observable<ApiResponse<any>>{
     return this.httpClient.post<ApiResponse<any>>(`${environment.baseUrl}/cliente/${id}/delete`,{});
   }
+
+  obtenerTodos():Observable<ApiResponse<any>>{
+    return this.httpClient.get<ApiResponse<any>>(`${environment.baseUrl}/cliente/getAll`);
+  }
 }

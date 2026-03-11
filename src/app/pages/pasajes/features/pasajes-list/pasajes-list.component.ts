@@ -2,10 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PrimeNGModules } from '@app/primeng-config';
 import { RouterLink } from '@angular/router';
-import {
-  PrecioBoleto,
-  PrecioPaqueteria,
-} from '@app/core/interfaces/apiResponse';
+import { PrecioBoleto} from '@app/core/interfaces/apiResponse';
 import { DataTableParams } from '@app/shared/ui/datatables/interfaces/datatable';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { DEFAULT_VALUES, MODULES_URLS } from '@app/constants/app.constants';
@@ -16,7 +13,6 @@ import { DatatableService } from '@app/shared/ui/datatables/services/datatable.s
 import { Subject, takeUntil } from 'rxjs';
 import { GlobalError } from '@app/core/interfaces/errors.interface';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { preciosPaqueteriaService } from '@app/data/services/preciosPaqueteria.service';
 import { PreciosBoletosService } from '@app/data/services/preciosBoletos.service';
 import { PasajesEditComponent } from '../pasajes-edit/pasajes-edit.component';
 import { PasajesAddComponent } from '../pasajes-add/pasajes-add.component';
@@ -103,7 +99,7 @@ export class PasajesListComponent {
     this.obtenerDatos(this.dataTablesParams);
   }
 
-  eliminar(producto: PrecioPaqueteria) {
+  eliminar(producto: PrecioBoleto) {
     this.loading = true;
     this.service.eliminarRegistro(producto.id).subscribe({
       next: (response) => {

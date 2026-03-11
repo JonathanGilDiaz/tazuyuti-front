@@ -11,11 +11,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { DropdownModule } from 'primeng/dropdown';
 import { PrimeNGModules } from '@app/primeng-config';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { PrecioPaqueteria } from '@app/core/interfaces/apiResponse';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { AuthService } from '@app/core/services/auth.service';
 import { PaquetesService } from '@app/data/services/paquetes.service';
-import { PrecioPaqueteriaAddComponent } from '@app/pages/precioPaqueteria/features/precio-paqueteria-add/precio-paqueteria-add.component';
 
 @Component({
   selector: 'app-user-add',
@@ -29,7 +27,6 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
   form: FormGroup;
   loading = false;
   private destroy$ = new Subject<void>();
-  precios: PrecioPaqueteria[] = [];
   sucursales: any[] = [];
   sucursalesFiltradas: any[] = [];
   refDialog: DynamicDialogRef | undefined;
@@ -44,7 +41,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
   total = 0;
   cambio = 0;
   totalRecords = 0;
-
+  private contadorConceptos = 1;
   baseOrigenId: number | null = null;
   baseOrigenNombre = '';
 
@@ -54,46 +51,8 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private authService: AuthService,
     public ref: DynamicDialogRef,
-    private dialogService: DialogService,
   ) {
     this.iniciarFormulario();
-  }
-
-  abrirModalNuevoPrecio(): void {
-    this.refDialog = this.dialogService.open(PrecioPaqueteriaAddComponent, {
-      header: 'Registrar nuevo precio',
-      width: '60vw',
-      breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
-      },
-    });
-    this.refDialog.onClose
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-          this.recargarPrecios(true); 
-
-      });
-  }
-  private recargarPrecios(seleccionarUltimo: boolean = false): void {
-    this.paqueteService
-      .catalogos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (resp) => {
-          if (resp.success) {
-            this.precios = resp.data.precios || [];
-
-            if (seleccionarUltimo && this.precios.length > 0) {
-              const ultimo = this.precios[this.precios.length - 1];
-
-              this.form.patchValue({
-                precioSeleccionadoId: ultimo.id,
-              });
-            }
-          }
-        },
-      });
   }
 
   ngOnInit(): void {
@@ -106,9 +65,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (resp) => {
           if (resp.success) {
-            this.precios = resp.data.precios || [];
             this.sucursales = resp.data.sucursal || [];
-
             this.sucursalesFiltradas = this.sucursales.filter(
               (s: any) => s.id !== this.baseOrigenId,
             );
@@ -126,7 +83,6 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
       .subscribe(() => this.calcularTotal());
   }
 
-  trackByPrec = (_: number, p: PrecioPaqueteria) => p.id;
   trackBySuc = (_: number, s: any) => s.id;
 
   iniciarFormulario(): void {
@@ -135,8 +91,9 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
       destinatario: ['', [Validators.required, Validators.minLength(2)]],
       baseDestinoId: [null, [Validators.required]],
 
-      precioSeleccionadoId: [null],
-      cantidadAgregar: [1, [Validators.min(1)]],
+      conceptoAgregar: [''],
+      precioAgregar: [0],
+      cantidadAgregar: [1],
 
       formaPago: ['01 Efectivo', Validators.required],
       pago: [0],
@@ -145,68 +102,42 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  private buscarPrecioPorId(id: number): PrecioPaqueteria | undefined {
-    return this.precios.find((p) => p.id === id);
-  }
-
   agregarSeleccion(): void {
-    const precioId = Number(this.form.get('precioSeleccionadoId')?.value);
-    const cantidad = Number(this.form.get('cantidadAgregar')?.value || 0);
-
-    if (!precioId) {
+    const concepto = this.form.get('conceptoAgregar')?.value?.trim();
+    const precio = Number(this.form.get('precioAgregar')?.value);
+    const cantidad = Number(this.form.get('cantidadAgregar')?.value);
+    if (!concepto) {
       this.modalService
-        .openAlertModal('error', 'Error', 'Selecciona un precio.')
+        .openAlertModal('error', 'Error', 'Debe ingresar un concepto.')
         .subscribe();
       return;
     }
-
-    if (!cantidad || cantidad <= 0 || !Number.isFinite(cantidad)) {
+    if (!precio || precio <= 0) {
       this.modalService
-        .openAlertModal(
-          'error',
-          'Error',
-          'La cantidad debe ser un número mayor a 0.',
-        )
+        .openAlertModal('error', 'Error', 'El precio debe ser mayor a 0.')
         .subscribe();
       return;
     }
-
-    const precioObj = this.buscarPrecioPorId(precioId);
-    if (!precioObj) {
-      console.error(
-        'precioId recibido:',
-        precioId,
-        'lista de precios:',
-        this.precios,
-      );
+    if (!cantidad || cantidad <= 0) {
       this.modalService
-        .openAlertModal(
-          'error',
-          'Error',
-          'El precio seleccionado no es válido.',
-        )
+        .openAlertModal('error', 'Error', 'La cantidad debe ser mayor a 0.')
         .subscribe();
       return;
     }
-    const existente = this.detallePaquete.find((p) => p.id === precioObj.id);
-    if (existente) {
-      existente.cantidad += cantidad;
-      existente.subtotal = existente.cantidad * existente.precio;
-    } else {
-      this.detallePaquete = [
-        ...this.detallePaquete,
-        {
-          id: precioObj.id,
-          nombre: precioObj.nombre,
-          precio: precioObj.precio,
-          cantidad: cantidad,
-          subtotal: cantidad * precioObj.precio,
-        },
-      ];
-    }
-
+    const nuevo = {
+      id: this.contadorConceptos++,
+      nombre: concepto,
+      precio: precio,
+      cantidad: cantidad,
+      subtotal: precio * cantidad,
+    };
+    this.detallePaquete = [...this.detallePaquete, nuevo];
     this.form.patchValue(
-      { precioSeleccionadoId: null, cantidadAgregar: 1 },
+      {
+        conceptoAgregar: '',
+        precioAgregar: 0,
+        cantidadAgregar: 1,
+      },
       { emitEvent: false },
     );
 
@@ -285,7 +216,7 @@ export class PaquetesAddComponent implements OnInit, OnDestroy {
     }
 
     const detalleAdaptado = this.detallePaquete.map((prod) => ({
-      precioPaquete: { id: prod.id },
+      concepto: prod.nombre,
       cantidad: prod.cantidad,
       precio: prod.precio,
       subtotal: prod.subtotal,

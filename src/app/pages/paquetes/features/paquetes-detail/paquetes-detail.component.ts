@@ -72,7 +72,7 @@ export class PaquetesDetailComponent {
       cancelacion: [''],
       descripcionCancelacion: [''],
       observacionesEntrega: [''],
-      recibio: [''], // <- este es obligatorio porque lo usas en "Entregar Paquete"
+      recibio: [''], 
     });
 
     if (this.config?.data?.id) {

@@ -1,6 +1,5 @@
 <div class="row">
   <form [formGroup]="form">
-    <!-- ====================== DATOS GENERALES ====================== -->
     <div class="row mb-2">
       <div class="col-12 d-flex gap-2 justify-content-end">
         <button
@@ -105,7 +104,7 @@
           <ng-template pTemplate="body" let-dato>
             <tr>
               <td>{{ dato.cantidad }}</td>
-              <td>{{ dato.precioPaquete?.nombre }}</td>
+              <td>{{ dato.concepto }}</td>
               <td>{{ "$" + (dato.precio | number : "1.2-2") }}</td>
               <td>{{ "$" + (dato.subtotal | number : "1.2-2") }}</td>
             </tr>

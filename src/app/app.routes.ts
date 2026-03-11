@@ -36,10 +36,6 @@ export const routes: Routes = [
         loadChildren: () => import('@app/pages/ventas/ventas.routes').then(m => m.VentasRoutes),
       },
        {
-        path: 'precioPaqueteria',
-        loadChildren: () => import('@app/pages/precioPaqueteria/precioPaqueteria.routes').then(m => m.PrecioPaqueteriaRoutes),
-      },
-       {
         path: 'equipaje',
         loadChildren: () => import('@app/pages/precioEquipaje/precioEquipaje.routes').then(m => m.PrecioEquipajeRoutes),
       },

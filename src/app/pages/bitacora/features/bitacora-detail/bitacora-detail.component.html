@@ -231,7 +231,7 @@
             <tr *ngFor="let detalle of paquete.detallePaquete">
               <td>{{ paquete.folio }}</td>
               <td>{{ detalle.cantidad }}</td>
-              <td>{{ detalle.precioPaquete?.nombre }}</td>
+              <td>{{ detalle.concepto }}</td>
               <td>{{ detalle.precio }}</td>
             </tr>
           </ng-container>
@@ -277,7 +277,7 @@
             <tr *ngFor="let detalle of paquete.detallePaquete">
               <td>{{ paquete.folio }}</td>
               <td>{{ detalle.cantidad }}</td>
-              <td>{{ detalle.precioPaquete?.nombre }}</td>
+              <td>{{ detalle.concepto }}</td>
               <td>{{ detalle.precio }}</td>
             </tr>
           </ng-container>

@@ -212,16 +212,6 @@ export interface DetalleOrdenCompra {
   subTotal: number;
 }
 
-export interface PrecioPaqueteria {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  medidas: String;
-  peso: number;
-  precio: number;
-  estado: boolean;
-}
-
 export interface PrecioEquipaje {
   id: number;
   nombre: string;
@@ -238,7 +228,7 @@ export interface DetallePaquete {
   cantidad: number;
   precio: number;
   subTotal: number;
-  precioPaquete: PrecioPaqueteria;
+  concepto: String;
 }
 
 export interface Paquete {
